@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import math
 import sys
 
 from dataclasses import dataclass, field
@@ -8,6 +9,7 @@ from typing import List
 import pandas as pd
 
 from antlr4 import *
+from antlr4.error.ErrorListener import ErrorListener
 
 # Generated imports
 
@@ -17,6 +19,13 @@ from gen.CypherParser import CypherParser
 # Module imports
 
 from visitor import hasType
+
+@dataclass
+class GeneratorErrorListener(ErrorListener):
+    errors_caught: int = 0
+    def syntaxError(self, recognizer, offendingSymbol, line, col, msg, e):
+        print("Syntax error at line {} col {}: {}".format(line, col, msg), file=sys.stderr)
+        self.errors_caught += 1
 
 @dataclass
 class CypherExecutor:
@@ -33,11 +42,14 @@ class CypherExecutor:
         if number := expr.oC_NumberLiteral():
             dtype = 'float64'
             nstr = number.getText()
-            if int_lit := number.oC_IntegerLiteral():
+            if (int_lit := number.oC_IntegerLiteral()) and 'e' not in nstr:
                 dtype = 'int64'
                 if int_lit.OctalInteger():
                     nstr = '0o' + nstr[1:]
-            return pd.Series([eval(nstr)] * rows, dtype=dtype)
+            value = eval(nstr)
+            if math.isinf(value):
+                raise Exception("FloatingPointOverflow")
+            return pd.Series([value] * rows, dtype=dtype)
         if expr.StringLiteral():
             return pd.Series([eval(expr.getText())] * rows, dtype=str)
 
@@ -361,11 +373,24 @@ class CypherExecutor:
         self._processReturn(return_)
 
     def _getAST(self, query: str):
+        error_listener = GeneratorErrorListener()
+
         input_stream = InputStream(query)
         lexer = CypherLexer(input_stream)
+        lexer.removeErrorListeners()
+        lexer.addErrorListener(error_listener)
+
         stream = CommonTokenStream(lexer)
+
         parser = CypherParser(stream)
-        return parser.oC_Cypher()
+        parser.removeErrorListeners()
+        parser.addErrorListener(error_listener)
+
+        root = parser.oC_Cypher()
+
+        if error_listener.errors_caught > 0:
+            raise Exception("Failed to parse query")
+        return root
 
     def exec(self, query_str: str) -> pd.DataFrame:
         ast = self._getAST(query_str)
