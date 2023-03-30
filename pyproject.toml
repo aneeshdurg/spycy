@@ -1,0 +1,4 @@
+[tool.pyright]
+exclude = ["**/__pycache__"]
+pythonVersion = "3.9"
+pythonPlatform = "Linux"
