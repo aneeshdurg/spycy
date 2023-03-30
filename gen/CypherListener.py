@@ -1,4 +1,4 @@
-# Generated from ./Cypher.g4 by ANTLR 4.9.3
+# Generated from ./Cypher.g4 by ANTLR 4.12.0
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .CypherParser import CypherParser
@@ -350,6 +350,15 @@ class CypherListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by CypherParser#oC_RelationshipsPattern.
+    def enterOC_RelationshipsPattern(self, ctx:CypherParser.OC_RelationshipsPatternContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_RelationshipsPattern.
+    def exitOC_RelationshipsPattern(self, ctx:CypherParser.OC_RelationshipsPatternContext):
+        pass
+
+
     # Enter a parse tree produced by CypherParser#oC_NodePattern.
     def enterOC_NodePattern(self, ctx:CypherParser.OC_NodePatternContext):
         pass
@@ -449,6 +458,15 @@ class CypherListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by CypherParser#oC_PropertyExpression.
+    def enterOC_PropertyExpression(self, ctx:CypherParser.OC_PropertyExpressionContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_PropertyExpression.
+    def exitOC_PropertyExpression(self, ctx:CypherParser.OC_PropertyExpressionContext):
+        pass
+
+
     # Enter a parse tree produced by CypherParser#oC_Expression.
     def enterOC_Expression(self, ctx:CypherParser.OC_ExpressionContext):
         pass
@@ -503,6 +521,51 @@ class CypherListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by CypherParser#oC_PartialComparisonExpression.
+    def enterOC_PartialComparisonExpression(self, ctx:CypherParser.OC_PartialComparisonExpressionContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_PartialComparisonExpression.
+    def exitOC_PartialComparisonExpression(self, ctx:CypherParser.OC_PartialComparisonExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_StringListNullPredicateExpression.
+    def enterOC_StringListNullPredicateExpression(self, ctx:CypherParser.OC_StringListNullPredicateExpressionContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_StringListNullPredicateExpression.
+    def exitOC_StringListNullPredicateExpression(self, ctx:CypherParser.OC_StringListNullPredicateExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_StringPredicateExpression.
+    def enterOC_StringPredicateExpression(self, ctx:CypherParser.OC_StringPredicateExpressionContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_StringPredicateExpression.
+    def exitOC_StringPredicateExpression(self, ctx:CypherParser.OC_StringPredicateExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_ListPredicateExpression.
+    def enterOC_ListPredicateExpression(self, ctx:CypherParser.OC_ListPredicateExpressionContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_ListPredicateExpression.
+    def exitOC_ListPredicateExpression(self, ctx:CypherParser.OC_ListPredicateExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_NullPredicateExpression.
+    def enterOC_NullPredicateExpression(self, ctx:CypherParser.OC_NullPredicateExpressionContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_NullPredicateExpression.
+    def exitOC_NullPredicateExpression(self, ctx:CypherParser.OC_NullPredicateExpressionContext):
+        pass
+
+
     # Enter a parse tree produced by CypherParser#oC_AddOrSubtractExpression.
     def enterOC_AddOrSubtractExpression(self, ctx:CypherParser.OC_AddOrSubtractExpressionContext):
         pass
@@ -539,12 +602,12 @@ class CypherListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by CypherParser#oC_StringListNullOperatorExpression.
-    def enterOC_StringListNullOperatorExpression(self, ctx:CypherParser.OC_StringListNullOperatorExpressionContext):
+    # Enter a parse tree produced by CypherParser#oC_NonArithmeticOperatorExpression.
+    def enterOC_NonArithmeticOperatorExpression(self, ctx:CypherParser.OC_NonArithmeticOperatorExpressionContext):
         pass
 
-    # Exit a parse tree produced by CypherParser#oC_StringListNullOperatorExpression.
-    def exitOC_StringListNullOperatorExpression(self, ctx:CypherParser.OC_StringListNullOperatorExpressionContext):
+    # Exit a parse tree produced by CypherParser#oC_NonArithmeticOperatorExpression.
+    def exitOC_NonArithmeticOperatorExpression(self, ctx:CypherParser.OC_NonArithmeticOperatorExpressionContext):
         pass
 
 
@@ -557,30 +620,12 @@ class CypherListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by CypherParser#oC_StringOperatorExpression.
-    def enterOC_StringOperatorExpression(self, ctx:CypherParser.OC_StringOperatorExpressionContext):
+    # Enter a parse tree produced by CypherParser#oC_PropertyLookup.
+    def enterOC_PropertyLookup(self, ctx:CypherParser.OC_PropertyLookupContext):
         pass
 
-    # Exit a parse tree produced by CypherParser#oC_StringOperatorExpression.
-    def exitOC_StringOperatorExpression(self, ctx:CypherParser.OC_StringOperatorExpressionContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_NullOperatorExpression.
-    def enterOC_NullOperatorExpression(self, ctx:CypherParser.OC_NullOperatorExpressionContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_NullOperatorExpression.
-    def exitOC_NullOperatorExpression(self, ctx:CypherParser.OC_NullOperatorExpressionContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_PropertyOrLabelsExpression.
-    def enterOC_PropertyOrLabelsExpression(self, ctx:CypherParser.OC_PropertyOrLabelsExpressionContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_PropertyOrLabelsExpression.
-    def exitOC_PropertyOrLabelsExpression(self, ctx:CypherParser.OC_PropertyOrLabelsExpressionContext):
+    # Exit a parse tree produced by CypherParser#oC_PropertyLookup.
+    def exitOC_PropertyLookup(self, ctx:CypherParser.OC_PropertyLookupContext):
         pass
 
 
@@ -593,57 +638,48 @@ class CypherListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by CypherParser#oC_Literal.
-    def enterOC_Literal(self, ctx:CypherParser.OC_LiteralContext):
+    # Enter a parse tree produced by CypherParser#oC_CaseExpression.
+    def enterOC_CaseExpression(self, ctx:CypherParser.OC_CaseExpressionContext):
         pass
 
-    # Exit a parse tree produced by CypherParser#oC_Literal.
-    def exitOC_Literal(self, ctx:CypherParser.OC_LiteralContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_BooleanLiteral.
-    def enterOC_BooleanLiteral(self, ctx:CypherParser.OC_BooleanLiteralContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_BooleanLiteral.
-    def exitOC_BooleanLiteral(self, ctx:CypherParser.OC_BooleanLiteralContext):
+    # Exit a parse tree produced by CypherParser#oC_CaseExpression.
+    def exitOC_CaseExpression(self, ctx:CypherParser.OC_CaseExpressionContext):
         pass
 
 
-    # Enter a parse tree produced by CypherParser#oC_ListLiteral.
-    def enterOC_ListLiteral(self, ctx:CypherParser.OC_ListLiteralContext):
+    # Enter a parse tree produced by CypherParser#oC_CaseAlternative.
+    def enterOC_CaseAlternative(self, ctx:CypherParser.OC_CaseAlternativeContext):
         pass
 
-    # Exit a parse tree produced by CypherParser#oC_ListLiteral.
-    def exitOC_ListLiteral(self, ctx:CypherParser.OC_ListLiteralContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_PartialComparisonExpression.
-    def enterOC_PartialComparisonExpression(self, ctx:CypherParser.OC_PartialComparisonExpressionContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_PartialComparisonExpression.
-    def exitOC_PartialComparisonExpression(self, ctx:CypherParser.OC_PartialComparisonExpressionContext):
+    # Exit a parse tree produced by CypherParser#oC_CaseAlternative.
+    def exitOC_CaseAlternative(self, ctx:CypherParser.OC_CaseAlternativeContext):
         pass
 
 
-    # Enter a parse tree produced by CypherParser#oC_ParenthesizedExpression.
-    def enterOC_ParenthesizedExpression(self, ctx:CypherParser.OC_ParenthesizedExpressionContext):
+    # Enter a parse tree produced by CypherParser#oC_ListComprehension.
+    def enterOC_ListComprehension(self, ctx:CypherParser.OC_ListComprehensionContext):
         pass
 
-    # Exit a parse tree produced by CypherParser#oC_ParenthesizedExpression.
-    def exitOC_ParenthesizedExpression(self, ctx:CypherParser.OC_ParenthesizedExpressionContext):
+    # Exit a parse tree produced by CypherParser#oC_ListComprehension.
+    def exitOC_ListComprehension(self, ctx:CypherParser.OC_ListComprehensionContext):
         pass
 
 
-    # Enter a parse tree produced by CypherParser#oC_RelationshipsPattern.
-    def enterOC_RelationshipsPattern(self, ctx:CypherParser.OC_RelationshipsPatternContext):
+    # Enter a parse tree produced by CypherParser#oC_PatternComprehension.
+    def enterOC_PatternComprehension(self, ctx:CypherParser.OC_PatternComprehensionContext):
         pass
 
-    # Exit a parse tree produced by CypherParser#oC_RelationshipsPattern.
-    def exitOC_RelationshipsPattern(self, ctx:CypherParser.OC_RelationshipsPatternContext):
+    # Exit a parse tree produced by CypherParser#oC_PatternComprehension.
+    def exitOC_PatternComprehension(self, ctx:CypherParser.OC_PatternComprehensionContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_Quantifier.
+    def enterOC_Quantifier(self, ctx:CypherParser.OC_QuantifierContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_Quantifier.
+    def exitOC_Quantifier(self, ctx:CypherParser.OC_QuantifierContext):
         pass
 
 
@@ -653,6 +689,24 @@ class CypherListener(ParseTreeListener):
 
     # Exit a parse tree produced by CypherParser#oC_FilterExpression.
     def exitOC_FilterExpression(self, ctx:CypherParser.OC_FilterExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_PatternPredicate.
+    def enterOC_PatternPredicate(self, ctx:CypherParser.OC_PatternPredicateContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_PatternPredicate.
+    def exitOC_PatternPredicate(self, ctx:CypherParser.OC_PatternPredicateContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_ParenthesizedExpression.
+    def enterOC_ParenthesizedExpression(self, ctx:CypherParser.OC_ParenthesizedExpressionContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_ParenthesizedExpression.
+    def exitOC_ParenthesizedExpression(self, ctx:CypherParser.OC_ParenthesizedExpressionContext):
         pass
 
 
@@ -737,51 +791,6 @@ class CypherListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by CypherParser#oC_ListComprehension.
-    def enterOC_ListComprehension(self, ctx:CypherParser.OC_ListComprehensionContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_ListComprehension.
-    def exitOC_ListComprehension(self, ctx:CypherParser.OC_ListComprehensionContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_PatternComprehension.
-    def enterOC_PatternComprehension(self, ctx:CypherParser.OC_PatternComprehensionContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_PatternComprehension.
-    def exitOC_PatternComprehension(self, ctx:CypherParser.OC_PatternComprehensionContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_PropertyLookup.
-    def enterOC_PropertyLookup(self, ctx:CypherParser.OC_PropertyLookupContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_PropertyLookup.
-    def exitOC_PropertyLookup(self, ctx:CypherParser.OC_PropertyLookupContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_CaseExpression.
-    def enterOC_CaseExpression(self, ctx:CypherParser.OC_CaseExpressionContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_CaseExpression.
-    def exitOC_CaseExpression(self, ctx:CypherParser.OC_CaseExpressionContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_CaseAlternative.
-    def enterOC_CaseAlternative(self, ctx:CypherParser.OC_CaseAlternativeContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_CaseAlternative.
-    def exitOC_CaseAlternative(self, ctx:CypherParser.OC_CaseAlternativeContext):
-        pass
-
-
     # Enter a parse tree produced by CypherParser#oC_Variable.
     def enterOC_Variable(self, ctx:CypherParser.OC_VariableContext):
         pass
@@ -791,48 +800,30 @@ class CypherListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by CypherParser#oC_Literal.
+    def enterOC_Literal(self, ctx:CypherParser.OC_LiteralContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_Literal.
+    def exitOC_Literal(self, ctx:CypherParser.OC_LiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_BooleanLiteral.
+    def enterOC_BooleanLiteral(self, ctx:CypherParser.OC_BooleanLiteralContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_BooleanLiteral.
+    def exitOC_BooleanLiteral(self, ctx:CypherParser.OC_BooleanLiteralContext):
+        pass
+
+
     # Enter a parse tree produced by CypherParser#oC_NumberLiteral.
     def enterOC_NumberLiteral(self, ctx:CypherParser.OC_NumberLiteralContext):
         pass
 
     # Exit a parse tree produced by CypherParser#oC_NumberLiteral.
     def exitOC_NumberLiteral(self, ctx:CypherParser.OC_NumberLiteralContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_MapLiteral.
-    def enterOC_MapLiteral(self, ctx:CypherParser.OC_MapLiteralContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_MapLiteral.
-    def exitOC_MapLiteral(self, ctx:CypherParser.OC_MapLiteralContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_Parameter.
-    def enterOC_Parameter(self, ctx:CypherParser.OC_ParameterContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_Parameter.
-    def exitOC_Parameter(self, ctx:CypherParser.OC_ParameterContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_PropertyExpression.
-    def enterOC_PropertyExpression(self, ctx:CypherParser.OC_PropertyExpressionContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_PropertyExpression.
-    def exitOC_PropertyExpression(self, ctx:CypherParser.OC_PropertyExpressionContext):
-        pass
-
-
-    # Enter a parse tree produced by CypherParser#oC_PropertyKeyName.
-    def enterOC_PropertyKeyName(self, ctx:CypherParser.OC_PropertyKeyNameContext):
-        pass
-
-    # Exit a parse tree produced by CypherParser#oC_PropertyKeyName.
-    def exitOC_PropertyKeyName(self, ctx:CypherParser.OC_PropertyKeyNameContext):
         pass
 
 
@@ -851,6 +842,42 @@ class CypherListener(ParseTreeListener):
 
     # Exit a parse tree produced by CypherParser#oC_DoubleLiteral.
     def exitOC_DoubleLiteral(self, ctx:CypherParser.OC_DoubleLiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_ListLiteral.
+    def enterOC_ListLiteral(self, ctx:CypherParser.OC_ListLiteralContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_ListLiteral.
+    def exitOC_ListLiteral(self, ctx:CypherParser.OC_ListLiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_MapLiteral.
+    def enterOC_MapLiteral(self, ctx:CypherParser.OC_MapLiteralContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_MapLiteral.
+    def exitOC_MapLiteral(self, ctx:CypherParser.OC_MapLiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_PropertyKeyName.
+    def enterOC_PropertyKeyName(self, ctx:CypherParser.OC_PropertyKeyNameContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_PropertyKeyName.
+    def exitOC_PropertyKeyName(self, ctx:CypherParser.OC_PropertyKeyNameContext):
+        pass
+
+
+    # Enter a parse tree produced by CypherParser#oC_Parameter.
+    def enterOC_Parameter(self, ctx:CypherParser.OC_ParameterContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#oC_Parameter.
+    def exitOC_Parameter(self, ctx:CypherParser.OC_ParameterContext):
         pass
 
 

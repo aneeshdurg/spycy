@@ -49,8 +49,6 @@ class CypherExecutor:
             nstr = number.getText()
             if (int_lit := number.oC_IntegerLiteral()) and 'e' not in nstr:
                 dtype = 'int64'
-                if int_lit.OctalInteger():
-                    nstr = '0o' + nstr[1:]
             value = eval(nstr)
             if math.isinf(value):
                 raise Exception("FloatingPointOverflow")
@@ -100,68 +98,8 @@ class CypherExecutor:
         operation = expr.children[0].getText()
         raise AssertionError(f"Operation {operation} unsupported")
 
-    def _evaluate_prop_or_labels(self, expr:
-            CypherParser.OC_PropertyOrLabelsExpressionContext) -> pd.Series:
-        atom = expr.oC_Atom()
-        assert atom
-        lhs = self._evaluate_atom(atom)
-
-        prop_lookups = expr.oC_PropertyLookup()
-        if prop_lookups:
-            assert len(prop_lookups) == 0, "Unsupported query - property lookups unsupported"
-
-        node_labels = expr.oC_NodeLabels()
-        if node_labels:
-            assert len(node_labels) == 0, "Unsupported query - lables unsupported"
-        return lhs
-
-    def _evaluate_string_op(self, lhs: pd.Series, expr:
-            CypherParser.OC_StringOperatorExpressionContext) -> pd.Series:
-        is_startswith = False
-        is_endswith = False
-        is_contains = False
-        assert expr.children
-        for child in expr.children:
-            if child.getText().lower() == "starts":
-                is_startswith = True
-                break
-            if child.getText().lower() == "ends":
-                is_endswith = True
-                break
-            if child.getText().lower() == "contains":
-                is_contains = True
-                break
-        prop_or_labels_expr = expr.oC_PropertyOrLabelsExpression()
-        assert prop_or_labels_expr
-        rhs = self._evaluate_prop_or_labels(prop_or_labels_expr)
-
-        def startswith(i: int, x: str):
-            rhs_e:str = rhs[i]
-            return x.startswith(rhs_e)
-        def endswith(i: int, x: str):
-            rhs_e:str = rhs[i]
-            return x.endswith(rhs_e)
-        def contains(i: int, x: str):
-            rhs_e:str = rhs[i]
-            return rhs_e in x
-        op = None
-        if is_startswith:
-            op = startswith
-        elif is_endswith:
-            op = endswith
-        elif is_contains:
-            op = contains
-        assert op
-        return pd.Series(op(i, e) for i, e in enumerate(lhs))
-
     def _evaluate_list_op(self, lhs: pd.Series, expr:
             CypherParser.OC_ListOperatorExpressionContext) -> pd.Series:
-        prop_or_labels_expr = expr.oC_PropertyOrLabelsExpression()
-        if prop_or_labels_expr:
-            rhs = self._evaluate_prop_or_labels(prop_or_labels_expr)
-            # This is an IN expression
-            return pd.Series(lhs[i] in e for i, e in enumerate(rhs))
-
         pre_range_accessor = None
         post_range_accessor = None
         start = False
@@ -192,37 +130,33 @@ class CypherExecutor:
             rhs = self._evaluate_expression(pre_range_accessor)
             return pd.Series(lhs[e] for e in rhs)
 
-    def _evaluate_null_op(self, lhs: pd.Series, expr:
-            CypherParser.OC_NullOperatorExpressionContext) -> pd.Series:
-        return lsh.apply(lambda x: x is pd.NA)
-
-    def _evaluate_string_list_null_operator(self, expr:
-            CypherParser.OC_StringListNullOperatorExpressionContext) -> pd.Series:
-        prop_or_labels_expr = expr.oC_PropertyOrLabelsExpression()
-        assert prop_or_labels_expr
-        output = self._evaluate_prop_or_labels(prop_or_labels_expr)
+    def _evaluate_non_arithmetic_operator(self, expr:
+            CypherParser.OC_NonArithmeticOperatorExpressionContext) -> pd.Series:
+        atom = expr.oC_Atom()
+        assert atom
+        lhs = self._evaluate_atom(atom)
 
         assert expr.children
         for child in expr.children[1:]:
-            if isinstance(child,
-                    CypherParser.OC_StringOperatorExpressionContext):
-                output = self._evaluate_string_op(output, child)
-            if isinstance(child,
-                    CypherParser.OC_ListOperatorExpressionContext):
-                output = self._evaluate_list_op(output, child)
-            if isinstance(child,
-                    CypherParser.OC_NullOperatorExpressionContext):
-                output = self._evaluate_null_op(output, child)
-        return output
+            if isinstance(child, CypherParser.OC_ListOperatorExpressionContext):
+                lhs = self._evaluate_list_op(lhs, child)
+
+            if isinstance(child, CypherParser.OC_PropertyLookupContext):
+                raise AssertionError("Unsupported query - property lookups unsupported")
+
+            if isinstance(child, CypherParser.OC_NodeLabelsContext):
+                raise AssertionError("Unsupported query - lables unsupported")
+        return lhs
+
 
     def _evaluate_unary_add_or_sub(self, expr:
             CypherParser.OC_UnaryAddOrSubtractExpressionContext) -> pd.Series:
         assert expr.children
         negate = expr.children[0].getText() == '-'
 
-        child = expr.oC_StringListNullOperatorExpression()
+        child = expr.oC_NonArithmeticOperatorExpression()
         assert child
-        output = self._evaluate_string_list_null_operator(child)
+        output = self._evaluate_non_arithmetic_operator(child)
         if negate:
             return -1 * output
         return output
@@ -284,19 +218,89 @@ class CypherExecutor:
                 lhs = self._evaluate_bin_op(lhs, rhs, last_op)
         return lhs
 
+    def _evaluate_string_op(self, lhs: pd.Series, expr:
+            CypherParser.OC_StringPredicateExpressionContext) -> pd.Series:
+        is_startswith = False
+        is_endswith = False
+        is_contains = False
+        assert expr.children
+        for child in expr.children:
+            if child.getText().lower() == "starts":
+                is_startswith = True
+                break
+            if child.getText().lower() == "ends":
+                is_endswith = True
+                break
+            if child.getText().lower() == "contains":
+                is_contains = True
+                break
+        add_or_sub_expr = expr.oC_AddOrSubtractExpression()
+        assert add_or_sub_expr
+        rhs = self._evaluate_add_or_subtract(add_or_sub_expr)
+
+        def startswith(i: int, x: str):
+            rhs_e:str = rhs[i]
+            return x.startswith(rhs_e)
+        def endswith(i: int, x: str):
+            rhs_e:str = rhs[i]
+            return x.endswith(rhs_e)
+        def contains(i: int, x: str):
+            rhs_e:str = rhs[i]
+            return rhs_e in x
+        op = None
+        if is_startswith:
+            op = startswith
+        elif is_endswith:
+            op = endswith
+        elif is_contains:
+            op = contains
+        assert op
+        return pd.Series(op(i, e) for i, e in enumerate(lhs))
+
+    def _evaluate_list_predicate(self, lhs: pd.Series, expr:
+            CypherParser.OC_ListPredicateExpressionContext) -> pd.Series:
+        add_or_sub_expr = expr.oC_AddOrSubtractExpression()
+        assert add_or_sub_expr
+        rhs = self._evaluate_add_or_subtract(add_or_sub_expr)
+        # This is an IN expression
+        return pd.Series(lhs[i] in e for i, e in enumerate(rhs))
+
+    def _evaluate_null_predicate(self, lhs: pd.Series, expr:
+            CypherParser.OC_NullPredicateExpressionContext) -> pd.Series:
+        return lhs.apply(lambda x: x is pd.NA)
+
+    def _evaluate_string_list_null_predicate(self, expr:
+            CypherParser.OC_StringListNullPredicateExpressionContext) -> pd.Series:
+        add_or_sub_expr = expr.oC_AddOrSubtractExpression()
+        assert add_or_sub_expr
+        output = self._evaluate_add_or_subtract(add_or_sub_expr)
+
+        assert expr.children
+        for child in expr.children[1:]:
+            if isinstance(child,
+                    CypherParser.OC_StringPredicateExpressionContext):
+                output = self._evaluate_string_op(output, child)
+            if isinstance(child,
+                    CypherParser.OC_ListPredicateExpressionContext):
+                output = self._evaluate_list_predicate(output, child)
+            if isinstance(child,
+                    CypherParser.OC_NullPredicateExpressionContext):
+                output = self._evaluate_null_predicate(output, child)
+        return output
+
     def _evaluate_comparision(self, expr: CypherParser.OC_ComparisonExpressionContext) -> pd.Series:
-        add_or_sub = expr.oC_AddOrSubtractExpression()
+        add_or_sub = expr.oC_StringListNullPredicateExpression()
         assert add_or_sub
-        lhs = self._evaluate_add_or_subtract(add_or_sub)
+        lhs = self._evaluate_string_list_null_predicate(add_or_sub)
 
         p_comps = expr.oC_PartialComparisonExpression()
         if not p_comps:
             return lhs
 
         for p_comp in p_comps:
-            rhs_expr = p_comp.oC_AddOrSubtractExpression()
+            rhs_expr = p_comp.oC_StringListNullPredicateExpression()
             assert rhs_expr
-            rhs = self._evaluate_add_or_subtract(rhs_expr)
+            rhs = self._evaluate_string_list_null_predicate(rhs_expr)
             lhs = self._evaluate_bin_op(lhs, rhs, p_comp.children[0].getText())
         return lhs
 
