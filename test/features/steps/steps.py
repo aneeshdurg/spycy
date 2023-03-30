@@ -52,23 +52,10 @@ def when_query(context):
     execute_query(context, context.text)
 
 def normalize_tck_value(value: str) -> Any:
-    if value == 'null':
-        return None
-    if value in ['true', 'false']:
-        bstr = value[0].upper() + value[1:]
-        return eval(bstr)
-
-    try:
-        return int(value)
-    except ValueError:
-        pass
-
-    try:
-        return float(value)
-    except ValueError:
-        pass
-
-    return value
+    false = False
+    true = True
+    null = None
+    return eval(value)
 
 def tck_to_records(table: Table) -> List[Dict[str, Any]]:
     records = []
@@ -79,11 +66,17 @@ def tck_to_records(table: Table) -> List[Dict[str, Any]]:
         records.append(row_obj)
     return records
 
+def normalize_pypher_value(value: Any) -> Any:
+    if value is pd.NA:
+        return None
+    elif isinstance(value, list):
+        return [normalize_pypher_value(v) for v in value]
+    return value
+
 def normalize_pypher_output(py_table: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     for row in py_table:
         for k, v in row.items():
-            if v is pd.NA:
-                row[k] = None
+            row[k] = normalize_pypher_value(v)
     return py_table
 
 @then("the result should be (ignoring element order for lists)")

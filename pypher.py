@@ -4,7 +4,7 @@ import math
 import sys
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import Any, List
 
 import pandas as pd
 
@@ -30,16 +30,21 @@ class GeneratorErrorListener(ErrorListener):
 @dataclass
 class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{' ': 0}]))
+    _use_scalar_evaluation: bool = False
 
     def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
-        rows = len(self.table)
+        rows = 1 if self._use_scalar_evaluation else len(self.table)
+        dtype: Any = None
+        value: Any = None
         if expr.getText().lower() == "null":
-            return pd.Series([pd.NA] * rows)
-        if expr.getText().lower() == "true":
-            return pd.Series([True] * rows, dtype=bool)
-        if expr.getText().lower() == "false":
-            return pd.Series([False] * rows, dtype=bool)
-        if number := expr.oC_NumberLiteral():
+            value = pd.NA
+        elif expr.getText().lower() == "true":
+            value = True
+            dtype = bool
+        elif expr.getText().lower() == "false":
+            value = False
+            dtype = bool
+        elif number := expr.oC_NumberLiteral():
             dtype = 'float64'
             nstr = number.getText()
             if (int_lit := number.oC_IntegerLiteral()) and 'e' not in nstr:
@@ -49,11 +54,24 @@ class CypherExecutor:
             value = eval(nstr)
             if math.isinf(value):
                 raise Exception("FloatingPointOverflow")
-            return pd.Series([value] * rows, dtype=dtype)
-        if expr.StringLiteral():
-            return pd.Series([eval(expr.getText())] * rows, dtype=str)
+        elif expr.StringLiteral():
+            value = eval(expr.getText())
+            dtype = str
+        elif (list_literal := expr.oC_ListLiteral()):
+            old_value = self._use_scalar_evaluation
+            self._use_scalar_evaluation = True
+            lhs = []
+            elems = list_literal.oC_Expression()
+            for list_el in elems:
+                lhs.append(self._evaluate_expression(list_el)[0])
+            self._use_scalar_evaluation = old_value
+            value = lhs
 
-        raise AssertionError('Unsupported literal type')
+        assert value is not None, "Unsupported literal type"
+        data = [value] * rows
+        if dtype:
+            return pd.Series(data, dtype=dtype)
+        return pd.Series(data)
 
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if (literal := expr.oC_Literal()):
