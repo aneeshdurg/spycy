@@ -31,17 +31,9 @@ class GeneratorErrorListener(ErrorListener):
 @dataclass
 class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{' ': 0}]))
-    _use_scalar_evaluation: bool = False
-
-    @contextmanager
-    def scalar_evaluation(self):
-        old_value = self._use_scalar_evaluation
-        self._use_scalar_evaluation = True
-        yield
-        self._use_scalar_evaluation = old_value
 
     def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
-        rows = 1 if self._use_scalar_evaluation else len(self.table)
+        rows = len(self.table)
         dtype: Any = None
         value: Any = None
         if expr.getText().lower() == "null":
@@ -64,12 +56,28 @@ class CypherExecutor:
             value = eval(expr.getText())
             dtype = str
         elif (list_literal := expr.oC_ListLiteral()):
-            with self.scalar_evaluation():
-                lhs = []
-                elems = list_literal.oC_Expression()
-                for list_el in elems:
-                    lhs.append(self._evaluate_expression(list_el)[0])
-            value = lhs
+            data = []
+            for _ in range(rows):
+                data.append([])
+            elems = list_literal.oC_Expression()
+            for list_el in elems:
+                values = self._evaluate_expression(list_el)
+                for i, l in enumerate(data):
+                    l.append(values[i])
+            return pd.Series(data)
+        elif (map_literal := expr.oC_MapLiteral()):
+            data = []
+            for _ in range(rows):
+                data.append({})
+            prop_key_names = map_literal.oC_PropertyKeyName()
+            assert prop_key_names
+            values = map_literal.oC_Expression()
+            for key_name, value_expr in zip(prop_key_names, values):
+                key = key_name.getText()
+                value = self._evaluate_expression(value_expr)
+                for i, m in enumerate(data):
+                    m[key] = value[i]
+            return pd.Series(data)
 
         assert value is not None, "Unsupported literal type"
         data = [value] * rows
@@ -116,6 +124,8 @@ class CypherExecutor:
                 if child.getText() == '[':
                     start = True
                     continue
+            elif child.getText() == ']':
+                break
             else:
                 if isinstance(child, CypherParser.OC_ExpressionContext):
                     if found_accessor:
@@ -134,7 +144,7 @@ class CypherExecutor:
         else:
             assert pre_range_accessor
             rhs = self._evaluate_expression(pre_range_accessor)
-            return pd.Series(lhs[e] for e in rhs)
+            return pd.Series(l[r] for l, r in zip(lhs, rhs))
 
     def _evaluate_non_arithmetic_operator(self, expr:
             CypherParser.OC_NonArithmeticOperatorExpressionContext) -> pd.Series:
@@ -396,7 +406,7 @@ class CypherExecutor:
         assert alias_var
         alias = alias_var.getText()
         self.table[alias] = list_column
-        self.table = self.table.explode(alias)
+        self.table = self.table.explode(alias, ignore_index=True)
 
 
     def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):
@@ -484,7 +494,7 @@ def main():
             query = f.read()
     exe = CypherExecutor()
     table = exe.exec(query)
-    print(table.to_string(index=False))
+    print(table)
 
 if __name__ == "__main__":
     main()
