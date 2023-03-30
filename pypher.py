@@ -70,13 +70,13 @@ class CypherExecutor:
             for _ in range(rows):
                 data.append({})
             prop_key_names = map_literal.oC_PropertyKeyName()
-            assert prop_key_names
-            values = map_literal.oC_Expression()
-            for key_name, value_expr in zip(prop_key_names, values):
-                key = key_name.getText()
-                value = self._evaluate_expression(value_expr)
-                for i, m in enumerate(data):
-                    m[key] = value[i]
+            if prop_key_names:
+                values = map_literal.oC_Expression()
+                for key_name, value_expr in zip(prop_key_names, values):
+                    key = key_name.getText()
+                    value = self._evaluate_expression(value_expr)
+                    for i, m in enumerate(data):
+                        m[key] = value[i]
             return pd.Series(data)
 
         assert value is not None, "Unsupported literal type"
