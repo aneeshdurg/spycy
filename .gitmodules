@@ -1,0 +1,6 @@
+[submodule "openCypher"]
+	path = openCypher
+	url = https://github.com/openCypher/openCypher
+[submodule "antlr4"]
+	path = antlr4
+	url = https://github.com/antlr/antlr4
