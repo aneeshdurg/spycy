@@ -3,6 +3,7 @@ import argparse
 import math
 import sys
 
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any, List
 
@@ -32,6 +33,13 @@ class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{' ': 0}]))
     _use_scalar_evaluation: bool = False
 
+    @contextmanager
+    def scalar_evaluation(self):
+        old_value = self._use_scalar_evaluation
+        self._use_scalar_evaluation = True
+        yield
+        self._use_scalar_evaluation = old_value
+
     def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
         rows = 1 if self._use_scalar_evaluation else len(self.table)
         dtype: Any = None
@@ -56,13 +64,11 @@ class CypherExecutor:
             value = eval(expr.getText())
             dtype = str
         elif (list_literal := expr.oC_ListLiteral()):
-            old_value = self._use_scalar_evaluation
-            self._use_scalar_evaluation = True
-            lhs = []
-            elems = list_literal.oC_Expression()
-            for list_el in elems:
-                lhs.append(self._evaluate_expression(list_el)[0])
-            self._use_scalar_evaluation = old_value
+            with self.scalar_evaluation():
+                lhs = []
+                elems = list_literal.oC_Expression()
+                for list_el in elems:
+                    lhs.append(self._evaluate_expression(list_el)[0])
             value = lhs
 
         assert value is not None, "Unsupported literal type"
@@ -82,8 +88,8 @@ class CypherExecutor:
             return self._evaluate_list_comp(list_comp)
         if (pattern_comp := expr.oC_PatternComprehension()):
             return self._evaluate_pattern_comp(pattern_comp)
-        if (rels := expr.oC_RelationshipsPattern()):
-            return self._evaluate_relationships_pattern(rels)
+        if (rels := expr.oC_Quantifier()):
+            return self._evaluate_quantifier(rels)
         if (par_expr := expr.oC_ParenthesizedExpression()):
             return self._evaluate_expression(par_expr.oC_Expression())
         if (func_call := expr.oC_FunctionInvocation()):
@@ -378,21 +384,39 @@ class CypherExecutor:
         assert not node.oC_Skip(), "Unsupported query - ORDER BY not implemented"
         assert not node.oC_Limit(), "Unsupported query - ORDER BY not implemented"
 
-    def _processReturn(self, node: CypherParser.OC_ReturnContext):
+    def _process_return(self, node: CypherParser.OC_ReturnContext):
         body = node.oC_ProjectionBody()
         assert body
         self._processProjectionBody(body)
 
-    def _processQuery(self, node: CypherParser.OC_SinglePartQueryContext):
+    def _process_unwind(self, node: CypherParser.OC_UnwindContext):
+        list_expr = node.oC_Expression()
+        list_column = self._evaluate_expression(list_expr)
+        alias_var = node.oC_Variable()
+        assert alias_var
+        alias = alias_var.getText()
+        self.table[alias] = list_column
+        self.table = self.table.explode(alias)
+
+
+    def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):
+        assert not node.oC_Match(), "Unsupported query - MATCH not implemented"
+        assert not node.oC_InQueryCall(), "Unsupported query - CALL not implemented"
+
+        if unwind := node.oC_Unwind():
+            self._process_unwind(unwind)
+
+    def _process_single_part_query(self, node: CypherParser.OC_SinglePartQueryContext):
         if hasType(node, CypherParser.OC_UpdatingClauseContext):
             raise AssertionError("Unsupported query - updating clauses not implemented")
         reading_clauses = node.oC_ReadingClause()
         if reading_clauses and len(reading_clauses):
-            raise AssertionError("Unsupported query - readling clauses not implemented")
+            for clause in reading_clauses:
+                self._process_reading_clause(clause)
 
         return_ = node.oC_Return()
         assert return_
-        self._processReturn(return_)
+        self._process_return(return_)
 
     def _getAST(self, query: str):
         error_listener = GeneratorErrorListener()
@@ -439,7 +463,7 @@ class CypherExecutor:
         single_query = regular_query.oC_SingleQuery()
         if single_query.oC_MultiPartQuery():
             raise AssertionError("Unsupported query - multi part query not implemented")
-        self._processQuery(single_query.oC_SinglePartQuery())
+        self._process_single_part_query(single_query.oC_SinglePartQuery())
 
         return self.table
 
@@ -460,7 +484,7 @@ def main():
             query = f.read()
     exe = CypherExecutor()
     table = exe.exec(query)
-    print(table)
+    print(table.to_string(index=False))
 
 if __name__ == "__main__":
     main()
