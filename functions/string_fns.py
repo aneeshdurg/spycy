@@ -2,6 +2,7 @@ from typing import List
 
 import pandas as pd
 
+
 def left(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("left is unimplemented")
 
@@ -49,17 +50,18 @@ def toUpper(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
 def trim(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("trim is unimplemented")
 
+
 fn_map = {
-        "left": left,
-        "lTrim": lTrim,
-        "replace": replace,
-        "reverse": reverse,
-        "right": right,
-        "rTrim": rTrim,
-        "split": split,
-        "substring": substring,
-        "toLower": toLower,
-        "toString": toString,
-        "toUpper": toUpper,
-        "trim": trim,
+    "left": left,
+    "lTrim": lTrim,
+    "replace": replace,
+    "reverse": reverse,
+    "right": right,
+    "rTrim": rTrim,
+    "split": split,
+    "substring": substring,
+    "toLower": toLower,
+    "toString": toString,
+    "toUpper": toUpper,
+    "trim": trim,
 }

@@ -2,3 +2,6 @@
 exclude = ["**/__pycache__"]
 pythonVersion = "3.9"
 pythonPlatform = "Linux"
+
+[tool.isort]
+profile = "black"

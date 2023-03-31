@@ -2,6 +2,7 @@ from typing import List
 
 import pandas as pd
 
+
 def acos(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("acos is unimplemented")
 
@@ -45,16 +46,17 @@ def sin(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
 def tan(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("tan is unimplemented")
 
+
 fn_map = {
-        "acos": acos,
-        "asin": asin,
-        "atan": atan,
-        "atan2": atan2,
-        "cos": cos,
-        "cot": cot,
-        "degrees": degrees,
-        "pi": pi,
-        "radians": radians,
-        "sin": sin,
-        "tan": tan,
+    "acos": acos,
+    "asin": asin,
+    "atan": atan,
+    "atan2": atan2,
+    "cos": cos,
+    "cot": cot,
+    "degrees": degrees,
+    "pi": pi,
+    "radians": radians,
+    "sin": sin,
+    "tan": tan,
 }

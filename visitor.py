@@ -14,6 +14,7 @@ def visitor(ctx, f):
 
 def hasType(ctx, type_):
     found_merge = False
+
     def helper(ctx):
         nonlocal found_merge
         if isinstance(ctx, type_):
@@ -27,6 +28,7 @@ def hasType(ctx, type_):
 
 def getType(ctx, type_):
     ctxs = []
+
     def helper(ctx):
         nonlocal ctxs
         if isinstance(ctx, type_):

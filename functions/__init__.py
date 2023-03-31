@@ -2,14 +2,16 @@ from typing import List
 
 import pandas as pd
 
-from . import aggregation_fns
-from . import list_fns
-from . import logarithmic_fns
-from . import numeric_fns
-from . import predicate_fns
-from . import scalar_fns
-from . import string_fns
-from . import trignometric_fns
+from . import (
+    aggregation_fns,
+    list_fns,
+    logarithmic_fns,
+    numeric_fns,
+    predicate_fns,
+    scalar_fns,
+    string_fns,
+    trignometric_fns,
+)
 
 fn_maps = [
     predicate_fns.fn_map,
@@ -22,7 +24,10 @@ fn_maps = [
     string_fns.fn_map,
 ]
 
-def function_registry(name: str, params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+
+def function_registry(
+    name: str, params: List[pd.Series], table: pd.DataFrame
+) -> pd.Series:
     for fn_map in fn_maps:
         if fn := fn_map.get(name, None):
             return fn(params, table)

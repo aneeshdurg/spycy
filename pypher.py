@@ -2,35 +2,33 @@
 import argparse
 import math
 import sys
-
-from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, List
+from typing import Any
 
 import pandas as pd
-
-from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 
-# Generated imports
-
+from antlr4 import *
+from functions import function_registry
 from gen.CypherLexer import CypherLexer
 from gen.CypherParser import CypherParser
-
-# Module imports
-from functions import function_registry
 from visitor import hasType
+
 
 @dataclass
 class GeneratorErrorListener(ErrorListener):
     errors_caught: int = 0
+
     def syntaxError(self, recognizer, offendingSymbol, line, col, msg, e):
-        print("Syntax error at line {} col {}: {}".format(line, col, msg), file=sys.stderr)
+        print(
+            "Syntax error at line {} col {}: {}".format(line, col, msg), file=sys.stderr
+        )
         self.errors_caught += 1
+
 
 @dataclass
 class CypherExecutor:
-    table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{' ': 0}]))
+    table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{" ": 0}]))
 
     def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
         rows = len(self.table)
@@ -45,17 +43,17 @@ class CypherExecutor:
             value = False
             dtype = bool
         elif number := expr.oC_NumberLiteral():
-            dtype = 'float64'
+            dtype = "float64"
             nstr = number.getText()
-            if (int_lit := number.oC_IntegerLiteral()) and 'e' not in nstr:
-                dtype = 'int64'
+            if (int_lit := number.oC_IntegerLiteral()) and "e" not in nstr:
+                dtype = "int64"
             value = eval(nstr)
             if math.isinf(value):
                 raise Exception("FloatingPointOverflow")
         elif expr.StringLiteral():
             value = eval(expr.getText())
             dtype = str
-        elif (list_literal := expr.oC_ListLiteral()):
+        elif (list_literal := expr.oC_ListLiteral()) :
             data = []
             for _ in range(rows):
                 data.append([])
@@ -65,7 +63,7 @@ class CypherExecutor:
                 for i, l in enumerate(data):
                     l.append(values[i])
             return pd.Series(data)
-        elif (map_literal := expr.oC_MapLiteral()):
+        elif (map_literal := expr.oC_MapLiteral()) :
             data = []
             for _ in range(rows):
                 data.append({})
@@ -85,7 +83,9 @@ class CypherExecutor:
             return pd.Series(data, dtype=dtype)
         return pd.Series(data)
 
-    def _evaluate_function_invocation(self, expr: CypherParser.OC_FunctionInvocationContext) -> pd.Series:
+    def _evaluate_function_invocation(
+        self, expr: CypherParser.OC_FunctionInvocationContext
+    ) -> pd.Series:
         fnname = expr.oC_FunctionName()
         assert fnname
         fnname = fnname.getText()
@@ -102,25 +102,25 @@ class CypherExecutor:
         return function_registry(fnname, params, self.table)
 
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
-        if (literal := expr.oC_Literal()):
+        if (literal := expr.oC_Literal()) :
             return self._evaluate_literal(literal)
-        if (parameter := expr.oC_Parameter()):
+        if (parameter := expr.oC_Parameter()) :
             return self._evaluate_parameter(parameter)
-        if (case_ := expr.oC_CaseExpression()):
+        if (case_ := expr.oC_CaseExpression()) :
             return self._evaluate_case(case_)
-        if (list_comp := expr.oC_ListComprehension()):
+        if (list_comp := expr.oC_ListComprehension()) :
             return self._evaluate_list_comp(list_comp)
-        if (pattern_comp := expr.oC_PatternComprehension()):
+        if (pattern_comp := expr.oC_PatternComprehension()) :
             return self._evaluate_pattern_comp(pattern_comp)
-        if (rels := expr.oC_Quantifier()):
+        if (rels := expr.oC_Quantifier()) :
             return self._evaluate_quantifier(rels)
-        if (par_expr := expr.oC_ParenthesizedExpression()):
+        if (par_expr := expr.oC_ParenthesizedExpression()) :
             return self._evaluate_expression(par_expr.oC_Expression())
-        if (func_call := expr.oC_FunctionInvocation()):
+        if (func_call := expr.oC_FunctionInvocation()) :
             return self._evaluate_function_invocation(func_call)
-        if (existential_subquery := expr.oC_ExistentialSubquery()):
+        if (existential_subquery := expr.oC_ExistentialSubquery()) :
             return self._evaluate_existential_subquery(existential_subquery)
-        if (variable := expr.oC_Variable()):
+        if (variable := expr.oC_Variable()) :
             # assert not variable.EscapedSymbolicName(), "Unsupported query - variable in `` unsupported"
             return self.table[variable.getText()]
 
@@ -128,8 +128,9 @@ class CypherExecutor:
         operation = expr.children[0].getText()
         raise AssertionError(f"Operation {operation} unsupported")
 
-    def _evaluate_list_op(self, lhs: pd.Series, expr:
-            CypherParser.OC_ListOperatorExpressionContext) -> pd.Series:
+    def _evaluate_list_op(
+        self, lhs: pd.Series, expr: CypherParser.OC_ListOperatorExpressionContext
+    ) -> pd.Series:
         pre_range_accessor = None
         post_range_accessor = None
         start = False
@@ -137,10 +138,10 @@ class CypherExecutor:
         assert expr.children
         for child in expr.children:
             if not start:
-                if child.getText() == '[':
+                if child.getText() == "[":
                     start = True
                     continue
-            elif child.getText() == ']':
+            elif child.getText() == "]":
                 break
             else:
                 if isinstance(child, CypherParser.OC_ExpressionContext):
@@ -156,14 +157,17 @@ class CypherExecutor:
             if pre_range_accessor and post_range_accessor:
                 pre_eval = self._evaluate_expression(pre_range_accessor)
                 post_eval = self._evaluate_expression(post_range_accessor)
-                return pd.Series(e[pre_eval[i] : post_eval[i]]  for i, e in enumerate(lhs))
+                return pd.Series(
+                    e[pre_eval[i] : post_eval[i]] for i, e in enumerate(lhs)
+                )
         else:
             assert pre_range_accessor
             rhs = self._evaluate_expression(pre_range_accessor)
             return pd.Series(l[r] for l, r in zip(lhs, rhs))
 
-    def _evaluate_non_arithmetic_operator(self, expr:
-            CypherParser.OC_NonArithmeticOperatorExpressionContext) -> pd.Series:
+    def _evaluate_non_arithmetic_operator(
+        self, expr: CypherParser.OC_NonArithmeticOperatorExpressionContext
+    ) -> pd.Series:
         atom = expr.oC_Atom()
         assert atom
         lhs = self._evaluate_atom(atom)
@@ -180,11 +184,11 @@ class CypherExecutor:
                 raise AssertionError("Unsupported query - lables unsupported")
         return lhs
 
-
-    def _evaluate_unary_add_or_sub(self, expr:
-            CypherParser.OC_UnaryAddOrSubtractExpressionContext) -> pd.Series:
+    def _evaluate_unary_add_or_sub(
+        self, expr: CypherParser.OC_UnaryAddOrSubtractExpressionContext
+    ) -> pd.Series:
         assert expr.children
-        negate = expr.children[0].getText() == '-'
+        negate = expr.children[0].getText() == "-"
 
         child = expr.oC_NonArithmeticOperatorExpression()
         assert child
@@ -194,64 +198,69 @@ class CypherExecutor:
         return output
 
     def _evaluate_bin_op(self, lhs: pd.Series, rhs: pd.Series, op: str) -> pd.Series:
-        if op == '=':
+        if op == "=":
             return lhs == rhs
-        if op == '<>':
+        if op == "<>":
             return lhs != rhs
 
-        return eval(f'lhs {op} rhs')
+        return eval(f"lhs {op} rhs")
 
-    def _evaluate_power_of(self, expr: CypherParser.OC_PowerOfExpressionContext) -> pd.Series:
+    def _evaluate_power_of(
+        self, expr: CypherParser.OC_PowerOfExpressionContext
+    ) -> pd.Series:
         assert expr.children
         lhs = self._evaluate_unary_add_or_sub(expr.children[0])
 
-        ops = ['^']
+        ops = ["^"]
         last_op = None
         for child in expr.children[1:]:
             if (op := child.getText()) in ops:
                 last_op = op
-            elif isinstance(child,
-                    CypherParser.OC_UnaryAddOrSubtractExpressionContext):
+            elif isinstance(child, CypherParser.OC_UnaryAddOrSubtractExpressionContext):
                 assert last_op
                 rhs = self._evaluate_unary_add_or_sub(child)
                 lhs = self._evaluate_bin_op(lhs, rhs, last_op)
         return lhs
 
-    def _evaluate_multiply_divide_modulo(self, expr: CypherParser.OC_MultiplyDivideModuloExpressionContext) -> pd.Series:
+    def _evaluate_multiply_divide_modulo(
+        self, expr: CypherParser.OC_MultiplyDivideModuloExpressionContext
+    ) -> pd.Series:
         assert expr.children
         lhs = self._evaluate_power_of(expr.children[0])
 
-        ops = ['*', '/', '%']
+        ops = ["*", "/", "%"]
         last_op = None
         for child in expr.children[1:]:
             if (op := child.getText()) in ops:
                 last_op = op
-            elif isinstance(child,
-                    CypherParser.OC_PowerOfExpressionContext):
+            elif isinstance(child, CypherParser.OC_PowerOfExpressionContext):
                 assert last_op
                 rhs = self._evaluate_power_of(child)
                 lhs = self._evaluate_bin_op(lhs, rhs, last_op)
         return lhs
 
-
-    def _evaluate_add_or_subtract(self, expr: CypherParser.OC_AddOrSubtractExpressionContext) -> pd.Series:
+    def _evaluate_add_or_subtract(
+        self, expr: CypherParser.OC_AddOrSubtractExpressionContext
+    ) -> pd.Series:
         assert expr.children
         lhs = self._evaluate_multiply_divide_modulo(expr.children[0])
 
-        ops = ['+', '-']
+        ops = ["+", "-"]
         last_op = None
         for child in expr.children[1:]:
             if (op := child.getText()) in ops:
                 last_op = op
-            elif isinstance(child,
-                    CypherParser.OC_MultiplyDivideModuloExpressionContext):
+            elif isinstance(
+                child, CypherParser.OC_MultiplyDivideModuloExpressionContext
+            ):
                 assert last_op
                 rhs = self._evaluate_multiply_divide_modulo(child)
                 lhs = self._evaluate_bin_op(lhs, rhs, last_op)
         return lhs
 
-    def _evaluate_string_op(self, lhs: pd.Series, expr:
-            CypherParser.OC_StringPredicateExpressionContext) -> pd.Series:
+    def _evaluate_string_op(
+        self, lhs: pd.Series, expr: CypherParser.OC_StringPredicateExpressionContext
+    ) -> pd.Series:
         is_startswith = False
         is_endswith = False
         is_contains = False
@@ -271,14 +280,17 @@ class CypherExecutor:
         rhs = self._evaluate_add_or_subtract(add_or_sub_expr)
 
         def startswith(i: int, x: str):
-            rhs_e:str = rhs[i]
+            rhs_e: str = rhs[i]
             return x.startswith(rhs_e)
+
         def endswith(i: int, x: str):
-            rhs_e:str = rhs[i]
+            rhs_e: str = rhs[i]
             return x.endswith(rhs_e)
+
         def contains(i: int, x: str):
-            rhs_e:str = rhs[i]
+            rhs_e: str = rhs[i]
             return rhs_e in x
+
         op = None
         if is_startswith:
             op = startswith
@@ -289,38 +301,40 @@ class CypherExecutor:
         assert op
         return pd.Series(op(i, e) for i, e in enumerate(lhs))
 
-    def _evaluate_list_predicate(self, lhs: pd.Series, expr:
-            CypherParser.OC_ListPredicateExpressionContext) -> pd.Series:
+    def _evaluate_list_predicate(
+        self, lhs: pd.Series, expr: CypherParser.OC_ListPredicateExpressionContext
+    ) -> pd.Series:
         add_or_sub_expr = expr.oC_AddOrSubtractExpression()
         assert add_or_sub_expr
         rhs = self._evaluate_add_or_subtract(add_or_sub_expr)
         # This is an IN expression
         return pd.Series(lhs[i] in e for i, e in enumerate(rhs))
 
-    def _evaluate_null_predicate(self, lhs: pd.Series, expr:
-            CypherParser.OC_NullPredicateExpressionContext) -> pd.Series:
+    def _evaluate_null_predicate(
+        self, lhs: pd.Series, expr: CypherParser.OC_NullPredicateExpressionContext
+    ) -> pd.Series:
         return lhs.apply(lambda x: x is pd.NA)
 
-    def _evaluate_string_list_null_predicate(self, expr:
-            CypherParser.OC_StringListNullPredicateExpressionContext) -> pd.Series:
+    def _evaluate_string_list_null_predicate(
+        self, expr: CypherParser.OC_StringListNullPredicateExpressionContext
+    ) -> pd.Series:
         add_or_sub_expr = expr.oC_AddOrSubtractExpression()
         assert add_or_sub_expr
         output = self._evaluate_add_or_subtract(add_or_sub_expr)
 
         assert expr.children
         for child in expr.children[1:]:
-            if isinstance(child,
-                    CypherParser.OC_StringPredicateExpressionContext):
+            if isinstance(child, CypherParser.OC_StringPredicateExpressionContext):
                 output = self._evaluate_string_op(output, child)
-            if isinstance(child,
-                    CypherParser.OC_ListPredicateExpressionContext):
+            if isinstance(child, CypherParser.OC_ListPredicateExpressionContext):
                 output = self._evaluate_list_predicate(output, child)
-            if isinstance(child,
-                    CypherParser.OC_NullPredicateExpressionContext):
+            if isinstance(child, CypherParser.OC_NullPredicateExpressionContext):
                 output = self._evaluate_null_predicate(output, child)
         return output
 
-    def _evaluate_comparision(self, expr: CypherParser.OC_ComparisonExpressionContext) -> pd.Series:
+    def _evaluate_comparision(
+        self, expr: CypherParser.OC_ComparisonExpressionContext
+    ) -> pd.Series:
         add_or_sub = expr.oC_StringListNullPredicateExpression()
         assert add_or_sub
         lhs = self._evaluate_string_list_null_predicate(add_or_sub)
@@ -376,8 +390,9 @@ class CypherExecutor:
             output = output | self._evaluate_xor(xor_expr)
         return output
 
-
-    def _evaluate_expression(self, expr: CypherParser.OC_ExpressionContext) -> pd.Series:
+    def _evaluate_expression(
+        self, expr: CypherParser.OC_ExpressionContext
+    ) -> pd.Series:
         """Returns a DataFrame with a single column"""
         or_expr = expr.oC_OrExpression()
         assert or_expr
@@ -390,7 +405,7 @@ class CypherExecutor:
         proj_items = node.oC_ProjectionItems()
         assert proj_items
 
-        if proj_items.children[0].getText() == '*':
+        if proj_items.children[0].getText() == "*":
             assert len(proj_items.children) == 1
             return
 
@@ -414,8 +429,8 @@ class CypherExecutor:
         body = node.oC_ProjectionBody()
         assert body
         self._process_projection_body(body)
-        if ' ' in self.table:
-            del self.table[' ']
+        if " " in self.table:
+            del self.table[" "]
 
     def _process_where(self, node: CypherParser.OC_WhereContext):
         filter_expr = node.oC_Expression()
@@ -459,7 +474,9 @@ class CypherExecutor:
             if isinstance(child, CypherParser.OC_ReadingClauseContext):
                 self._process_reading_clause(child)
             if isinstance(child, CypherParser.OC_UpdatingClauseContext):
-                raise AssertionError("Unsupported query - updating clauses not implemented")
+                raise AssertionError(
+                    "Unsupported query - updating clauses not implemented"
+                )
             if isinstance(child, CypherParser.OC_ReturnContext):
                 self._process_return(child)
                 break
@@ -470,7 +487,9 @@ class CypherExecutor:
             if isinstance(child, CypherParser.OC_ReadingClauseContext):
                 self._process_reading_clause(child)
             if isinstance(child, CypherParser.OC_UpdatingClauseContext):
-                raise AssertionError("Unsupported query - updating clauses not implemented")
+                raise AssertionError(
+                    "Unsupported query - updating clauses not implemented"
+                )
             if isinstance(child, CypherParser.OC_WithContext):
                 self._process_with(child)
             if isinstance(child, CypherParser.OC_SinglePartQueryContext):
@@ -540,6 +559,7 @@ def main():
     exe = CypherExecutor()
     table = exe.exec(query)
     print(table)
+
 
 if __name__ == "__main__":
     main()
