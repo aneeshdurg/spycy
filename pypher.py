@@ -3,7 +3,7 @@ import argparse
 import math
 import sys
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Tuple
 
 import networkx as nx
 import pandas as pd
@@ -33,7 +33,17 @@ class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{" ": 0}]))
     graph: nx.MultiDiGraph = field(default_factory=nx.MultiDiGraph)
 
+    # TODO use _table_accesses to speed up CREATE/MATCH
     _table_accesses: int = 0
+    _returned: bool = False
+
+    @dataclass
+    class Node:
+        id_: int
+
+    @dataclass
+    class Edge:
+        id_: Tuple[int, int, int]
 
     def _evaluate_list_literal(
         self, expr: CypherParser.OC_ListLiteralContext
@@ -450,6 +460,7 @@ class CypherExecutor:
         body = node.oC_ProjectionBody()
         assert body
         self._process_projection_body(body)
+        self._returned = True
 
     def _process_where(self, node: CypherParser.OC_WhereContext):
         filter_expr = node.oC_Expression()
@@ -515,6 +526,16 @@ class CypherExecutor:
             if e.properties:
                 edge_ids_to_props[eid] = self._evaluate_map_literal(e.properties)
 
+        entities_to_data = {}
+        for n in pgraph.nodes.values():
+            if n.name:
+                assert n.name not in entities_to_data, "Duplicate name"
+                entities_to_data[n.name]  = []
+        for e in pgraph.edges.values():
+            if e.name:
+                assert e.name not in entities_to_data, "Duplicate name"
+                entities_to_data[e.name]  = []
+
         for i in range(len(self.table)):
             node_id_to_data_id = {}
             for nid, n in pgraph.nodes.items():
@@ -526,6 +547,9 @@ class CypherExecutor:
                     "properties": props[i] if props is not None else {},
                 }
                 self.graph.add_node(data_id, **data)
+                if n.name:
+                    if (data := entities_to_data.get(n.name)) is not None:
+                        data.append(CypherExecutor.Node(data_id))
 
             for eid, e in pgraph.edges.items():
                 assert not e.undirected, "Creating undirected edges not allowed"
@@ -538,7 +562,13 @@ class CypherExecutor:
                 }
                 start = node_id_to_data_id[e.start]
                 end = node_id_to_data_id[e.end]
-                self.graph.add_edge(start, end, **data)
+                key = self.graph.add_edge(start, end, **data)
+                if e.name:
+                    if (data := entities_to_data.get(e.name)) is not None:
+                        data.append(CypherExecutor.Edge((start, end, key)))
+
+        for name, data in entities_to_data.items():
+            self.table[name] = data
 
     def _process_updating_clause(self, node: CypherParser.OC_UpdatingClauseContext):
         create = node.oC_Create()
@@ -612,6 +642,9 @@ class CypherExecutor:
         else:
             self._process_single_part_query(single_query.oC_SinglePartQuery())
 
+        if not self._returned:
+            self.table = pd.DataFrame()
+
         if " " in self.table:
             del self.table[" "]
         return self.table
@@ -621,8 +654,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--query", action="store")
     parser.add_argument("--file", action="store")
+    parser.add_argument("--interactive", action="store_true")
 
     args = parser.parse_args()
+
+    exe = CypherExecutor()
+    if args.interactive:
+        import readline
+        while query := input("> "):
+            table = exe.exec(query)
+            print(table)
 
     assert args.query or args.file, "One of --query and --file is required!"
 
@@ -631,9 +672,16 @@ def main():
     else:
         with open(args.file) as f:
             query = f.read()
-    exe = CypherExecutor()
     table = exe.exec(query)
     print(table)
+    import os
+    if "DEBUG" in os.environ:
+        print(exe.graph)
+        print(exe.graph.nodes)
+        for n in exe.graph.nodes:
+            print(n, exe.graph.nodes[n])
+        for e in exe.graph.edges:
+            print(e, exe.graph.edges[e])
 
 
 if __name__ == "__main__":
