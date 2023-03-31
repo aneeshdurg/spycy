@@ -18,7 +18,7 @@ from gen.CypherLexer import CypherLexer
 from gen.CypherParser import CypherParser
 
 # Module imports
-
+from functions import function_registry
 from visitor import hasType
 
 @dataclass
@@ -84,6 +84,22 @@ class CypherExecutor:
         if dtype:
             return pd.Series(data, dtype=dtype)
         return pd.Series(data)
+
+    def _evaluate_function_invocation(self, expr: CypherParser.OC_FunctionInvocationContext) -> pd.Series:
+        fnname = expr.oC_FunctionName()
+        assert fnname
+        fnname = fnname.getText()
+
+        assert expr.children
+        is_distinct = False
+        if expr.children[2].getText().lower() == "distinct":
+            is_distinct = True
+
+        params = []
+        if param_exprs := expr.oC_Expression():
+            for param_expr in param_exprs:
+                params.append(self._evaluate_expression(param_expr))
+        return function_registry(fnname, params, self.table)
 
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if (literal := expr.oC_Literal()):
@@ -367,7 +383,7 @@ class CypherExecutor:
         assert or_expr
         return self._evaluate_or(or_expr)
 
-    def _processProjectionBody(self, node: CypherParser.OC_ProjectionBodyContext):
+    def _process_projection_body(self, node: CypherParser.OC_ProjectionBodyContext):
         is_distinct = node.DISTINCT()
         assert not is_distinct, "Unsupported query - DISTINCT not implemented"
 
@@ -397,17 +413,36 @@ class CypherExecutor:
     def _process_return(self, node: CypherParser.OC_ReturnContext):
         body = node.oC_ProjectionBody()
         assert body
-        self._processProjectionBody(body)
+        self._process_projection_body(body)
+        if ' ' in self.table:
+            del self.table[' ']
+
+    def _process_where(self, node: CypherParser.OC_WhereContext):
+        filter_expr = node.oC_Expression()
+        assert filter_expr
+        filter_col = self._evaluate_expression(filter_expr)
+        new_table = self.table[filter_col]
+        assert new_table is not None
+        self.table = new_table
+
+    def _process_with(self, node: CypherParser.OC_WithContext):
+        body = node.oC_ProjectionBody()
+        assert body
+        self._process_projection_body(body)
+
+        where = node.oC_Where()
+        if where:
+            self._process_where(where)
 
     def _process_unwind(self, node: CypherParser.OC_UnwindContext):
         list_expr = node.oC_Expression()
+        assert list_expr
         list_column = self._evaluate_expression(list_expr)
         alias_var = node.oC_Variable()
         assert alias_var
         alias = alias_var.getText()
         self.table[alias] = list_column
         self.table = self.table.explode(alias, ignore_index=True)
-
 
     def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):
         assert not node.oC_Match(), "Unsupported query - MATCH not implemented"
@@ -419,14 +454,27 @@ class CypherExecutor:
     def _process_single_part_query(self, node: CypherParser.OC_SinglePartQueryContext):
         if hasType(node, CypherParser.OC_UpdatingClauseContext):
             raise AssertionError("Unsupported query - updating clauses not implemented")
-        reading_clauses = node.oC_ReadingClause()
-        if reading_clauses and len(reading_clauses):
-            for clause in reading_clauses:
-                self._process_reading_clause(clause)
+        assert node.children
+        for child in node.children:
+            if isinstance(child, CypherParser.OC_ReadingClauseContext):
+                self._process_reading_clause(child)
+            if isinstance(child, CypherParser.OC_UpdatingClauseContext):
+                raise AssertionError("Unsupported query - updating clauses not implemented")
+            if isinstance(child, CypherParser.OC_ReturnContext):
+                self._process_return(child)
+                break
 
-        return_ = node.oC_Return()
-        assert return_
-        self._process_return(return_)
+    def _process_multi_part_query(self, node: CypherParser.OC_MultiPartQueryContext):
+        assert node.children
+        for child in node.children:
+            if isinstance(child, CypherParser.OC_ReadingClauseContext):
+                self._process_reading_clause(child)
+            if isinstance(child, CypherParser.OC_UpdatingClauseContext):
+                raise AssertionError("Unsupported query - updating clauses not implemented")
+            if isinstance(child, CypherParser.OC_WithContext):
+                self._process_with(child)
+            if isinstance(child, CypherParser.OC_SinglePartQueryContext):
+                self._process_single_part_query(child)
 
     def _getAST(self, query: str):
         error_listener = GeneratorErrorListener()
@@ -461,19 +509,16 @@ class CypherExecutor:
         assert not hasType(
             query, CypherParser.OC_UnionContext
         ), "Unsupported query - union not implemented"
-        assert not hasType(
-            query, CypherParser.OC_WhereContext
-        ), "Unsupported query - where not implemented"
-
         assert not query.oC_StandaloneCall(), "Unsupported query - call not implemented"
 
         regular_query = query.oC_RegularQuery()
         assert regular_query
 
         single_query = regular_query.oC_SingleQuery()
-        if single_query.oC_MultiPartQuery():
-            raise AssertionError("Unsupported query - multi part query not implemented")
-        self._process_single_part_query(single_query.oC_SinglePartQuery())
+        if multi_query := single_query.oC_MultiPartQuery():
+            self._process_multi_part_query(multi_query)
+        else:
+            self._process_single_part_query(single_query.oC_SinglePartQuery())
 
         return self.table
 

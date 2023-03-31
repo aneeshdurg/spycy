@@ -1,5 +1,6 @@
 from typing import Any, Dict, List
 
+import hjson
 import pandas as pd
 
 from behave import given, then, when
@@ -52,10 +53,7 @@ def when_query(context):
     execute_query(context, context.text)
 
 def normalize_tck_value(value: str) -> Any:
-    false = False
-    true = True
-    null = None
-    return eval(value)
+    return hjson.loads(value)
 
 def tck_to_records(table: Table) -> List[Dict[str, Any]]:
     records = []
@@ -71,6 +69,8 @@ def normalize_pypher_value(value: Any) -> Any:
         return None
     elif isinstance(value, list):
         return [normalize_pypher_value(v) for v in value]
+    elif isinstance(value, dict):
+        return {k: normalize_pypher_value(v) for k, v in value.items()}
     return value
 
 def normalize_pypher_output(py_table: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
