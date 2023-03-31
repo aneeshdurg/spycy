@@ -8,6 +8,7 @@ from typing import Any
 import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 
+import pattern_graph
 from antlr4 import *
 from functions import function_registry
 from gen.CypherLexer import CypherLexer
@@ -29,6 +30,8 @@ class GeneratorErrorListener(ErrorListener):
 @dataclass
 class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{" ": 0}]))
+
+    _table_accesses: int = 0
 
     def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
         rows = len(self.table)
@@ -121,6 +124,7 @@ class CypherExecutor:
         if (existential_subquery := expr.oC_ExistentialSubquery()) :
             return self._evaluate_existential_subquery(existential_subquery)
         if (variable := expr.oC_Variable()) :
+            self._table_accesses += 1
             # assert not variable.EscapedSymbolicName(), "Unsupported query - variable in `` unsupported"
             return self.table[variable.getText()]
 
@@ -466,17 +470,42 @@ class CypherExecutor:
         if unwind := node.oC_Unwind():
             self._process_unwind(unwind)
 
+    def _interpret_pattern(
+        self, pattern: CypherParser.OC_PatternContext
+    ) -> pattern_graph.Graph:
+        pgraph = pattern_graph.Graph()
+
+        pattern_part = pattern.oC_PatternPart()
+        assert pattern_part
+
+        for part in pattern_part:
+            assert (
+                not part.oC_Variable()
+            ), "Unsupported query - named paths not supported"
+            anon_part = part.oC_AnonymousPatternPart()
+            assert anon_part
+            pgraph.add_fragment(anon_part)
+        return pgraph
+
+    def _process_create(self, node: CypherParser.OC_CreateContext):
+        pattern = node.oC_Pattern()
+        assert pattern
+        pgraph = self._interpret_pattern(pattern)
+        print(pgraph)
+        assert False, "Create support WIP"
+
+    def _process_updating_clause(self, node: CypherParser.OC_UpdatingClauseContext):
+        create = node.oC_Create()
+        assert create, "Unsupported query - only CREATE updates are allowed"
+        self._process_create(create)
+
     def _process_single_part_query(self, node: CypherParser.OC_SinglePartQueryContext):
-        if hasType(node, CypherParser.OC_UpdatingClauseContext):
-            raise AssertionError("Unsupported query - updating clauses not implemented")
         assert node.children
         for child in node.children:
             if isinstance(child, CypherParser.OC_ReadingClauseContext):
                 self._process_reading_clause(child)
             if isinstance(child, CypherParser.OC_UpdatingClauseContext):
-                raise AssertionError(
-                    "Unsupported query - updating clauses not implemented"
-                )
+                self._process_updating_clause(child)
             if isinstance(child, CypherParser.OC_ReturnContext):
                 self._process_return(child)
                 break
@@ -487,9 +516,7 @@ class CypherExecutor:
             if isinstance(child, CypherParser.OC_ReadingClauseContext):
                 self._process_reading_clause(child)
             if isinstance(child, CypherParser.OC_UpdatingClauseContext):
-                raise AssertionError(
-                    "Unsupported query - updating clauses not implemented"
-                )
+                self._process_updating_clause(child)
             if isinstance(child, CypherParser.OC_WithContext):
                 self._process_with(child)
             if isinstance(child, CypherParser.OC_SinglePartQueryContext):
