@@ -196,6 +196,27 @@ class CypherExecutor:
             rhs = self._evaluate_expression(pre_range_accessor)
             return pd.Series(l[r] for l, r in zip(lhs, rhs))
 
+    def _evaluate_property_lookup(
+        self, lhs: pd.Series, expr: CypherParser.OC_PropertyLookupContext
+    ) -> pd.Series:
+        if len(lhs) == 0:
+            return pd.Series([])
+
+        el = lhs[0]
+        output = []
+        key_expr = expr.oC_PropertyKeyName()
+        assert key_expr
+        key = key_expr.getText()
+        if isinstance(el, CypherExecutor.Node):
+            for row in lhs:
+                output.append(self.graph.nodes[row.id_]["properties"][key])
+        elif isinstance(el, CypherExecutor.Edge):
+            for row in lhs:
+                output.append(self.graph.edges[row.id_]["properties"][key])
+        else:
+            raise Exception("TypeError::InvalidPropertyAccess")
+        return pd.Series(output)
+
     def _evaluate_non_arithmetic_operator(
         self, expr: CypherParser.OC_NonArithmeticOperatorExpressionContext
     ) -> pd.Series:
@@ -209,7 +230,7 @@ class CypherExecutor:
                 lhs = self._evaluate_list_op(lhs, child)
 
             if isinstance(child, CypherParser.OC_PropertyLookupContext):
-                raise AssertionError("Unsupported query - property lookups unsupported")
+                return self._evaluate_property_lookup(lhs, child)
 
             if isinstance(child, CypherParser.OC_NodeLabelsContext):
                 raise AssertionError("Unsupported query - lables unsupported")
@@ -519,6 +540,9 @@ class CypherExecutor:
         pgraph = self._interpret_pattern(pattern)
         node_ids_to_props = {}
         for nid, n in pgraph.nodes.items():
+            if n.name and n.name in self.table:
+                if n.properties or n.labels:
+                    raise Exception("SyntaxError::VariableAlreadyBound")
             if n.properties:
                 node_ids_to_props[nid] = self._evaluate_map_literal(n.properties)
         edge_ids_to_props = {}
@@ -530,11 +554,11 @@ class CypherExecutor:
         for n in pgraph.nodes.values():
             if n.name:
                 assert n.name not in entities_to_data, "Duplicate name"
-                entities_to_data[n.name]  = []
+                entities_to_data[n.name] = []
         for e in pgraph.edges.values():
             if e.name:
                 assert e.name not in entities_to_data, "Duplicate name"
-                entities_to_data[e.name]  = []
+                entities_to_data[e.name] = []
 
         for i in range(len(self.table)):
             node_id_to_data_id = {}
@@ -661,6 +685,7 @@ def main():
     exe = CypherExecutor()
     if args.interactive:
         import readline
+
         while query := input("> "):
             table = exe.exec(query)
             print(table)
@@ -675,6 +700,7 @@ def main():
     table = exe.exec(query)
     print(table)
     import os
+
     if "DEBUG" in os.environ:
         print(exe.graph)
         print(exe.graph.nodes)

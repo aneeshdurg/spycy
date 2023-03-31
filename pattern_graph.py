@@ -122,8 +122,11 @@ class Graph:
         if name_var:
             name = name_var.getText()
         nodeid = None
+        preexisting = False
         if name:
             nodeid = self._node_name_to_id.get(name)
+            if nodeid:
+                preexisting = True
         if not nodeid:
             nodeid = NodeID(len(self.nodes))
             self.nodes[nodeid] = Node(nodeid, name)
@@ -133,6 +136,8 @@ class Graph:
         node = self.nodes[nodeid]
 
         if label_el := node_el.oC_NodeLabels():
+            if preexisting:
+                raise Exception("SyntaxError::VariableAlreadyBound")
             labels = label_el.oC_NodeLabel()
             assert labels
             for label in labels:
@@ -141,6 +146,8 @@ class Graph:
                 node.add_label(lname.getText())
 
         if props := node_el.oC_Properties():
+            if preexisting:
+                raise Exception("SyntaxError::VariableAlreadyBound")
             assert not props.oC_Parameter(), "Unsupported query - parameters"
             if map_lit := props.oC_MapLiteral():
                 node.properties = map_lit

@@ -5,8 +5,6 @@ import pandas as pd
 from behave import given, then, when
 from behave.model import Table
 
-from pypher import CypherExecutor
-
 with open("openCypher/tck/graphs/binary-tree-1/binary-tree-1.cypher", "r") as f:
     BINARY_TREE1 = f.read()
 with open("openCypher/tck/graphs/binary-tree-2/binary-tree-2.cypher", "r") as f:
@@ -17,7 +15,7 @@ def execute_query(context: Any, query: str):
     context.result = None
     context.error = None
     try:
-        context.result = CypherExecutor().exec(query)
+        context.result = context.executor.exec(query)
     except Exception as e:
         context.error = e
 
@@ -46,7 +44,7 @@ def binary_tree2(context):
 @given("having executed")
 @given("after having executed")
 def setup_query(context):
-    raise Exception("Can't execute setup queries")
+    context.executor.exec(context.text)
 
 
 @given("parameters are")
@@ -110,12 +108,22 @@ def assert_results_in_any_order(context):
 
 @then("the result should be, in order")
 def assert_results_in_order(context):
-    assert not context.error
+    if context.error:
+        raise context.error
+    print(context.result, context.table.headings)
+    assert list(context.result.columns) == context.table.headings
+    print(type(context.table))
+    expected_rows = tck_to_records(context.table)
+    assert len(context.result) == len(expected_rows)
+
+    actual_rows = normalize_pypher_output(context.result.to_dict("records"))
+    for expected, actual in zip(expected_rows, actual_rows):
+        assert expected == actual, f"{expected} != {actual}"
 
 
 @then("the result should be empty")
 def assert_empty_result(context):
-    assert not context.error
+    assert not context.error, context.error
 
 
 @then("{errorType} should be raised at runtime: {error}")
