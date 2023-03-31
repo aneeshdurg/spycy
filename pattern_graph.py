@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Set
+from typing import Dict, List, Optional, Set
 
 from gen.CypherParser import CypherParser
 
@@ -57,8 +57,34 @@ class Edge:
 class Graph:
     nodes: Dict[NodeID, Node] = field(default_factory=dict)
     edges: Dict[EdgeID, Edge] = field(default_factory=dict)
+
     _node_name_to_id: Dict[str, NodeID] = field(default_factory=dict)
     _edge_name_to_id: Dict[str, EdgeID] = field(default_factory=dict)
+
+    _node_out_incident_edges: Dict[NodeID, List[EdgeID]] = field(default_factory=dict)
+    _node_in_incident_edges: Dict[NodeID, List[EdgeID]] = field(default_factory=dict)
+    _node_undir_incident_edges: Dict[NodeID, List[EdgeID]] = field(default_factory=dict)
+
+    def out_neighbors(self, node: NodeID) -> List[EdgeID]:
+        return self._node_out_incident_edges.get(node, [])
+
+    def in_neighbors(self, node: NodeID) -> List[EdgeID]:
+        return self._node_in_incident_edges.get(node, [])
+
+    def undir_neighbors(self, node: NodeID) -> List[EdgeID]:
+        return self._node_undir_incident_edges.get(node, [])
+
+    def out_degree(self, node: NodeID) -> int:
+        return len(self.out_neighbors(node))
+
+    def in_degree(self, node: NodeID) -> int:
+        return len(self.in_neighbors(node))
+
+    def undir_degree(self, node: NodeID) -> int:
+        return len(self.undir_neighbors(node))
+
+    def degree(self, node: NodeID) -> int:
+        return self.out_degree(node) + self.in_degree(node) + self.undir_degree(node)
 
     def add_relationship(
         self,
@@ -115,6 +141,22 @@ class Graph:
         if name:
             assert name not in self._edge_name_to_id
             self._edge_name_to_id[name] = edgeid
+
+        if undirected:
+            if start not in self._node_undir_incident_edges:
+                self._node_undir_incident_edges[start] = []
+            if end not in self._node_undir_incident_edges:
+                self._node_undir_incident_edges[end] = []
+            self._node_undir_incident_edges[start].append(edgeid)
+            self._node_undir_incident_edges[end].append(edgeid)
+        else:
+            if start not in self._node_out_incident_edges:
+                self._node_out_incident_edges[start] = []
+            self._node_out_incident_edges[start].append(edgeid)
+
+            if end not in self._node_in_incident_edges:
+                self._node_in_incident_edges[end] = []
+            self._node_in_incident_edges[end].append(edgeid)
 
     def add_node(self, node_el: CypherParser.OC_NodePatternContext) -> NodeID:
         name_var = node_el.oC_Variable()

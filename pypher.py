@@ -3,12 +3,13 @@ import argparse
 import math
 import sys
 from dataclasses import dataclass, field
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple
 
 import networkx as nx
 import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 
+import matcher
 import pattern_graph
 from antlr4 import *
 from functions import function_registry
@@ -202,7 +203,7 @@ class CypherExecutor:
         if len(lhs) == 0:
             return pd.Series([])
 
-        el = lhs[0]
+        el = list(lhs)[0]
         output = []
         key_expr = expr.oC_PropertyKeyName()
         assert key_expr
@@ -510,11 +511,55 @@ class CypherExecutor:
         self.table[alias] = list_column
         self.table = self.table.explode(alias, ignore_index=True)
 
+    def _process_match(self, node: CypherParser.OC_MatchContext):
+        assert not node.oC_Where(), "Unsupported query - Match Where not implemented"
+        pattern = node.oC_Pattern()
+        assert pattern
+        pgraph = self._interpret_pattern(pattern)
+        node_ids_to_props, edge_ids_to_props = self._evaluate_pattern_graph_properties(
+            pgraph
+        )
+
+        names_to_data = {}
+        for n in pgraph.nodes.values():
+            if n.name:
+                names_to_data[n.name] = []
+        for e in pgraph.edges.values():
+            if e.name:
+                names_to_data[e.name] = []
+        for i in range(len(self.table)):
+            row_to_data = {}
+            for n in pgraph.nodes.values():
+                if n.name:
+                    row_to_data[n.name] = []
+            for e in pgraph.edges.values():
+                if e.name:
+                    row_to_data[e.name] = []
+
+            m = matcher.Matcher(self.graph, pgraph)
+            results = m.match_dfs()
+            for result in results:
+                for node, data in result.node_ids_to_data_ids.items():
+                    if node_name := pgraph.nodes[node].name:
+                        row_to_data[node_name].append(CypherExecutor.Node(data))
+                for edge, data in result.edge_ids_to_data_ids.items():
+                    if edge_name := pgraph.edges[edge].name:
+                        row_to_data[edge_name].append(CypherExecutor.Edge(data))
+
+            for name, data in row_to_data.items():
+                names_to_data[name].append(data)
+
+        for name, data in names_to_data.items():
+            self.table[name] = pd.Series(data)
+        for name in names_to_data:
+            self.table = self.table.explode(name)
+
     def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):
-        assert not node.oC_Match(), "Unsupported query - MATCH not implemented"
         assert not node.oC_InQueryCall(), "Unsupported query - CALL not implemented"
 
-        if unwind := node.oC_Unwind():
+        if match_ := node.oC_Match():
+            self._process_match(match_)
+        elif unwind := node.oC_Unwind():
             self._process_unwind(unwind)
 
     def _interpret_pattern(
@@ -534,10 +579,11 @@ class CypherExecutor:
             pgraph.add_fragment(anon_part)
         return pgraph
 
-    def _process_create(self, node: CypherParser.OC_CreateContext):
-        pattern = node.oC_Pattern()
-        assert pattern
-        pgraph = self._interpret_pattern(pattern)
+    def _evaluate_pattern_graph_properties(
+        self, pgraph: pattern_graph.Graph
+    ) -> Tuple[
+        Dict[pattern_graph.NodeID, pd.Series], Dict[pattern_graph.EdgeID, pd.Series]
+    ]:
         node_ids_to_props = {}
         for nid, n in pgraph.nodes.items():
             if n.name and n.name in self.table:
@@ -549,6 +595,16 @@ class CypherExecutor:
         for eid, e in pgraph.edges.items():
             if e.properties:
                 edge_ids_to_props[eid] = self._evaluate_map_literal(e.properties)
+
+        return node_ids_to_props, edge_ids_to_props
+
+    def _process_create(self, node: CypherParser.OC_CreateContext):
+        pattern = node.oC_Pattern()
+        assert pattern
+        pgraph = self._interpret_pattern(pattern)
+        node_ids_to_props, edge_ids_to_props = self._evaluate_pattern_graph_properties(
+            pgraph
+        )
 
         entities_to_data = {}
         for n in pgraph.nodes.values():
