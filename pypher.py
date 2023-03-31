@@ -5,6 +5,7 @@ import sys
 from dataclasses import dataclass, field
 from typing import Any
 
+import networkx as nx
 import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 
@@ -30,10 +31,49 @@ class GeneratorErrorListener(ErrorListener):
 @dataclass
 class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{" ": 0}]))
+    graph: nx.MultiDiGraph = field(default_factory=nx.MultiDiGraph)
 
     _table_accesses: int = 0
 
+    def _evaluate_list_literal(
+        self, expr: CypherParser.OC_ListLiteralContext
+    ) -> pd.Series:
+        rows = len(self.table)
+        data = []
+        for _ in range(rows):
+            data.append([])
+        elems = expr.oC_Expression()
+        assert elems
+        for list_el in elems:
+            values = self._evaluate_expression(list_el)
+            for i, l in enumerate(data):
+                l.append(values[i])
+        return pd.Series(data)
+
+    def _evaluate_map_literal(
+        self, expr: CypherParser.OC_MapLiteralContext
+    ) -> pd.Series:
+        rows = len(self.table)
+        data = []
+        for _ in range(rows):
+            data.append({})
+        prop_key_names = expr.oC_PropertyKeyName()
+        if prop_key_names:
+            values = expr.oC_Expression()
+            for key_name, value_expr in zip(prop_key_names, values):
+                key = key_name.getText()
+                value = self._evaluate_expression(value_expr)
+                for i, m in enumerate(data):
+                    m[key] = value[i]
+        return pd.Series(data)
+
     def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
+        if (list_literal := expr.oC_ListLiteral()) :
+            return self._evaluate_list_literal(list_literal)
+
+        if (map_literal := expr.oC_MapLiteral()) :
+            return self._evaluate_map_literal(map_literal)
+
         rows = len(self.table)
         dtype: Any = None
         value: Any = None
@@ -56,29 +96,6 @@ class CypherExecutor:
         elif expr.StringLiteral():
             value = eval(expr.getText())
             dtype = str
-        elif (list_literal := expr.oC_ListLiteral()) :
-            data = []
-            for _ in range(rows):
-                data.append([])
-            elems = list_literal.oC_Expression()
-            for list_el in elems:
-                values = self._evaluate_expression(list_el)
-                for i, l in enumerate(data):
-                    l.append(values[i])
-            return pd.Series(data)
-        elif (map_literal := expr.oC_MapLiteral()) :
-            data = []
-            for _ in range(rows):
-                data.append({})
-            prop_key_names = map_literal.oC_PropertyKeyName()
-            if prop_key_names:
-                values = map_literal.oC_Expression()
-                for key_name, value_expr in zip(prop_key_names, values):
-                    key = key_name.getText()
-                    value = self._evaluate_expression(value_expr)
-                    for i, m in enumerate(data):
-                        m[key] = value[i]
-            return pd.Series(data)
 
         assert value is not None, "Unsupported literal type"
         data = [value] * rows
@@ -433,8 +450,6 @@ class CypherExecutor:
         body = node.oC_ProjectionBody()
         assert body
         self._process_projection_body(body)
-        if " " in self.table:
-            del self.table[" "]
 
     def _process_where(self, node: CypherParser.OC_WhereContext):
         filter_expr = node.oC_Expression()
@@ -491,8 +506,39 @@ class CypherExecutor:
         pattern = node.oC_Pattern()
         assert pattern
         pgraph = self._interpret_pattern(pattern)
-        print(pgraph)
-        assert False, "Create support WIP"
+        node_ids_to_props = {}
+        for nid, n in pgraph.nodes.items():
+            if n.properties:
+                node_ids_to_props[nid] = self._evaluate_map_literal(n.properties)
+        edge_ids_to_props = {}
+        for eid, e in pgraph.edges.items():
+            if e.properties:
+                edge_ids_to_props[eid] = self._evaluate_map_literal(e.properties)
+
+        for i in range(len(self.table)):
+            node_id_to_data_id = {}
+            for nid, n in pgraph.nodes.items():
+                data_id = len(self.graph.nodes)
+                node_id_to_data_id[nid] = data_id
+                props = node_ids_to_props.get(nid)
+                data = {
+                    "labels": n.labels,
+                    "properties": props[i] if props is not None else {},
+                }
+                self.graph.add_node(data_id, **data)
+
+            for eid, e in pgraph.edges.items():
+                assert not e.undirected, "Creating undirected edges not allowed"
+                assert len(e.types) == 1, "Created edges must have 1 type"
+                assert e.range_ is None, "Can't create variable length edge"
+                props = edge_ids_to_props.get(eid)
+                data = {
+                    "type": list(e.types)[0],
+                    "properties": props[i] if props is not None else {},
+                }
+                start = node_id_to_data_id[e.start]
+                end = node_id_to_data_id[e.end]
+                self.graph.add_edge(start, end, **data)
 
     def _process_updating_clause(self, node: CypherParser.OC_UpdatingClauseContext):
         create = node.oC_Create()
@@ -566,6 +612,8 @@ class CypherExecutor:
         else:
             self._process_single_part_query(single_query.oC_SinglePartQuery())
 
+        if " " in self.table:
+            del self.table[" "]
         return self.table
 
 
