@@ -38,6 +38,9 @@ class CypherExecutor:
     _table_accesses: int = 0
     _returned: bool = False
 
+    def reset_table(self):
+        self.table = pd.DataFrame([{" ": 0}])
+
     @dataclass
     class Node:
         id_: int
@@ -692,6 +695,8 @@ class CypherExecutor:
         return root
 
     def exec(self, query_str: str) -> pd.DataFrame:
+        self.reset_table()
+
         ast = self._getAST(query_str)
 
         root = ast.oC_Statement()
@@ -737,7 +742,8 @@ def main():
 
         while query := input("> "):
             table = exe.exec(query)
-            print(table)
+            if len(table):
+                print(table)
 
     assert args.query or args.file, "One of --query and --file is required!"
 
