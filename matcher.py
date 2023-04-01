@@ -17,6 +17,11 @@ class MatchResult:
     def contains_edge(self, edge: Tuple[int, int, int]) -> bool:
         return any(edge in edges for edges in self.edge_ids_to_data_ids.values())
 
+    def copy(self) -> "MatchResult":
+        return MatchResult(
+            self.node_ids_to_data_ids.copy(), self.edge_ids_to_data_ids.copy()
+        )
+
 
 @dataclass
 class MatchResultSet:
@@ -283,16 +288,18 @@ class Matcher:
                 if intermediate.contains_edge(data_edge):
                     continue
 
-                intermediate.node_ids_to_data_ids[nid] = data_node
-                intermediate.edge_ids_to_data_ids[picked_neighbor] = data_edge
-                if self.satisfies_edges(intermediate, nid, picked_neighbor) is None:
+                tmp = intermediate.copy()
+                tmp.node_ids_to_data_ids[nid] = data_node
+                tmp.edge_ids_to_data_ids[picked_neighbor] = data_edge
+                if self.satisfies_edges(tmp, nid, picked_neighbor) is None:
                     continue
-                self._match_dfs(iteration_order[1:], intermediate)
+                self._match_dfs(iteration_order[1:], tmp)
         else:
             # no neighbor is already matched, scan the whole graph
             for node in self.graph.nodes:
                 if self.node_matches(n, node):
-                    intermediate.node_ids_to_data_ids[nid] = node
-                    if self.satisfies_edges(intermediate, nid, None) is None:
+                    tmp = intermediate.copy()
+                    tmp.node_ids_to_data_ids[nid] = node
+                    if self.satisfies_edges(tmp, nid, None) is None:
                         continue
-                    self._match_dfs(iteration_order[1:], intermediate)
+                    self._match_dfs(iteration_order[1:], tmp)

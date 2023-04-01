@@ -213,10 +213,10 @@ class CypherExecutor:
         key = key_expr.getText()
         if isinstance(el, CypherExecutor.Node):
             for row in lhs:
-                output.append(self.graph.nodes[row.id_]["properties"][key])
+                output.append(self.graph.nodes[row.id_]["properties"].get(key, pd.NA))
         elif isinstance(el, CypherExecutor.Edge):
             for row in lhs:
-                output.append(self.graph.edges[row.id_]["properties"][key])
+                output.append(self.graph.edges[row.id_]["properties"].get(key, pd.NA))
         else:
             raise Exception("TypeError::InvalidPropertyAccess")
         return pd.Series(output)
