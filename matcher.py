@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import networkx as nx
+import pandas as pd
 
 import pattern_graph
 
@@ -13,18 +14,169 @@ class MatchResult:
         default_factory=dict
     )
 
-    def copy(self) -> "MatchResult":
-        return MatchResult(
-            self.node_ids_to_data_ids.copy(), self.edge_ids_to_data_ids.copy()
-        )
+    def contains_edge(self, edge: Tuple[int, int, int]) -> bool:
+        return any(edge in edges for edges in self.edge_ids_to_data_ids.values())
+
+
+@dataclass
+class MatchResultSet:
+    node_ids_to_data_ids: Dict[pattern_graph.NodeID, List[int]] = field(
+        default_factory=dict
+    )
+    edge_ids_to_data_ids: Dict[
+        pattern_graph.EdgeID, List[Tuple[int, int, int]]
+    ] = field(default_factory=dict)
+
+    def add(self, result: MatchResult):
+        if len(self.node_ids_to_data_ids) == 0:
+            for nid, data in result.node_ids_to_data_ids.items():
+                self.node_ids_to_data_ids[nid] = [data]
+            for eid, data in result.edge_ids_to_data_ids.items():
+                self.edge_ids_to_data_ids[eid] = [data]
+        else:
+            for nid in self.node_ids_to_data_ids:
+                self.node_ids_to_data_ids[nid].append(result.node_ids_to_data_ids[nid])
+            for eid in self.edge_ids_to_data_ids:
+                self.edge_ids_to_data_ids[eid].append(result.edge_ids_to_data_ids[eid])
 
 
 @dataclass
 class Matcher:
     graph: nx.MultiDiGraph
     pgraph: pattern_graph.Graph
+    row_id: int
+    node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series]
+    edge_ids_to_props: Dict[pattern_graph.EdgeID, pd.Series]
 
-    def match_dfs(self) -> List[MatchResult]:
+    results: MatchResultSet = field(default_factory=MatchResultSet)
+
+    def properties_match(
+        self, match_props: Dict[str, Any], data_props: Dict[str, Any]
+    ) -> bool:
+        for k, v in match_props.items():
+            if k not in data_props:
+                return False
+            if v != data_props[k]:
+                return False
+        return True
+
+    def node_matches(self, pnode: pattern_graph.Node, data_node: int) -> bool:
+        if not pnode.labels and not pnode.properties:
+            return True
+
+        node_data = self.graph.nodes[data_node]
+        if pnode.labels:
+            if not any(label in node_data["labels"] for label in pnode.labels):
+                return False
+        if pnode.properties:
+            match_props = self.node_ids_to_props[pnode.id_][self.row_id]
+            assert isinstance(match_props, dict)
+            data_props = node_data["properties"]
+            assert isinstance(data_props, dict)
+            if not self.properties_match(match_props, data_props):
+                return False
+        return True
+
+    def edge_matches(
+        self, pedge: pattern_graph.Edge, data_edge: Tuple[int, int, int]
+    ) -> bool:
+        assert pedge.range_ is None
+        if not pedge.types and not pedge.properties:
+            return True
+
+        edge_data = self.graph.edges[data_edge]
+        if pedge.types:
+            if edge_data["type"] not in pedge.types:
+                return False
+        if pedge.properties:
+            match_props = self.edge_ids_to_props[pedge.id_][self.row_id]
+            assert isinstance(match_props, dict)
+            data_props = edge_data["properties"]
+            assert isinstance(data_props, dict)
+            if not self.properties_match(match_props, data_props):
+                return False
+        return False
+
+    def find_all_edges(
+        self, source: int, dst: int, edge: pattern_graph.Edge
+    ) -> List[Tuple[int, int, int]]:
+        return []
+
+    def satisfies_edges(
+        self,
+        intermediate: MatchResult,
+        nid: pattern_graph.NodeID,
+        extended_edge: Optional[pattern_graph.EdgeID],
+    ) -> Optional[Dict[pattern_graph.EdgeID, List[Tuple[int, int, int]]]]:
+        edge_id_to_data_choices = {}
+
+        candidate = intermediate.node_ids_to_data_ids[nid]
+        for neighbor_id in self.pgraph._node_out_incident_edges.get(nid, []):
+            if neighbor_id == extended_edge:
+                continue
+            neighbor = self.pgraph.edges[neighbor_id]
+            other_n = neighbor.end
+            if other_n not in intermediate.node_ids_to_data_ids:
+                continue
+            data_id = intermediate.node_ids_to_data_ids[other_n]
+            if edges := self.find_all_edges(candidate, data_id, neighbor):
+                edge_id_to_data_choices[neighbor_id] = edges
+            else:
+                return None
+
+        for neighbor_id in self.pgraph._node_in_incident_edges.get(nid, []):
+            if neighbor_id == extended_edge:
+                continue
+            neighbor = self.pgraph.edges[neighbor_id]
+            other_n = neighbor.start
+            if other_n not in intermediate.node_ids_to_data_ids:
+                continue
+            data_id = intermediate.node_ids_to_data_ids[other_n]
+            if edges := self.find_all_edges(data_id, candidate, neighbor):
+                edge_id_to_data_choices[neighbor_id] = edges
+            else:
+                return None
+
+        for neighbor_id in self.pgraph._node_undir_incident_edges.get(nid, []):
+            if neighbor_id == extended_edge:
+                continue
+            neighbor = self.pgraph.edges[neighbor_id]
+            other_n = neighbor.end if neighbor.start == nid else neighbor.start
+            if other_n not in intermediate.node_ids_to_data_ids:
+                continue
+            data_id = intermediate.node_ids_to_data_ids[other_n]
+            edges = []
+            if out_edges := self.find_all_edges(candidate, data_id, neighbor):
+                edges += out_edges
+            if in_edges := self.find_all_edges(data_id, candidate, neighbor):
+                edges += in_edges
+            if len(edges):
+                edge_id_to_data_choices[neighbor_id] = edges
+            else:
+                return None
+
+        return edge_id_to_data_choices
+
+    def find_nodes_connected_to(
+        self,
+        source: int,
+        pedge: pattern_graph.Edge,
+        pnode: pattern_graph.Node,
+        check_out: bool,
+        check_in: bool,
+    ) -> List[Tuple[Tuple[int, int, int], int]]:
+        results = []
+        if check_out:
+            for edge in self.graph.edges(source, keys=True):
+                if self.edge_matches(pedge, edge):
+                    results.append((edge, edge[1]))
+        if check_in:
+            for edge in self.graph.in_edges(source, keys=True):
+                if self.edge_matches(pedge, edge):
+                    results.append((edge, edge[0]))
+        return results
+
+    def match_dfs(self) -> MatchResultSet:
         iteration_order = []
         while len(iteration_order) != len(self.pgraph.nodes):
             connected_node: Optional[pattern_graph.NodeID] = None
@@ -35,7 +187,8 @@ class Matcher:
             ):
                 connected_node: Optional[pattern_graph.NodeID] = None
                 degree: Optional[int] = None
-                for neighbor in neighbors:
+                for neighbor_id in neighbors:
+                    neighbor = self.pgraph.edges[neighbor_id]
                     other_n = neighbor.end if neighbor.start == node else neighbor.start
                     curr_deg = self.pgraph.degree(other_n)
                     if degree is None or curr_deg < degree:
@@ -79,53 +232,67 @@ class Matcher:
                         connected_node = curr_node
                 assert connected_node
             iteration_order.append(connected_node)
-        return_list = []
-        self._match_dfs(iteration_order, MatchResult(), return_list)
-        return return_list
+        self._match_dfs(iteration_order, MatchResult())
+        return self.results
 
     def _match_dfs(
-        self,
-        iteration_order: List[pattern_graph.NodeID],
-        intermediate: MatchResult,
-        results: List[MatchResult],
+        self, iteration_order: List[pattern_graph.NodeID], intermediate: MatchResult
     ):
         if len(iteration_order) == 0:
-            results.append(intermediate.copy())
+            self.results.add(intermediate)
             return
 
         nid = iteration_order[0]
         n = self.pgraph.nodes[nid]
 
-        found = False
+        found = None
+        picked_neighbor = None
         # Attempt to see if a neighbor is already matched
-        for neighbor in self.pgraph._node_out_incident_edges.get(nid, []):
-            if neighbor not in intermediate.node_ids_to_data_ids:
+        for neighbor_id in self.pgraph._node_out_incident_edges.get(nid, []):
+            neighbor = self.pgraph.edges[neighbor_id]
+            other_n = neighbor.end
+            if other_n not in intermediate.node_ids_to_data_ids:
                 continue
-            data_id = intermediate.node_ids_to_data_ids[neighbor]
-            for data_edge in self.graph.edges(data_id):
-                print("O", nid, neighbor, data_id, data_edge)
+            picked_neighbor = neighbor_id
+            data_id = intermediate.node_ids_to_data_ids[other_n]
+            found = self.find_nodes_connected_to(data_id, neighbor, n, True, False)
 
-        for neighbor in self.pgraph._node_in_incident_edges.get(nid, []):
-            if neighbor not in intermediate.node_ids_to_data_ids:
-                continue
-            data_id = intermediate.node_ids_to_data_ids[neighbor]
-            for data_edge in self.graph.in_edges(data_id):
-                print("I", nid, neighbor, data_id, data_edge)
+        if picked_neighbor is None:
+            for neighbor_id in self.pgraph._node_in_incident_edges.get(nid, []):
+                neighbor = self.pgraph.edges[neighbor_id]
+                other_n = neighbor.start
+                if other_n not in intermediate.node_ids_to_data_ids:
+                    continue
+                picked_neighbor = neighbor_id
+                data_id = intermediate.node_ids_to_data_ids[other_n]
+                found = self.find_nodes_connected_to(data_id, neighbor, n, False, True)
 
-        for neighbor in self.pgraph._node_undir_incident_edges.get(nid, []):
-            if neighbor not in intermediate.node_ids_to_data_ids:
-                continue
-            data_id = intermediate.node_ids_to_data_ids[neighbor]
-            for data_edge in self.graph.edges(data_id):
-                print("U", nid, neighbor, data_id, data_edge)
-            for data_edge in self.graph.in_edges(data_id):
-                print("U", nid, neighbor, data_id, data_edge)
+        if picked_neighbor is None:
+            for neighbor_id in self.pgraph._node_undir_incident_edges.get(nid, []):
+                neighbor = self.pgraph.edges[neighbor_id]
+                other_n = neighbor.end if neighbor.start == nid else neighbor.start
+                if other_n not in intermediate.node_ids_to_data_ids:
+                    continue
+                picked_neighbor = neighbor_id
+                data_id = intermediate.node_ids_to_data_ids[other_n]
+                found = self.find_nodes_connected_to(data_id, neighbor, n, True, True)
 
-        if not found:
+        if picked_neighbor is not None:
+            assert found
+            for data_edge, data_node in found:
+                if intermediate.contains_edge(data_edge):
+                    continue
+
+                intermediate.node_ids_to_data_ids[nid] = data_node
+                intermediate.edge_ids_to_data_ids[picked_neighbor] = data_edge
+                if self.satisfies_edges(intermediate, nid, picked_neighbor) is None:
+                    continue
+                self._match_dfs(iteration_order[1:], intermediate)
+        else:
             # no neighbor is already matched, scan the whole graph
             for node in self.graph.nodes:
-                if not n.labels and not n.properties:
+                if self.node_matches(n, node):
                     intermediate.node_ids_to_data_ids[nid] = node
-                    self._match_dfs(iteration_order[1:], intermediate, results)
-                else:
-                    assert False
+                    if self.satisfies_edges(intermediate, nid, None) is None:
+                        continue
+                    self._match_dfs(iteration_order[1:], intermediate)

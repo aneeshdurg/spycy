@@ -528,31 +528,24 @@ class CypherExecutor:
             if e.name:
                 names_to_data[e.name] = []
         for i in range(len(self.table)):
-            row_to_data = {}
-            for n in pgraph.nodes.values():
-                if n.name:
-                    row_to_data[n.name] = []
-            for e in pgraph.edges.values():
-                if e.name:
-                    row_to_data[e.name] = []
-
-            m = matcher.Matcher(self.graph, pgraph)
+            m = matcher.Matcher(
+                self.graph, pgraph, i, node_ids_to_props, edge_ids_to_props
+            )
             results = m.match_dfs()
-            for result in results:
-                for node, data in result.node_ids_to_data_ids.items():
-                    if node_name := pgraph.nodes[node].name:
-                        row_to_data[node_name].append(CypherExecutor.Node(data))
-                for edge, data in result.edge_ids_to_data_ids.items():
-                    if edge_name := pgraph.edges[edge].name:
-                        row_to_data[edge_name].append(CypherExecutor.Edge(data))
-
-            for name, data in row_to_data.items():
-                names_to_data[name].append(data)
+            for node, data in results.node_ids_to_data_ids.items():
+                if node_name := pgraph.nodes[node].name:
+                    names_to_data[node_name].append(
+                        [CypherExecutor.Node(d) for d in data]
+                    )
+            for edge, data in results.edge_ids_to_data_ids.items():
+                if edge_name := pgraph.edges[edge].name:
+                    names_to_data[edge_name].append(
+                        [CypherExecutor.Edge(d) for d in data]
+                    )
 
         for name, data in names_to_data.items():
             self.table[name] = pd.Series(data)
-        for name in names_to_data:
-            self.table = self.table.explode(name)
+        self.table = self.table.explode(list(names_to_data.keys()), ignore_index=True)
 
     def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):
         assert not node.oC_InQueryCall(), "Unsupported query - CALL not implemented"
