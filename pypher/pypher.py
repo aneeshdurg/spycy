@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import math
 import sys
 from dataclasses import dataclass, field
@@ -39,6 +40,27 @@ class CypherExecutor:
 
     def reset_table(self):
         self.table = pd.DataFrame([{" ": 0}])
+
+    def table_to_json(self):
+        def make_serializable(x):
+            if x is pd.NA:
+                return None
+
+            if isinstance(x, CypherExecutor.Node):
+                return {"type": "Node", "id": x.id_}
+            elif isinstance(x, CypherExecutor.Edge):
+                return {"type": "Edge", "id": x.id_}
+            elif isinstance(x, dict):
+                for k, v in x.items():
+                    x[k] = make_serializable(v)
+            elif isinstance(x, list):
+                for i, v in enumerate(x):
+                    x[i] = make_serializable(v)
+            return x
+
+        rows = self.table.to_dict("records")
+        rows = [make_serializable(row) for row in rows]
+        return json.dumps(rows)
 
     @dataclass
     class Node:
@@ -81,10 +103,10 @@ class CypherExecutor:
         return pd.Series(data)
 
     def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
-        if (list_literal := expr.oC_ListLiteral()) :
+        if list_literal := expr.oC_ListLiteral():
             return self._evaluate_list_literal(list_literal)
 
-        if (map_literal := expr.oC_MapLiteral()) :
+        if map_literal := expr.oC_MapLiteral():
             return self._evaluate_map_literal(map_literal)
 
         rows = len(self.table)
@@ -135,25 +157,25 @@ class CypherExecutor:
         return function_registry(fnname, params, self.table)
 
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
-        if (literal := expr.oC_Literal()) :
+        if literal := expr.oC_Literal():
             return self._evaluate_literal(literal)
-        if (parameter := expr.oC_Parameter()) :
+        if parameter := expr.oC_Parameter():
             return self._evaluate_parameter(parameter)
-        if (case_ := expr.oC_CaseExpression()) :
+        if case_ := expr.oC_CaseExpression():
             return self._evaluate_case(case_)
-        if (list_comp := expr.oC_ListComprehension()) :
+        if list_comp := expr.oC_ListComprehension():
             return self._evaluate_list_comp(list_comp)
-        if (pattern_comp := expr.oC_PatternComprehension()) :
+        if pattern_comp := expr.oC_PatternComprehension():
             return self._evaluate_pattern_comp(pattern_comp)
-        if (rels := expr.oC_Quantifier()) :
+        if rels := expr.oC_Quantifier():
             return self._evaluate_quantifier(rels)
-        if (par_expr := expr.oC_ParenthesizedExpression()) :
+        if par_expr := expr.oC_ParenthesizedExpression():
             return self._evaluate_expression(par_expr.oC_Expression())
-        if (func_call := expr.oC_FunctionInvocation()) :
+        if func_call := expr.oC_FunctionInvocation():
             return self._evaluate_function_invocation(func_call)
-        if (existential_subquery := expr.oC_ExistentialSubquery()) :
+        if existential_subquery := expr.oC_ExistentialSubquery():
             return self._evaluate_existential_subquery(existential_subquery)
-        if (variable := expr.oC_Variable()) :
+        if variable := expr.oC_Variable():
             self._table_accesses += 1
             # assert not variable.EscapedSymbolicName(), "Unsupported query - variable in `` unsupported"
             return self.table[variable.getText()]
@@ -753,6 +775,7 @@ def main():
             query = f.read()
     table = exe.exec(query)
     print(table)
+    print(exe.table_to_json())
     import os
 
     if "DEBUG" in os.environ:

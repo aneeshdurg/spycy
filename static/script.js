@@ -9,7 +9,7 @@ function render_table(output, table) {
 
   const row0 = table[0];
   const table_headings = []
-  for (let key of row0.keys()){
+  for (let key of Object.getOwnPropertyNames(row0)){
     const heading = document.createElement('th');
     heading.innerText = key;
     heading_row.appendChild(heading);
@@ -21,38 +21,64 @@ function render_table(output, table) {
     const content_row = document.createElement('tr');
     for (let key of table_headings) {
       const element = document.createElement('td');
-      const data = row.get(key);
-      console.log(key, data);
+      const data = row[key];
       element.innerText = JSON.stringify(data);
       content_row.appendChild(element);
     }
     output_table.appendChild(content_row);
   }
 
+  output.innerHTML = "";
   output.appendChild(output_table);
 }
 
 async function eval_cell(input, output) {
-  console.log(input.value);
-  await pyodide.runPython(`
-    exe.exec(${JSON.stringify(input.value)})
-    result = exe.table.to_dict('records')
-  `);
-  const output_table = pyodide.globals.get('result').toJs()
-  render_table(output, output_table)
+  window.stderr = []
+  try {
+    await pyodide.runPython(`
+      exe.exec(${JSON.stringify(input.value)})
+      result = exe.table_to_json()
+    `);
+    const output_table = JSON.parse(pyodide.globals.get('result'))
+    render_table(output, output_table)
+  } catch (e){
+    if (window.stderr.length) {
+      for (let msg of window.stderr) {
+        const error_msg = document.createElement('p');
+        error_msg.className = "errormsg";
+        error_msg.innerText = msg;
+        output.appendChild(error_msg);
+      }
+    }
+    const errors = document.createElement('code');
+    errors.innerText = e;
+    output.appendChild(errors);
+  }
 }
 
 function create_cell(container) {
   const input = document.createElement("textarea");
+  input.className = "cellinput";
   const output = document.createElement("div");
   const cell = document.createElement("div");
+  const count = container.childElementCount;
+  cell.id = "cell" + container.childElementCount;
+
+  cell.addEventListener('focus', () => {
+    input.focus();
+  });
   input.addEventListener('keydown', async (event) => {
     if (event.key === "Enter" && event.ctrlKey) {
       await eval_cell(input, output);
-      create_cell(container);
+      const nextid = count + 1;
+      const next_el = document.getElementById("cell" + nextid);
+      if (next_el) {
+        next_el.focus();
+      } else {
+        create_cell(container);
+      }
     }
   });
-  cell.id = "cell" + container.childElementCount;
   cell.appendChild(input);
   cell.appendChild(document.createElement("br"));
   cell.appendChild(output);
@@ -64,7 +90,6 @@ function create_cell(container) {
 
 function setup_notebook() {
   notebook = document.getElementById("notebook");
-  console.log(notebook)
   create_cell(notebook, 0);
 }
 
@@ -76,6 +101,11 @@ async function main(){
   progress.innerHTML += "Installing micropip<br>"
   await pyodide.loadPackage('micropip');
   progress.innerHTML += "Installed micropip<br>"
+
+  window.stderr = [];
+  console.warn = (x) => {
+    window.stderr.push(x);
+  };
 
   await pyodide.runPython(`
     import js

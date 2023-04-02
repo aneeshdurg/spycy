@@ -11788,7 +11788,7 @@ class CypherLexer(Lexer):
     WHITESPACE = 126
     Comment = 127
 
-    channelNames = [u"DEFAULT_TOKEN_CHANNEL", u"HIDDEN"]
+    channelNames = ["DEFAULT_TOKEN_CHANNEL", "HIDDEN"]
 
     modeNames = ["DEFAULT_MODE"]
 

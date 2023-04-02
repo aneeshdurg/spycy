@@ -8,14 +8,18 @@
         main();
       });
     </script>
+    <link rel="stylesheet" type="text/css" href="./static/style.css">
   </head>
   <body>
     <h1> pypher console </h1>
-    <div id="preload">
-      <code id="progress"></code>
-    </div>
-    <div id="loaded" style="display: none;">
-      <div id="notebook"></div>
+    <p> Input openCypher queries and use `ctrl + enter` to execute them! </p>
+    <div class="content">
+      <div id="preload" class="preload">
+        <code id="progress"></code>
+      </div>
+      <div id="loaded" style="display: none;">
+        <div id="notebook"></div>
+      </div>
     </div>
   </body>
 </html>
