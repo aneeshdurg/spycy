@@ -59,6 +59,8 @@ async function eval_cell(input, output) {
 function create_cell(container) {
   const input = document.createElement("textarea");
   input.className = "cellinput";
+  const run = document.createElement("button");
+  run.innerText = "run"
   const output = document.createElement("div");
   const cell = document.createElement("div");
   const count = container.childElementCount;
@@ -67,25 +69,34 @@ function create_cell(container) {
   cell.addEventListener('focus', () => {
     input.focus();
   });
+
+  const evaluate = async () => {
+    await eval_cell(input, output);
+    const nextid = count + 1;
+    const next_el = document.getElementById("cell" + nextid);
+    if (next_el) {
+      next_el.focus();
+    } else {
+      create_cell(container);
+    }
+  };
   input.addEventListener('keydown', async (event) => {
     if (event.key === "Enter" && event.ctrlKey) {
-      await eval_cell(input, output);
-      const nextid = count + 1;
-      const next_el = document.getElementById("cell" + nextid);
-      if (next_el) {
-        next_el.focus();
-      } else {
-        create_cell(container);
-      }
+      evaluate();
     }
   });
+  run.addEventListener('click', evaluate);
+
   cell.appendChild(input);
+  cell.appendChild(document.createElement("br"));
+  cell.appendChild(run);
   cell.appendChild(document.createElement("br"));
   cell.appendChild(output);
   cell.appendChild(document.createElement("br"));
   cell.appendChild(document.createElement("br"));
   container.appendChild(cell);
   input.focus();
+  container.scrollTop = container.scrollHeight;
 }
 
 function setup_notebook() {
@@ -123,9 +134,12 @@ async function main(){
     async def main():
       global exe
       progress.innerHTML += "Initializing python environment<br>"
-      await install(progress, "networkx")
-      await install(progress, "pandas")
-      await install(progress, "antlr4-python3-runtime")
+      imports = []
+      imports.append(install(progress, "networkx"))
+      imports.append(install(progress, "pandas"))
+      imports.append(install(progress, "antlr4-python3-runtime"))
+      for import_ in imports:
+        await import_
       progress.innerHTML += "Installing pypher<br>"
       await micropip.install("./dist/pypher_aneeshdurg-0.0.1-py3-none-any.whl", deps=True)
       progress.innerHTML += "Installed pypher<br>"
