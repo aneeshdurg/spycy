@@ -1,4 +1,4 @@
-from pypher import CypherExecutor
+from pypher.pypher import CypherExecutor
 
 
 def before_scenario(context, scenario):

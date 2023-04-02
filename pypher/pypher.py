@@ -9,13 +9,12 @@ import networkx as nx
 import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 
-import matcher
-import pattern_graph
 from antlr4 import *
-from functions import function_registry
-from gen.CypherLexer import CypherLexer
-from gen.CypherParser import CypherParser
-from visitor import hasType
+from pypher import matcher, pattern_graph
+from pypher.functions import function_registry
+from pypher.gen.CypherLexer import CypherLexer
+from pypher.gen.CypherParser import CypherParser
+from pypher.visitor import hasType
 
 
 @dataclass
