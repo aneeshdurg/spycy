@@ -27,9 +27,3 @@ python3 -m pypher --interactive
 
 pypher is still mostly unimplemented so most queries will probably error or
 return incorrect results.
-
-## TODO:
-+ Add tests
-+ Implement list/map support.
-+ Implement support for `UNWIND`
-+ Implement basic support for read only queries
