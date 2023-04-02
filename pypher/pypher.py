@@ -556,19 +556,26 @@ class CypherExecutor:
                 self.graph, pgraph, i, node_ids_to_props, edge_ids_to_props
             )
             results = m.match_dfs()
-            for node, data in results.node_ids_to_data_ids.items():
-                if node_name := pgraph.nodes[node].name:
+            for nid, pnode in pgraph.nodes.items():
+                if node_name := pnode.name:
+                    data = results.node_ids_to_data_ids.get(nid, [])
                     names_to_data[node_name].append(
                         [CypherExecutor.Node(d) for d in data]
                     )
-            for edge, data in results.edge_ids_to_data_ids.items():
-                if edge_name := pgraph.edges[edge].name:
+
+            for eid, pedge in pgraph.edges.items():
+                if edge_name := pedge.name:
+                    data = results.edge_ids_to_data_ids.get(eid, [])
                     names_to_data[edge_name].append(
                         [CypherExecutor.Edge(d) for d in data]
                     )
 
         for name, data in names_to_data.items():
-            self.table[name] = pd.Series(data)
+            self.table[name] = data
+        filter_col = []
+        for i in range(len(self.table)):
+            filter_col.append(all(len(self.table[n][i]) > 0 for n in names_to_data))
+        self.table = self.table[filter_col]
         self.table = self.table.explode(list(names_to_data.keys()), ignore_index=True)
 
     def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):

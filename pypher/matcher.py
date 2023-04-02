@@ -172,13 +172,15 @@ class Matcher:
     ) -> List[Tuple[Tuple[int, int, int], int]]:
         results = []
         if check_out:
-            for edge in self.graph.edges(source, keys=True):
-                if self.edge_matches(pedge, edge):
-                    results.append((edge, edge[1]))
-        if check_in:
+            # outgoing to self, in-coming from source
             for edge in self.graph.in_edges(source, keys=True):
                 if self.edge_matches(pedge, edge):
                     results.append((edge, edge[0]))
+        if check_in:
+            # incoming to self, out-going from source
+            for edge in self.graph.out_edges(source, keys=True):
+                if self.edge_matches(pedge, edge):
+                    results.append((edge, edge[1]))
         return results
 
     def match_dfs(self) -> MatchResultSet:
@@ -283,7 +285,7 @@ class Matcher:
                 found = self.find_nodes_connected_to(data_id, neighbor, n, True, True)
 
         if picked_neighbor is not None:
-            assert found
+            assert found is not None
             for data_edge, data_node in found:
                 if intermediate.contains_edge(data_edge):
                     continue
