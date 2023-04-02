@@ -126,20 +126,9 @@ async function main(){
     exe = None
     result = None
     import micropip
-    async def install(progress, pkg):
-      progress.innerHTML += f"Installing {pkg}<br>"
-      await micropip.install(pkg)
-      progress.innerHTML += f"Installed {pkg}<br>"
-
     async def main():
       global exe
       progress.innerHTML += "Initializing python environment<br>"
-      imports = []
-      imports.append(install(progress, "networkx"))
-      imports.append(install(progress, "pandas"))
-      imports.append(install(progress, "antlr4-python3-runtime"))
-      for import_ in imports:
-        await import_
       progress.innerHTML += "Installing pypher<br>"
       await micropip.install("./dist/pypher_aneeshdurg-0.0.1-py3-none-any.whl", deps=True)
       progress.innerHTML += "Installed pypher<br>"
