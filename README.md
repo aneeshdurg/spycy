@@ -1,10 +1,12 @@
 # PyPher
 
-PyPher is a python implementation of
-[openCypher](https://github.com/opencypher/openCypher/). The goal of `PyPher` is
-to have a simple in-memory graph database engine that is not concerned with
-performance. The ideal use-case is for testing programs that generate small
-openCypher queries, or as an alternative reference implementation.
+PyPher is a python implementation of [openCypher](https://github.com/opencypher/openCypher/).
+Try it out in your browser here: [https://aneeshdurg.me/pypher](https://aneeshdurg.me/pypher)
+
+The goal of `PyPher` is to have a simple in-memory graph database engine that is
+not concerned with performance. The ideal use-case is for testing programs that
+generate small openCypher queries, or as an alternative reference
+implementation.
 
 The long-term goals of this project include fully passing all openCypher TCK
 tests.
