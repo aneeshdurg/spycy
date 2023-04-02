@@ -13,10 +13,10 @@ tests.
 
 ```bash
 # Example usage:
-./pypher.py --query "CREATE (a {id: 'node0'})-[:X]->(b) return a"
+python3 -m pypher --query "CREATE (a {id: 'node0'})-[:X]->(b) return a"
 
 # Or interactive mode:
-./pypher.py --interactive
+python3 -m pypher --interactive
 > CREATE (a {id: 'node0'})-[:X]->(b {id: 'node1'})
 > MATCH (a)--(b) RETURN a.id, b.id
     a.id   b.id
@@ -25,9 +25,6 @@ tests.
 
 pypher is still mostly unimplemented so most queries will probably error or
 return incorrect results.
-
-## Currently supported:
-+ Simple expressions on scalars (POD scalars only)
 
 ## TODO:
 + Add tests
