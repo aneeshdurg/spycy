@@ -18,6 +18,10 @@ from pypher.gen.CypherParser import CypherParser
 from pypher.visitor import hasType
 
 
+class ExecutionError(Exception):
+    pass
+
+
 @dataclass
 class GeneratorErrorListener(ErrorListener):
     errors_caught: int = 0
@@ -127,7 +131,7 @@ class CypherExecutor:
                 dtype = "int64"
             value = eval(nstr)
             if math.isinf(value):
-                raise Exception("FloatingPointOverflow")
+                raise ExecutionError("SyntaxError::FloatingPointOverflow")
         elif expr.StringLiteral():
             value = eval(expr.getText())
             dtype = str
@@ -178,7 +182,10 @@ class CypherExecutor:
         if variable := expr.oC_Variable():
             self._table_accesses += 1
             # assert not variable.EscapedSymbolicName(), "Unsupported query - variable in `` unsupported"
-            return self.table[variable.getText()]
+            name = variable.getText()
+            if name not in self.table:
+                raise ExecutionError(f"SyntaxError::UnknownVariable {name}")
+            return self.table[name]
 
         assert expr.children
         operation = expr.children[0].getText()
@@ -239,7 +246,7 @@ class CypherExecutor:
             for row in lhs:
                 output.append(self.graph.edges[row.id_]["properties"].get(key, pd.NA))
         else:
-            raise Exception("TypeError::InvalidPropertyAccess")
+            raise ExecutionError("TypeError::InvalidPropertyAccess")
         return pd.Series(output)
 
     def _evaluate_non_arithmetic_operator(
@@ -615,7 +622,7 @@ class CypherExecutor:
         for nid, n in pgraph.nodes.items():
             if n.name and n.name in self.table:
                 if n.properties or n.labels:
-                    raise Exception("SyntaxError::VariableAlreadyBound")
+                    raise ExecutionError("SyntaxError::VariableAlreadyBound")
             if n.properties:
                 node_ids_to_props[nid] = self._evaluate_map_literal(n.properties)
         edge_ids_to_props = {}
@@ -734,7 +741,7 @@ class CypherExecutor:
         root = parser.oC_Cypher()
 
         if error_listener.errors_caught > 0:
-            raise Exception("Failed to parse query")
+            raise ExecutionError("Failed to parse query")
         return root
 
     def exec(self, query_str: str) -> pd.DataFrame:
@@ -784,9 +791,12 @@ def main():
         import readline
 
         while query := input("> "):
-            table = exe.exec(query)
-            if len(table):
-                print(table)
+            try:
+                table = exe.exec(query)
+                if len(table):
+                    print(table)
+            except ExecutionError as e:
+                print(e, file=sys.stderr)
 
     assert args.query or args.file, "One of --query and --file is required!"
 
@@ -795,9 +805,13 @@ def main():
     else:
         with open(args.file) as f:
             query = f.read()
-    table = exe.exec(query)
-    print(table)
-    print(exe.table_to_json())
+    try:
+        table = exe.exec(query)
+        print(table)
+    except ExecutionError as e:
+        print(e, file=sys.stderr)
+
+    # print(exe.table_to_json())
     import os
 
     if "DEBUG" in os.environ:
