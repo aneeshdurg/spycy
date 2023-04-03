@@ -171,7 +171,6 @@ TESTS-clauses.match.Match2.xml:[3] Matching a self-loop with an undirected relat
 TESTS-clauses.match.Match2.xml:[4] Matching a self-loop with a directed relationship pattern
 TESTS-clauses.match.Match2.xml:[5] Match relationship with inline property value
 TESTS-clauses.match.Match2.xml:[6] Match relationships with multiple types
-TESTS-clauses.match.Match2.xml:[7] Matching twice with conflicting relationship types on same relationship
 TESTS-clauses.match.Match3.xml:[11] Undirected match in self-relationship graph
 TESTS-clauses.match.Match3.xml:[12] Undirected match of self-relationship in self-relationship graph
 TESTS-clauses.match.Match3.xml:[13] Directed match on self-relationship graph

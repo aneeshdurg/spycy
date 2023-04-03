@@ -100,7 +100,7 @@ class Matcher:
             assert isinstance(data_props, dict)
             if not self.properties_match(match_props, data_props):
                 return False
-        return False
+        return True
 
     def find_all_edges(
         self, source: int, dst: int, edge: pattern_graph.Edge
