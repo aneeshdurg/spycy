@@ -37,23 +37,38 @@ async function eval_cell(input, output) {
   window.stderr = []
   try {
     await pyodide.runPython(`
-      exe.exec(${JSON.stringify(input.value)})
-      result = exe.table_to_json()
+      try:
+        exe.exec(${JSON.stringify(input.value)})
+        result = exe.table_to_json()
+      except Exception as e:
+        print(e, file=sys.stderr)
+        raise Exception from e
     `);
     const output_table = JSON.parse(pyodide.globals.get('result'))
     render_table(output, output_table)
   } catch (e){
+    const summary = document.createElement('summary');
     if (window.stderr.length) {
       for (let msg of window.stderr) {
         const error_msg = document.createElement('p');
         error_msg.className = "errormsg";
         error_msg.innerText = msg;
-        output.appendChild(error_msg);
+        summary.appendChild(error_msg);
       }
+    } else {
+      const error_msg = document.createElement('p');
+      error_msg.className = "errormsg";
+      error_msg.innerText = "UNKNOWN EXECUTION ERROR";
+      summary.appendChild(error_msg);
     }
+
+    const details = document.createElement('details');
     const errors = document.createElement('code');
     errors.innerText = e;
-    output.appendChild(errors);
+    details.appendChild(errors);
+
+    output.appendChild(summary);
+    output.appendChild(details);
   }
 }
 
@@ -121,6 +136,8 @@ async function main(){
   };
 
   await pyodide.runPython(`
+    import sys
+
     import js
     preload = js.document.getElementById("preload")
     loaded_env = js.document.getElementById("loaded")
