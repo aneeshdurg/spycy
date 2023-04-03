@@ -49,7 +49,6 @@ TESTS-clauses.call.Call6.xml:[1] Calling the same STRING procedure twice using t
 TESTS-clauses.call.Call6.xml:[2] Project procedure results between query scopes with WITH clause
 TESTS-clauses.call.Call6.xml:[3] Project procedure results between query scopes with WITH clause and rename the projection
 TESTS-clauses.create.Create1.xml:[13] Fail when creating a node that is already bound
-TESTS-clauses.create.Create2.xml:[23] Fail when creating a relationship that is already bound
 TESTS-clauses.create.Create3.xml:[11] WITH-MERGE-CREATE: A bound node should be recognized after projection with WITH + MERGE node
 TESTS-clauses.create.Create3.xml:[12] WITH-MERGE-CREATE: A bound node should be recognized after projection with WITH + MERGE pattern
 TESTS-clauses.create.Create3.xml:[13] Merge followed by multiple creates
@@ -2929,12 +2928,6 @@ TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.6
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.7
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.8
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.9
-TESTS-expressions.typeConversion.TypeConversion1.xml:[1] `toBoolean()` on booleans
-TESTS-expressions.typeConversion.TypeConversion1.xml:[2] `toBoolean()` on valid literal string
-TESTS-expressions.typeConversion.TypeConversion1.xml:[3] `toBoolean()` on variables with valid string values
-TESTS-expressions.typeConversion.TypeConversion1.xml:[4] `toBoolean()` on invalid strings
-TESTS-expressions.typeConversion.TypeConversion2.xml:[1] `toInteger()` on float
-TESTS-expressions.typeConversion.TypeConversion2.xml:[2] `toInteger()` returning null on non-numerical string
 TESTS-expressions.typeConversion.TypeConversion2.xml:[3] `toInteger()` handling mixed number types
 TESTS-expressions.typeConversion.TypeConversion2.xml:[4] `toInteger()` handling Any type
 TESTS-expressions.typeConversion.TypeConversion2.xml:[5] `toInteger()` on a list of strings

@@ -2,6 +2,8 @@ from typing import List
 
 import pandas as pd
 
+from pypher.errors import ExecutionError
+
 
 def coalesce(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     data = []
@@ -50,7 +52,26 @@ def timestamp(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
 
 
 def toBoolean(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("toBoolean unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to toBoolean")
+    arg = params[0]
+    output = []
+    for i in range(len(arg)):
+        if arg[i] is pd.NA:
+            output.append(pd.NA)
+        elif arg[i] == True or arg[i] == False:
+            # could be numpy.bool_ or bool
+            output.append(bool(arg[i]))
+        elif isinstance(arg[i], str):
+            if arg[i] == "true":
+                output.append(True)
+            elif arg[i] == "false":
+                output.append(False)
+            else:
+                output.append(pd.NA)
+        else:
+            raise ExecutionError("TypeError::toBoolean got unexpected type")
+    return pd.Series(output)
 
 
 def toFloat(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
@@ -58,7 +79,21 @@ def toFloat(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
 
 
 def toInteger(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("toInteger unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to toBoolean")
+    arg = params[0]
+    output = []
+    for i in range(len(arg)):
+        val = arg[i]
+        if val is pd.NA:
+            output.append(pd.NA)
+        elif isinstance(val, float):
+            output.append(int(val))
+        elif isinstance(val, str):
+            output.append(pd.NA)
+        else:
+            raise ExecutionError("TypeError::toInteger got unexpected type")
+    return pd.Series(output)
 
 
 def type_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
