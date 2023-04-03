@@ -1033,6 +1033,7 @@ TESTS-expressions.list.List12.xml:[3] Size of list comprehension
 TESTS-expressions.list.List12.xml:[4] Returning a list comprehension
 TESTS-expressions.list.List12.xml:[5] Using a list comprehension in a WITH
 TESTS-expressions.list.List12.xml:[6] Using a list comprehension in a WHERE
+TESTS-expressions.list.List12.xml:[7] Fail when using aggregation in list comprehension
 TESTS-expressions.list.List2.xml:[10] List slice with parameterised range
 TESTS-expressions.list.List2.xml:[11] List slice with parameterised invalid range
 TESTS-expressions.list.List2.xml:[2] List slice with implicit end

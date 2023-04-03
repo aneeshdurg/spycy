@@ -157,6 +157,54 @@ class CypherExecutor:
                 params.append(self._evaluate_expression(param_expr))
         return function_registry(fnname, params, self.table)
 
+    def _evaluate_list_comp(
+        self, expr: CypherParser.OC_ListComprehensionContext
+    ) -> pd.Series:
+        filter_expr = expr.oC_FilterExpression()
+        assert filter_expr
+        id_in_coll = filter_expr.oC_IdInColl()
+        assert id_in_coll
+        id_to_bind = id_in_coll.oC_Variable().getText()
+        coll = id_in_coll.oC_Expression()
+        column = self._evaluate_expression(coll)
+
+        where_expr = filter_expr.oC_Where()
+        if where_expr:
+            where_expr = where_expr.oC_Expression()
+        list_expr = expr.oC_Expression()
+
+        output = []
+        old_table = self.table
+        for i, row in enumerate(column):
+            current_table_row = old_table.iloc[i].copy()
+            current_table_row = pd.DataFrame(
+                [{c: current_table_row[c] for c in current_table_row.index}]
+            )
+
+            if not isinstance(row, list):
+                raise ExecutionError(
+                    "TypeError::Cannot use list comprehension on non-list type"
+                )
+            new_row = []
+            for el in row:
+                current_table_row[id_to_bind] = [el]
+                self.table = current_table_row
+
+                if where_expr:
+                    keep = self._evaluate_expression(where_expr)
+                    assert len(keep) == 1
+                    if not keep[0]:
+                        continue
+                if list_expr:
+                    new_value = self._evaluate_expression(list_expr)
+                    assert len(new_value) == 1
+                    new_row.append(new_value[0])
+                else:
+                    new_row.append(el)
+            output.append(new_row)
+        self.table = old_table
+        return pd.Series(output)
+
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if literal := expr.oC_Literal():
             return self._evaluate_literal(literal)
@@ -838,6 +886,7 @@ def main():
                     print(table)
             except ExecutionError as e:
                 print(e, file=sys.stderr)
+                print(e.traceback, file=sys.stderr)
 
     assert args.query or args.file, "One of --query and --file is required!"
 
@@ -846,11 +895,8 @@ def main():
     else:
         with open(args.file) as f:
             query = f.read()
-    try:
-        table = exe.exec(query)
-        print(table)
-    except ExecutionError as e:
-        print(e, file=sys.stderr)
+    table = exe.exec(query)
+    print(table)
 
     # print(exe.table_to_json())
     import os
