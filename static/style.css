@@ -21,6 +21,7 @@
 .errormsg {
   font-family: monospaced;
   background: #f7da79;
+  padding: 0.25em;
 }
 
 th {
