@@ -1,9 +1,15 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
 import hjson
 import pandas as pd
 from behave import given, then, when
 from behave.model import Table
+
+from antlr4 import *
+from pypher import pattern_graph
+from pypher.gen.CypherLexer import CypherLexer
+from pypher.gen.CypherParser import CypherParser
+from pypher.pypher import CypherExecutor
 
 with open("openCypher/tck/graphs/binary-tree-1/binary-tree-1.cypher", "r") as f:
     BINARY_TREE1 = f.read()
@@ -59,34 +65,99 @@ def when_query(context):
     execute_query(context, context.text)
 
 
-def normalize_tck_value(value: str) -> Any:
+def parse_type(value: str) -> Tuple[Optional[str], str]:
+    if value[0] != ":":
+        return None, value
+    remainder = value[1:]
+    type_ = ""
+    while remainder[0] not in ["{", ")", "]", ":"]:
+        type_ += remainder[0]
+        remainder = remainder[1:]
+    if len(type_) == 0:
+        raise ValueError("Could not parse type")
+    return type_, remainder
+
+
+def parse_props(value: str) -> Tuple[Any, str]:
+    if value[0] != "{":
+        return None, value
+    remainder = value[1:]
+    props_str = value[0]
+    balance = 1
+    while remainder[0] not in [")", "]", " "]:
+        props_str += remainder[0]
+        remainder = remainder[1:]
+        if remainder == "{":
+            balance += 1
+        if remainder == "}":
+            balance -= 1
+        if balance == 0:
+            break
+
+    if balance != 0:
+        raise ValueError("Could not parse props")
+
+    return hjson.parse(props_str), remainder
+
+
+def parse_tck_node(context, value: str) -> Any:
+    input_stream = InputStream(value)
+    lexer = CypherLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = CypherParser(stream)
+    root = parser.oC_Pattern()
+
+    pgraph = context.executor._interpret_pattern(root)
+    assert len(pgraph.nodes) == 1
+    return list(pgraph.nodes.values())[0]
+
+
+def normalize_tck_value(context, value: str) -> Any:
+    if value.startswith("("):
+        return parse_tck_node(context, value)
+    if value.startswith("["):
+        try:
+            return parse_tck_edge_details(context, value)
+        except Exception:
+            pass
+    if value.startswith("<"):
+        try:
+            return parse_tck_path(value)
+        except ValueError:
+            pass
     return hjson.loads(value)
 
 
-def tck_to_records(table: Table) -> List[Dict[str, Any]]:
+def tck_to_records(context, table: Table) -> List[Dict[str, Any]]:
     records = []
     for row in table:
         row_obj = {}
         for heading in table.headings:
-            row_obj[heading] = normalize_tck_value(row[heading])
+            row_obj[heading] = normalize_tck_value(context, row[heading])
         records.append(row_obj)
     return records
 
 
-def normalize_pypher_value(value: Any) -> Any:
+def normalize_pypher_value(context, value: Any) -> Any:
     if value is pd.NA:
         return None
     elif isinstance(value, list):
-        return [normalize_pypher_value(v) for v in value]
+        return [normalize_pypher_value(context, v) for v in value]
     elif isinstance(value, dict):
-        return {k: normalize_pypher_value(v) for k, v in value.items()}
+        return {k: normalize_pypher_value(context, v) for k, v in value.items()}
+    elif isinstance(value, CypherExecutor.Node):
+        data_node = context.executor.graph.nodes[value.id_]
+        id_ = pattern_graph.NodeID(0)
+        return pattern_graph.Node(id_, None, data_node["labels"], None)
     return value
 
 
-def normalize_pypher_output(py_table: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def normalize_pypher_output(
+    context, py_table: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
     for row in py_table:
         for k, v in row.items():
-            row[k] = normalize_pypher_value(v)
+            row[k] = normalize_pypher_value(context, v)
     return py_table
 
 
@@ -98,10 +169,10 @@ def assert_results_in_any_order(context):
     print(context.result, context.table.headings)
     assert list(context.result.columns) == context.table.headings
     print(type(context.table))
-    expected_rows = tck_to_records(context.table)
+    expected_rows = tck_to_records(context, context.table)
     assert len(context.result) == len(expected_rows)
 
-    actual_rows = normalize_pypher_output(context.result.to_dict("records"))
+    actual_rows = normalize_pypher_output(context, context.result.to_dict("records"))
     for expected, actual in zip(expected_rows, actual_rows):
         assert expected == actual, f"{expected} != {actual}"
 
@@ -113,10 +184,10 @@ def assert_results_in_order(context):
     print(context.result, context.table.headings)
     assert list(context.result.columns) == context.table.headings
     print(type(context.table))
-    expected_rows = tck_to_records(context.table)
+    expected_rows = tck_to_records(context, context.table)
     assert len(context.result) == len(expected_rows)
 
-    actual_rows = normalize_pypher_output(context.result.to_dict("records"))
+    actual_rows = normalize_pypher_output(context, context.result.to_dict("records"))
     for expected, actual in zip(expected_rows, actual_rows):
         assert expected == actual, f"{expected} != {actual}"
 

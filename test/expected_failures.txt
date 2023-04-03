@@ -49,11 +49,7 @@ TESTS-clauses.call.Call6.xml:[1] Calling the same STRING procedure twice using t
 TESTS-clauses.call.Call6.xml:[2] Project procedure results between query scopes with WITH clause
 TESTS-clauses.call.Call6.xml:[3] Project procedure results between query scopes with WITH clause and rename the projection
 TESTS-clauses.create.Create1.xml:[13] Fail when creating a node that is already bound
-TESTS-clauses.create.Create2.xml:[11] Create a single relationship and an end node on an existing starting node
-TESTS-clauses.create.Create2.xml:[12] Create a single relationship and a starting node on an existing end node
 TESTS-clauses.create.Create2.xml:[23] Fail when creating a relationship that is already bound
-TESTS-clauses.create.Create2.xml:[4] Create two nodes and a single relationship in the reverse direction
-TESTS-clauses.create.Create2.xml:[6] Create a single relationship between two existing nodes in the reverse direction
 TESTS-clauses.create.Create3.xml:[11] WITH-MERGE-CREATE: A bound node should be recognized after projection with WITH + MERGE node
 TESTS-clauses.create.Create3.xml:[12] WITH-MERGE-CREATE: A bound node should be recognized after projection with WITH + MERGE pattern
 TESTS-clauses.create.Create3.xml:[13] Merge followed by multiple creates
@@ -62,10 +58,8 @@ TESTS-clauses.create.Create3.xml:[2] WITH-CREATE
 TESTS-clauses.create.Create3.xml:[3] MATCH-CREATE-WITH-CREATE
 TESTS-clauses.create.Create3.xml:[4] MATCH-CREATE: Newly-created nodes not visible to preceding MATCH
 TESTS-clauses.create.Create3.xml:[5] WITH-CREATE: Nodes are not created when aliases are applied to variable names
-TESTS-clauses.create.Create3.xml:[6] WITH-CREATE: Only a single node is created when an alias is applied to a variable name
 TESTS-clauses.create.Create3.xml:[7] WITH-CREATE: Nodes are not created when aliases are applied to variable names multiple times
 TESTS-clauses.create.Create3.xml:[8] WITH-CREATE: Only a single node is created when an alias is applied to a variable name multiple times
-TESTS-clauses.create.Create5.xml:[1] Create a pattern with multiple hops
 TESTS-clauses.create.Create5.xml:[2] Create a pattern with multiple hops in the reverse direction
 TESTS-clauses.create.Create5.xml:[3] Create a pattern with multiple hops in varying directions
 TESTS-clauses.create.Create5.xml:[4] Create a pattern with multiple hops with multiple types and varying directions
@@ -129,14 +123,11 @@ TESTS-clauses.match-where.MatchWhere1.xml:[4] Filter start node of relationship 
 TESTS-clauses.match-where.MatchWhere1.xml:[5] Filter end node of relationship with property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[6] Filter node with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[7] Filter relationship with relationship type predicate on multi variables with multiple bindings
-TESTS-clauses.match-where.MatchWhere1.xml:[8] Filter relationship with property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[9] Filter relationship with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
-TESTS-clauses.match-where.MatchWhere3.xml:[1] Join between node identities
 TESTS-clauses.match-where.MatchWhere3.xml:[2] Join between node properties of disconnected nodes
 TESTS-clauses.match-where.MatchWhere3.xml:[3] Join between node properties of adjacent nodes
-TESTS-clauses.match-where.MatchWhere4.xml:[1] Join nodes on inequality
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
 TESTS-clauses.match-where.MatchWhere5.xml:[1] Filter out on null
 TESTS-clauses.match-where.MatchWhere5.xml:[2] Filter out on null if the AND'd predicate evaluates to false
@@ -169,7 +160,6 @@ TESTS-clauses.match.Match2.xml:[13] Fail when matching a relationship variable b
 TESTS-clauses.match.Match2.xml:[2] Matching a relationship pattern using a label predicate on both sides
 TESTS-clauses.match.Match2.xml:[3] Matching a self-loop with an undirected relationship pattern
 TESTS-clauses.match.Match2.xml:[4] Matching a self-loop with a directed relationship pattern
-TESTS-clauses.match.Match2.xml:[5] Match relationship with inline property value
 TESTS-clauses.match.Match2.xml:[6] Match relationships with multiple types
 TESTS-clauses.match.Match3.xml:[11] Undirected match in self-relationship graph
 TESTS-clauses.match.Match3.xml:[12] Undirected match of self-relationship in self-relationship graph
@@ -184,7 +174,6 @@ TESTS-clauses.match.Match3.xml:[1] Get neighbours
 TESTS-clauses.match.Match3.xml:[20] Three bound nodes pointing to the same node
 TESTS-clauses.match.Match3.xml:[21] Three bound nodes pointing to the same node with extra connections
 TESTS-clauses.match.Match3.xml:[22] Returning bound nodes that are not part of the pattern
-TESTS-clauses.match.Match3.xml:[23] Matching disconnected patterns
 TESTS-clauses.match.Match3.xml:[24] Matching twice with duplicate relationship types on same relationship
 TESTS-clauses.match.Match3.xml:[25] Matching twice with an additional node label
 TESTS-clauses.match.Match3.xml:[26] Matching twice with a duplicate predicate
@@ -195,8 +184,6 @@ TESTS-clauses.match.Match3.xml:[3] Undirected match on simple relationship graph
 TESTS-clauses.match.Match3.xml:[4] Get two related nodes
 TESTS-clauses.match.Match3.xml:[5] Return two subgraphs with bound undirected relationship
 TESTS-clauses.match.Match3.xml:[6] Matching a relationship pattern using a label predicate
-TESTS-clauses.match.Match3.xml:[7] Matching nodes with many labels
-TESTS-clauses.match.Match3.xml:[8] Matching using relationship predicate with multiples of the same type
 TESTS-clauses.match.Match3.xml:[9] Get related to related to
 TESTS-clauses.match.Match4.xml:[1] Handling fixed-length variable length pattern
 TESTS-clauses.match.Match4.xml:[2] Simple variable length pattern
@@ -286,7 +273,6 @@ TESTS-clauses.match.Match7.xml:[6] Optionally matching relationship with a relat
 TESTS-clauses.match.Match7.xml:[7] MATCH with OPTIONAL MATCH in longer pattern
 TESTS-clauses.match.Match7.xml:[8] Longer pattern with bound nodes without matches
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
-TESTS-clauses.match.Match8.xml:[1] Pattern independent of bound variables results in cross product
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match8.xml:[3] Matching and disregarding output, then matching again
 TESTS-clauses.match.Match9.xml:[1] Variable length relationship variables are lists of relationships
@@ -456,7 +442,6 @@ TESTS-clauses.return.Return3.xml:[1] Returning multiple expressions
 TESTS-clauses.return.Return3.xml:[3] Projecting nodes and relationships
 TESTS-clauses.return.Return4.xml:[10] Fail when returning multiple columns with same name
 TESTS-clauses.return.Return4.xml:[11] Reusing variable names in RETURN
-TESTS-clauses.return.Return4.xml:[2] Support column renaming
 TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
 TESTS-clauses.return.Return4.xml:[5] Keeping used expression 2
 TESTS-clauses.return.Return4.xml:[6] Keeping used expression 3
@@ -793,10 +778,8 @@ TESTS-clauses.with-where.WithWhere1.xml:[3] Filter for an unbound relationship v
 TESTS-clauses.with-where.WithWhere1.xml:[4] Filter for an unbound node variable
 TESTS-clauses.with-where.WithWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
-TESTS-clauses.with-where.WithWhere3.xml:[1] Join between node identities
 TESTS-clauses.with-where.WithWhere3.xml:[2] Join between node properties of disconnected nodes
 TESTS-clauses.with-where.WithWhere3.xml:[3] Join between node properties of adjacent nodes
-TESTS-clauses.with-where.WithWhere4.xml:[1] Join nodes on inequality
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
 TESTS-clauses.with-where.WithWhere5.xml:[1] Filter out on null
 TESTS-clauses.with-where.WithWhere5.xml:[2] Filter out on null if the AND'd predicate evaluates to false
@@ -805,7 +788,6 @@ TESTS-clauses.with-where.WithWhere5.xml:[4] Do not filter out on null if the OR'
 TESTS-clauses.with-where.WithWhere6.xml:[1] Filter a single aggregate
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
-TESTS-clauses.with.With1.xml:[1] Forwarind a node variable 1
 TESTS-clauses.with.With1.xml:[2] Forwarind a node variable 2
 TESTS-clauses.with.With1.xml:[3] Forwarding a relationship variable
 TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
