@@ -28,11 +28,12 @@ function render_table(output, table) {
     output_table.appendChild(content_row);
   }
 
-  output.innerHTML = "";
   output.appendChild(output_table);
 }
 
 async function eval_cell(input, output) {
+  output.innerHTML = "";
+
   window.stderr = []
   try {
     await pyodide.runPython(`
@@ -90,6 +91,7 @@ function create_cell(container) {
   cell.appendChild(input);
   cell.appendChild(document.createElement("br"));
   cell.appendChild(run);
+  cell.appendChild(document.createElement("br"));
   cell.appendChild(document.createElement("br"));
   cell.appendChild(output);
   cell.appendChild(document.createElement("br"));

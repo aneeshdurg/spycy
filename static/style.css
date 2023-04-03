@@ -22,3 +22,12 @@
   font-family: monospaced;
   background: #f7da79;
 }
+
+th {
+  background: #bbbbbb;
+  padding: 0.25em;
+}
+
+td {
+  padding: 0.25em;
+}
