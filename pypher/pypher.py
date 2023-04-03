@@ -646,17 +646,29 @@ class CypherExecutor:
         for i in range(len(self.table)):
             node_id_to_data_id = {}
             for nid, n in pgraph.nodes.items():
-                data_id = len(self.graph.nodes)
-                node_id_to_data_id[nid] = data_id
-                props = node_ids_to_props.get(nid)
-                data = {
-                    "labels": n.labels,
-                    "properties": props[i] if props is not None else {},
-                }
-                self.graph.add_node(data_id, **data)
+                if n.name and n.name in self.table:
+                    assert not n.labels, "Cannot create bound node"
+                    assert not n.properties, "Cannot create bound node"
+                    data_node = self.table[n.name][i]
+                    assert data_node
+                    assert isinstance(
+                        data_node, CypherExecutor.Node
+                    ), "TypeError, expected node"
+                    node_id_to_data_id[nid] = data_node.id_
+                else:
+                    data_id = len(self.graph.nodes)
+                    node_id_to_data_id[nid] = data_id
+                    props = node_ids_to_props.get(nid)
+                    data = {
+                        "labels": n.labels,
+                        "properties": props[i] if props is not None else {},
+                    }
+                    self.graph.add_node(data_id, **data)
+                    data_node = CypherExecutor.Node(data_id)
+
                 if n.name:
                     if (data := entities_to_data.get(n.name)) is not None:
-                        data.append(CypherExecutor.Node(data_id))
+                        data.append(data_node)
 
             for eid, e in pgraph.edges.items():
                 assert not e.undirected, "Creating undirected edges not allowed"

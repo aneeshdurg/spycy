@@ -123,7 +123,9 @@ def assert_results_in_order(context):
 
 @then("the result should be empty")
 def assert_empty_result(context):
-    assert not context.error, context.error
+    if context.error:
+        raise context.error
+    assert len(context.result) == 0, len(context.result)
 
 
 @then("{errorType} should be raised at runtime: {error}")
