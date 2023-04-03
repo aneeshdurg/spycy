@@ -76,14 +76,8 @@ TESTS-clauses.create.Create6.xml:[6] Aggregating in `RETURN` after creating node
 TESTS-clauses.create.Create6.xml:[7] Aggregating in `WITH` after creating nodes affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[8] Limiting to zero results after creating relationships affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[9] Skipping all results after creating relationships affects the result set but not the side effects
-TESTS-clauses.delete.Delete1.xml:[1] Delete nodes
-TESTS-clauses.delete.Delete1.xml:[2] Detach delete node
-TESTS-clauses.delete.Delete1.xml:[3] Detach deleting connected nodes and relationships
-TESTS-clauses.delete.Delete1.xml:[4] Delete on null node
 TESTS-clauses.delete.Delete1.xml:[5] Ignore null when deleting node
-TESTS-clauses.delete.Delete1.xml:[6] Detach delete on null node
 TESTS-clauses.delete.Delete2.xml:[1] Delete relationships
-TESTS-clauses.delete.Delete2.xml:[2] Delete optionally matched relationship
 TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
 TESTS-clauses.delete.Delete2.xml:[4] Ignore null when deleting relationship
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
@@ -100,14 +94,12 @@ TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
 TESTS-clauses.delete.Delete6.xml:[10] Skipping and limiting to a few results after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all results after deleting relationships does not affect the result set nor the side effects
-TESTS-clauses.delete.Delete6.xml:[12] Filtering after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[13] Aggregating in `RETURN` after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[14] Aggregating in `WITH` after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[1] Limiting to zero results after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[2] Skipping all results after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[3] Skipping and limiting to a few results after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
-TESTS-clauses.delete.Delete6.xml:[5] Filtering after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[6] Aggregating in `RETURN` after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[7] Aggregating in `WITH` after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[8] Limiting to zero results after deleting relationships affects the result set but not the side effects

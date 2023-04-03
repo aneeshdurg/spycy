@@ -265,7 +265,7 @@ class CypherExecutor:
                 return self._evaluate_property_lookup(lhs, child)
 
             if isinstance(child, CypherParser.OC_NodeLabelsContext):
-                raise AssertionError("Unsupported query - lables unsupported")
+                raise AssertionError("Unsupported query - labels unsupported")
         return lhs
 
     def _evaluate_unary_add_or_sub(
@@ -696,10 +696,48 @@ class CypherExecutor:
         for name, data in entities_to_data.items():
             self.table[name] = data
 
+    def _process_delete(self, node: CypherParser.OC_DeleteContext):
+        is_detach = False
+        assert node.children
+        if node.children[0].getText().lower() == "detach":
+            is_detach = True
+        nodes_to_delete = set()
+        edges_to_delete = set()
+        exprs = node.oC_Expression()
+        assert exprs is not None
+        for expr in exprs:
+            output = self._evaluate_expression(expr)
+            for entity in output:
+                if isinstance(entity, CypherExecutor.Node):
+                    nodes_to_delete.add(entity.id_)
+                elif isinstance(entity, CypherExecutor.Edge):
+                    edges_to_delete.add(entity.id_)
+                else:
+                    raise ExecutionError("TypeError::DeleteNonEntity")
+
+        if not is_detach:
+            for node in nodes_to_delete:
+                for edge in self.graph.out_edges(node, keys=True):
+                    if edge not in edges_to_delete:
+                        raise ExecutionError("DeleteError::DeleteAttachedNode")
+                for edge in self.graph.in_edges(node, keys=True):
+                    if edge not in edges_to_delete:
+                        raise ExecutionError("DeleteError::DeleteAttachedNode")
+
+        for edge in edges_to_delete:
+            self.graph.remove_edge(*edge)
+        for node in nodes_to_delete:
+            self.graph.remove_node(node)
+
     def _process_updating_clause(self, node: CypherParser.OC_UpdatingClauseContext):
-        create = node.oC_Create()
-        assert create, "Unsupported query - only CREATE updates are allowed"
-        self._process_create(create)
+        if create := node.oC_Create():
+            self._process_create(create)
+        elif delete := node.oC_Delete():
+            self._process_delete(delete)
+        else:
+            raise AssertionError(
+                "Unsupported query - only CREATE/DELETE updates supported"
+            )
 
     def _process_single_part_query(self, node: CypherParser.OC_SinglePartQueryContext):
         assert node.children
