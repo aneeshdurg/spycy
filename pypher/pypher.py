@@ -650,6 +650,14 @@ class CypherExecutor:
                 assert e.name not in entities_to_data, "Duplicate name"
                 entities_to_data[e.name] = []
 
+        for eid, e in pgraph.edges.items():
+            if e.undirected:
+                raise ExecutionError("Creating undirected edges not allowed")
+            if len(e.types) != 1:
+                raise ExecutionError("Created edges must have 1 type")
+            if e.range_ is not None:
+                raise ExecutionError("Can't create variable length edge")
+
         for i in range(len(self.table)):
             node_id_to_data_id = {}
             for nid, n in pgraph.nodes.items():
@@ -678,9 +686,6 @@ class CypherExecutor:
                         data.append(data_node)
 
             for eid, e in pgraph.edges.items():
-                assert not e.undirected, "Creating undirected edges not allowed"
-                assert len(e.types) == 1, "Created edges must have 1 type"
-                assert e.range_ is None, "Can't create variable length edge"
                 props = edge_ids_to_props.get(eid)
                 data = {
                     "type": list(e.types)[0],
