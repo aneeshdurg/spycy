@@ -899,8 +899,6 @@ TESTS-expressions.boolean.Boolean4.xml:[4] Fail when using NOT on a non-boolean 
 TESTS-expressions.boolean.Boolean4.xml:[4] Fail when using NOT on a non-boolean literal -- @1.2
 TESTS-expressions.boolean.Boolean4.xml:[4] Fail when using NOT on a non-boolean literal -- @1.3
 TESTS-expressions.boolean.Boolean5.xml:[6] Conjunction is not distributive over exclusive disjunction on null
-TESTS-expressions.comparison.Comparison1.xml:[11] Handling explicit equality of large integer
-TESTS-expressions.comparison.Comparison1.xml:[13] Handling explicit equality of large integer, non-equal values
 TESTS-expressions.comparison.Comparison1.xml:[14] Direction of traversed relationship is not significant for path equality, simple
 TESTS-expressions.comparison.Comparison1.xml:[15] It is unknown - i.e. null - if a null is equal to a null
 TESTS-expressions.comparison.Comparison1.xml:[16] It is unknown - i.e. null - if a null is not equal to a null
@@ -930,7 +928,6 @@ TESTS-expressions.comparison.Comparison2.xml:[6] Comparability between numbers a
 TESTS-expressions.comparison.Comparison3.xml:[1] Handling numerical ranges 1
 TESTS-expressions.comparison.Comparison3.xml:[2] Handling numerical ranges 2
 TESTS-expressions.comparison.Comparison3.xml:[3] Handling numerical ranges 3
-TESTS-expressions.comparison.Comparison3.xml:[4] Handling numerical ranges 4
 TESTS-expressions.comparison.Comparison3.xml:[5] Handling string ranges 1
 TESTS-expressions.comparison.Comparison3.xml:[6] Handling string ranges 2
 TESTS-expressions.comparison.Comparison3.xml:[7] Handling string ranges 3
@@ -1164,7 +1161,6 @@ TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.
 TESTS-expressions.map.Map3.xml:[5] Using `keys()` and `IN` to check field existence
 TESTS-expressions.mathematical.Mathematical11.xml:[1] Absolute function
 TESTS-expressions.mathematical.Mathematical13.xml:[1] `sqrt()` returning float values
-TESTS-expressions.mathematical.Mathematical2.xml:[1] Allow addition
 TESTS-expressions.null.Null1.xml:[3] Property null check on null node
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.1
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.10

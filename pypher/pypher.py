@@ -536,7 +536,6 @@ class CypherExecutor:
         self.table = self.table.explode(alias, ignore_index=True)
 
     def _process_match(self, node: CypherParser.OC_MatchContext):
-        assert not node.oC_Where(), "Unsupported query - Match Where not implemented"
         pattern = node.oC_Pattern()
         assert pattern
         pgraph = self._interpret_pattern(pattern)
@@ -577,6 +576,10 @@ class CypherExecutor:
             filter_col.append(all(len(self.table[n][i]) > 0 for n in names_to_data))
         self.table = self.table[filter_col]
         self.table = self.table.explode(list(names_to_data.keys()), ignore_index=True)
+
+        # TODO some kind of pushdown could be implemented here instead
+        if where := node.oC_Where():
+            self._process_where(where)
 
     def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):
         assert not node.oC_InQueryCall(), "Unsupported query - CALL not implemented"
