@@ -789,6 +789,7 @@ class CypherExecutor:
 
     def exec(self, query_str: str) -> pd.DataFrame:
         self.reset_table()
+        self._returned = False
 
         ast = self._getAST(query_str)
 
