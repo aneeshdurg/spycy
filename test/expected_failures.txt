@@ -1089,7 +1089,6 @@ TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.
 TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.6
 TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.7
 TESTS-expressions.map.Map3.xml:[5] Using `keys()` and `IN` to check field existence
-TESTS-expressions.mathematical.Mathematical13.xml:[1] `sqrt()` returning float values
 TESTS-expressions.null.Null1.xml:[3] Property null check on null node
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.1
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.10

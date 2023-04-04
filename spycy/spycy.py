@@ -16,6 +16,7 @@ from spycy.errors import ExecutionError
 from spycy.functions import function_registry
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
+from spycy.types import Edge, Node
 from spycy.visitor import hasType
 
 
@@ -47,9 +48,9 @@ class CypherExecutor:
             if x is pd.NA:
                 return None
 
-            if isinstance(x, CypherExecutor.Node):
+            if isinstance(x, Node):
                 return {"type": "Node", "id": x.id_}
-            elif isinstance(x, CypherExecutor.Edge):
+            elif isinstance(x, Edge):
                 return {"type": "Edge", "id": x.id_}
             elif isinstance(x, dict):
                 for k, v in x.items():
@@ -62,14 +63,6 @@ class CypherExecutor:
         rows = self.table.to_dict("records")
         rows = [make_serializable(row) for row in rows]
         return json.dumps(rows)
-
-    @dataclass
-    class Node:
-        id_: int
-
-    @dataclass
-    class Edge:
-        id_: Tuple[int, int, int]
 
     def _evaluate_list_literal(
         self, expr: CypherParser.OC_ListLiteralContext
@@ -284,10 +277,10 @@ class CypherExecutor:
         key_expr = expr.oC_PropertyKeyName()
         assert key_expr
         key = key_expr.getText()
-        if isinstance(el, CypherExecutor.Node):
+        if isinstance(el, Node):
             for row in lhs:
                 output.append(self.graph.nodes[row.id_]["properties"].get(key, pd.NA))
-        elif isinstance(el, CypherExecutor.Edge):
+        elif isinstance(el, Edge):
             for row in lhs:
                 output.append(self.graph.edges[row.id_]["properties"].get(key, pd.NA))
         else:
@@ -610,16 +603,12 @@ class CypherExecutor:
             for nid, pnode in pgraph.nodes.items():
                 if node_name := pnode.name:
                     data = results.node_ids_to_data_ids.get(nid, [])
-                    names_to_data[node_name].append(
-                        [CypherExecutor.Node(d) for d in data]
-                    )
+                    names_to_data[node_name].append([Node(d) for d in data])
 
             for eid, pedge in pgraph.edges.items():
                 if edge_name := pedge.name:
                     data = results.edge_ids_to_data_ids.get(eid, [])
-                    names_to_data[edge_name].append(
-                        [CypherExecutor.Edge(d) for d in data]
-                    )
+                    names_to_data[edge_name].append([Edge(d) for d in data])
 
         for name, data in names_to_data.items():
             self.table[name] = data
@@ -711,9 +700,7 @@ class CypherExecutor:
                     assert not n.properties, "Cannot create bound node"
                     data_node = self.table[n.name][i]
                     assert data_node
-                    assert isinstance(
-                        data_node, CypherExecutor.Node
-                    ), "TypeError, expected node"
+                    assert isinstance(data_node, Node), "TypeError, expected node"
                     node_id_to_data_id[nid] = data_node.id_
                 else:
                     data_id = len(self.graph.nodes)
@@ -724,7 +711,7 @@ class CypherExecutor:
                         "properties": props[i] if props is not None else {},
                     }
                     self.graph.add_node(data_id, **data)
-                    data_node = CypherExecutor.Node(data_id)
+                    data_node = Node(data_id)
 
                 if n.name:
                     if (data := entities_to_data.get(n.name)) is not None:
@@ -741,7 +728,7 @@ class CypherExecutor:
                 key = self.graph.add_edge(start, end, **data)
                 if e.name:
                     if (data := entities_to_data.get(e.name)) is not None:
-                        data.append(CypherExecutor.Edge((start, end, key)))
+                        data.append(Edge((start, end, key)))
 
         for name, data in entities_to_data.items():
             self.table[name] = data
@@ -758,9 +745,9 @@ class CypherExecutor:
         for expr in exprs:
             output = self._evaluate_expression(expr)
             for entity in output:
-                if isinstance(entity, CypherExecutor.Node):
+                if isinstance(entity, Node):
                     nodes_to_delete.add(entity.id_)
-                elif isinstance(entity, CypherExecutor.Edge):
+                elif isinstance(entity, Edge):
                     edges_to_delete.add(entity.id_)
                 else:
                     raise ExecutionError("TypeError::DeleteNonEntity")

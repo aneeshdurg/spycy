@@ -3,6 +3,7 @@ from typing import List
 import pandas as pd
 
 from spycy.errors import ExecutionError
+from spycy.types import Edge, Node
 
 
 def coalesce(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
@@ -24,7 +25,14 @@ def head(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
 
 
 def id_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("id unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to id")
+    output = []
+    for el in params[0]:
+        if not isinstance(el, Node):
+            raise ExecutionError("TypeError::id got unexpected type")
+        output.append(el.id_)
+    return pd.Series(output)
 
 
 def last(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:

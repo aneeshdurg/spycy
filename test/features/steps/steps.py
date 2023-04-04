@@ -10,6 +10,7 @@ from spycy import pattern_graph
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
 from spycy.spycy import CypherExecutor
+from spycy.types import Edge, Node
 
 with open("openCypher/tck/graphs/binary-tree-1/binary-tree-1.cypher", "r") as f:
     BINARY_TREE1 = f.read()
@@ -145,7 +146,7 @@ def normalize_spycy_value(context, value: Any) -> Any:
         return [normalize_spycy_value(context, v) for v in value]
     elif isinstance(value, dict):
         return {k: normalize_spycy_value(context, v) for k, v in value.items()}
-    elif isinstance(value, CypherExecutor.Node):
+    elif isinstance(value, Node):
         data_node = context.executor.graph.nodes[value.id_]
         id_ = pattern_graph.NodeID(0)
         return pattern_graph.Node(id_, None, data_node["labels"], None)
