@@ -4,7 +4,7 @@ import json
 import math
 import sys
 from dataclasses import dataclass, field
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Set, Tuple
 
 import networkx as nx
 import pandas as pd
@@ -39,6 +39,13 @@ class CypherExecutor:
     # TODO use _table_accesses to speed up CREATE/MATCH
     _table_accesses: int = 0
     _returned: bool = False
+
+    _deleted_ids: Set[int] = field(default_factory=set)
+
+    def _vend_node_id(self) -> int:
+        if len(self._deleted_ids):
+            return self._deleted_ids.pop()
+        return len(self.graph.nodes)
 
     def reset_table(self):
         self.table = pd.DataFrame([{" ": 0}])
@@ -703,7 +710,7 @@ class CypherExecutor:
                     assert isinstance(data_node, Node), "TypeError, expected node"
                     node_id_to_data_id[nid] = data_node.id_
                 else:
-                    data_id = len(self.graph.nodes)
+                    data_id = self._vend_node_id()
                     node_id_to_data_id[nid] = data_id
                     props = node_ids_to_props.get(nid)
                     data = {
@@ -763,8 +770,9 @@ class CypherExecutor:
 
         for edge in edges_to_delete:
             self.graph.remove_edge(*edge)
-        for node in nodes_to_delete:
-            self.graph.remove_node(node)
+        for node_ in nodes_to_delete:
+            self.graph.remove_node(node_)
+            self._deleted_ids.add(node_)
 
     def _process_updating_clause(self, node: CypherParser.OC_UpdatingClauseContext):
         if create := node.oC_Create():
