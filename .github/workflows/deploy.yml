@@ -11,6 +11,7 @@ jobs:
 
     - name: Build
       run: |
+        pip install build
         bash build.sh
 
     - name: Prepare for deployment
@@ -22,6 +23,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -m 'deploy'
         git branch -M main
+        git config --global --add safe.directory /github/workspace/build
 
     - name: Deploy
       uses: ad-m/github-push-action@v0.5.0
