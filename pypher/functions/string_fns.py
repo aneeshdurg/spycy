@@ -2,29 +2,29 @@ from typing import List
 
 import pandas as pd
 
+from pypher.errors import ExecutionError
+
+
+def string_func(f):
+    def wrapper(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+        if len(params) != 1:
+            raise ExecutionError(f"Invalid number of arguments")
+        if not isinstance(params[0][0], str):
+            raise ExecutionError(f"TypeError::Expected string")
+
+        return params[0].apply(f)
+
 
 def left(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("left is unimplemented")
-
-
-def lTrim(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("lTrim is unimplemented")
 
 
 def replace(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("replace is unimplemented")
 
 
-def reverse(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("reverse is unimplemented")
-
-
 def right(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("right is unimplemented")
-
-
-def rTrim(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("rTrim is unimplemented")
 
 
 def split(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
@@ -35,33 +35,21 @@ def substring(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("substring is unimplemented")
 
 
-def toLower(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("toLower is unimplemented")
-
-
 def toString(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("toString is unimplemented")
 
 
-def toUpper(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("toUpper is unimplemented")
-
-
-def trim(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("trim is unimplemented")
-
-
 fn_map = {
     "left": left,
-    "lTrim": lTrim,
+    "lTrim": string_func(lambda x: x.lstrip()),
     "replace": replace,
-    "reverse": reverse,
+    "reverse": string_func(lambda x: x[::-1]),
     "right": right,
-    "rTrim": rTrim,
+    "rTrim": string_func(lambda x: x.rstrip()),
     "split": split,
     "substring": substring,
-    "toLower": toLower,
+    "toLower": string_func(lambda x: x.lower()),
     "toString": toString,
-    "toUpper": toUpper,
-    "trim": trim,
+    "toUpper": string_func(lambda x: x.upper()),
+    "trim": string_func(lambda x: x.strip()),
 }

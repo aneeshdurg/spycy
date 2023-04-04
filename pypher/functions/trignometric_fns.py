@@ -1,62 +1,28 @@
 from typing import List
 
+import numpy as np
 import pandas as pd
 
-
-def acos(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("acos is unimplemented")
-
-
-def asin(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("asin is unimplemented")
-
-
-def atan(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("atan is unimplemented")
-
-
-def atan2(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("atan2 is unimplemented")
-
-
-def cos(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("cos is unimplemented")
-
-
-def cot(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("cot is unimplemented")
-
-
-def degrees(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("degrees is unimplemented")
+from pypher.errors import ExecutionError
+from pypher.functions.numeric_fns import _wrap_simple_fn
 
 
 def pi(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("pi is unimplemented")
-
-
-def radians(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("radians is unimplemented")
-
-
-def sin(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("sin is unimplemented")
-
-
-def tan(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("tan is unimplemented")
+    if len(params) != 0:
+        raise ExecutionError("Incorrect argument count")
+    return pd.Series([np.pi] * len(table), dtype=float)
 
 
 fn_map = {
-    "acos": acos,
-    "asin": asin,
-    "atan": atan,
-    "atan2": atan2,
-    "cos": cos,
-    "cot": cot,
-    "degrees": degrees,
+    "acos": _wrap_simple_fn(np.arccos),
+    "asin": _wrap_simple_fn(np.arcsin),
+    "atan": _wrap_simple_fn(np.arctan),
+    "atan2": _wrap_simple_fn(np.arctan2),
+    "cos": _wrap_simple_fn(np.cos),
+    "cot": _wrap_simple_fn(lambda x: 1 / np.tan(x)),
+    "degrees": _wrap_simple_fn(np.rad2deg),
     "pi": pi,
-    "radians": radians,
-    "sin": sin,
-    "tan": tan,
+    "radians": _wrap_simple_fn(np.deg2rad),
+    "sin": _wrap_simple_fn(np.sin),
+    "tan": _wrap_simple_fn(np.tan),
 }

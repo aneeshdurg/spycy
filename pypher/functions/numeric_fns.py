@@ -10,7 +10,7 @@ def _wrap_simple_fn(f):
     def wrapped(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
         if len(params) != 1:
             raise ExecutionError(f"Invalid number of arguments")
-        return f(params[0])
+        return f(params[0].to_numpy(dtype=float))
 
     return wrapped
 

@@ -1,36 +1,22 @@
 from typing import List
 
+import numpy as np
 import pandas as pd
 
-
-def fn(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("fn is unimplemented")
+from pypher.errors import ExecutionError
+from pypher.functions.numeric_fns import _wrap_simple_fn
 
 
 def e_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("e is unimplemented")
-
-
-def exp(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("exp is unimplemented")
-
-
-def log(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("log is unimplemented")
-
-
-def log10(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("log10 is unimplemented")
-
-
-def sqrt(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("sqrt is unimplemented")
+    if len(params) != 0:
+        raise ExecutionError("Incorrect argument count")
+    return pd.Series([np.e] * len(table), dtype=float)
 
 
 fn_map = {
     "e": e_,
-    "exp": exp,
-    "log": log,
-    "log10": log10,
-    "sqrt": sqrt,
+    "exp": _wrap_simple_fn(np.exp),
+    "log": _wrap_simple_fn(np.log),
+    "log10": _wrap_simple_fn(np.log10),
+    "sqrt": _wrap_simple_fn(np.sqrt),
 }
