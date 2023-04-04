@@ -1,7 +1,13 @@
-set -e
 # Script for deploying the gh-pages branch
-git rebase main
+set -e
+
+# generate spycy whl
+pip install .
 python3 -m build
-git add -f dist/
-git commit --amend --no-edit
-git push origin gh-pages -f
+
+# setup hosted contents
+mkdir build
+cd build
+mv ../dist .
+cp -r ../static .
+cp ../index.html .
