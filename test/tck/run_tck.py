@@ -35,6 +35,10 @@ def main(update: bool):
     features = glob.glob("features/**/*.feature", recursive=True)
     extract_name = re.compile(".*/([a-zA-Z]*)\d+")
     feature_classes = set(extract_name.match(feature).group(1) for feature in features)
+    if len(feature_classes) == 0:
+        raise Exception("Could not find any features")
+    for feature in feature_classes:
+        print("Found feature", feature, file=sys.stderr)
     with tempfile.TemporaryDirectory() as tmpdir:
         pool = ThreadPool(processes=16)
         pool.map(
