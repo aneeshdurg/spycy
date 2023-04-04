@@ -1,5 +1,7 @@
 # sPyCy
 
+![TCK CI status](https://github.com/aneeshdurg/spycy/actions/workflows/tck.yml/badge.svg)
+
 sPyCy is a python implementation of [openCypher](https://github.com/opencypher/openCypher/).
 Try it out in your browser here: [https://aneeshdurg.me/spycy](https://aneeshdurg.me/spycy)
 
@@ -9,7 +11,8 @@ generate small openCypher queries, or as an alternative reference
 implementation.
 
 The long-term goals of this project include fully passing all openCypher TCK
-tests.
+tests. Currently a subset of TCK tests are expected to pass. The failing tests
+are documented.
 
 ## Usage:
 
