@@ -76,7 +76,6 @@ TESTS-clauses.create.Create6.xml:[7] Aggregating in `WITH` after creating nodes 
 TESTS-clauses.create.Create6.xml:[8] Limiting to zero results after creating relationships affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[9] Skipping all results after creating relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete1.xml:[5] Ignore null when deleting node
-TESTS-clauses.delete.Delete2.xml:[1] Delete relationships
 TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
 TESTS-clauses.delete.Delete2.xml:[4] Ignore null when deleting relationship
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
@@ -525,7 +524,6 @@ TESTS-clauses.union.Union2.xml:[4] Should be able to create text output from uni
 TESTS-clauses.unwind.Unwind1.xml:[12] Unwind does not remove variables from scope
 TESTS-clauses.unwind.Unwind1.xml:[13] Multiple unwinds after each other
 TESTS-clauses.unwind.Unwind1.xml:[14] Unwind with merge
-TESTS-clauses.unwind.Unwind1.xml:[2] Unwinding a range
 TESTS-clauses.unwind.Unwind1.xml:[4] Unwinding a collected unwound expression
 TESTS-clauses.unwind.Unwind1.xml:[5] Unwinding a collected expression
 TESTS-clauses.unwind.Unwind1.xml:[6] Creating nodes from an unwound parameter list
@@ -834,7 +832,6 @@ TESTS-expressions.aggregation.Aggregation6.xml:[3] `percentileCont()` failing on
 TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.1
 TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.2
 TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.3
-TESTS-expressions.aggregation.Aggregation6.xml:[5] `percentileDisc()` failing in more involved query
 TESTS-expressions.aggregation.Aggregation8.xml:[1] Distinct on unbound node
 TESTS-expressions.aggregation.Aggregation8.xml:[2] Distinct on null
 TESTS-expressions.aggregation.Aggregation8.xml:[3] Collect distinct nulls
@@ -986,46 +983,6 @@ TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given
 TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: list -- @1.4
 TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: map -- @1.5
 TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: string -- @1.3
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.1
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.10
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.11
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.12
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.13
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.14
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.2
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.3
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.4
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.5
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.6
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.7
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.8
-TESTS-expressions.list.List11.xml:[1] Create list from `range()` with default step -- @1.9
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.1
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.10
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.11
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.12
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.13
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.14
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.15
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.16
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.17
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.18
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.19
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.2
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.20
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.21
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.22
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.23
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.24
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.25
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.26
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.3
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.4
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.5
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.6
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.7
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.8
-TESTS-expressions.list.List11.xml:[2] Create list from `range()` with explicitly given step -- @1.9
 TESTS-expressions.list.List11.xml:[3] Create an empty list if range direction and step direction are inconsistent
 TESTS-expressions.list.List12.xml:[1] Collect and extract using a list comprehension
 TESTS-expressions.list.List12.xml:[2] Collect and filter using a list comprehension
