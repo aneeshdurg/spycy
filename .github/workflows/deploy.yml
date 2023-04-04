@@ -9,6 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+
     - name: Build
       run: |
         pip install build
@@ -26,7 +27,7 @@ jobs:
         git config --global --add safe.directory /github/workspace/build
 
     - name: Deploy
-      uses: ad-m/github-push-action@v0.5.0
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
