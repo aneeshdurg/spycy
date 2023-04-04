@@ -1005,28 +1005,17 @@ TESTS-expressions.list.List3.xml:[4] Equality between almost equal lists with nu
 TESTS-expressions.list.List3.xml:[6] Equality between different nested lists with null should return false
 TESTS-expressions.list.List3.xml:[7] Equality between almost equal nested lists with null should return null
 TESTS-expressions.list.List4.xml:[2] Concatenating a list with a scalar of same type
-TESTS-expressions.list.List5.xml:[10] IN should return true when types of LHS and RHS match - list
-TESTS-expressions.list.List5.xml:[11] IN should return false when order of elements in LHS list and RHS list don't match
-TESTS-expressions.list.List5.xml:[12] IN with different length lists should return false
-TESTS-expressions.list.List5.xml:[13] IN should return false when matching a list with a nested list with same elements
-TESTS-expressions.list.List5.xml:[14] IN should return true when both LHS and RHS contain nested lists
-TESTS-expressions.list.List5.xml:[15] IN should return true when both LHS and RHS contain a nested list alongside a scalar element
-TESTS-expressions.list.List5.xml:[17] IN should return true when LHS and RHS contain a nested list
 TESTS-expressions.list.List5.xml:[18] IN should return false when LHS contains a nested list and type mismatch on RHS - singleton version
-TESTS-expressions.list.List5.xml:[19] IN should return false when LHS contains a nested list and type mismatch on RHS
 TESTS-expressions.list.List5.xml:[20] IN should return null if LHS and RHS are null
 TESTS-expressions.list.List5.xml:[21] IN should return null if LHS and RHS are null - list version
 TESTS-expressions.list.List5.xml:[22] IN should return null when LHS and RHS both ultimately contain null, even if LHS and RHS are of different types (nested list and flat list)
 TESTS-expressions.list.List5.xml:[24] IN should return true if match despite nulls
 TESTS-expressions.list.List5.xml:[25] IN should return null if comparison with null is required
 TESTS-expressions.list.List5.xml:[26] IN should return true if correct list found despite other lists having nulls
-TESTS-expressions.list.List5.xml:[27] IN should return true if correct list found despite null being another element within containing list
 TESTS-expressions.list.List5.xml:[28] IN should return false if no match can be found, despite nulls
 TESTS-expressions.list.List5.xml:[29] IN should return null if comparison with null is required, list version
-TESTS-expressions.list.List5.xml:[30] IN should return false if different length lists compared, even if the extra element is null
 TESTS-expressions.list.List5.xml:[31] IN should return null when comparing two so-called identical lists where one element is null
 TESTS-expressions.list.List5.xml:[32] IN should return true with previous null match, list version
-TESTS-expressions.list.List5.xml:[33] IN should return false if different length lists with nested elements compared, even if the extra element is null
 TESTS-expressions.list.List5.xml:[34] IN should return null if comparison with null is required, list version 2
 TESTS-expressions.list.List5.xml:[35] IN should work with an empty list
 TESTS-expressions.list.List5.xml:[36] IN should return false for the empty list if the LHS and RHS types differ
@@ -1035,9 +1024,6 @@ TESTS-expressions.list.List5.xml:[38] IN should work with an empty list in the p
 TESTS-expressions.list.List5.xml:[39] IN should work with an empty list when comparing nested lists
 TESTS-expressions.list.List5.xml:[40] IN should return null if comparison with null is required for empty list
 TESTS-expressions.list.List5.xml:[41] IN should return true when LHS and RHS contain nested list with multiple empty lists
-TESTS-expressions.list.List5.xml:[6] IN should return false when matching a number with a string - list version
-TESTS-expressions.list.List5.xml:[7] IN should return false when types of LHS and RHS don't match - singleton list
-TESTS-expressions.list.List5.xml:[8] IN should return false when types of LHS and RHS don't match - list
 TESTS-expressions.list.List6.xml:[10] Get node degree via size of pattern comprehension that specifies multiple relationship types
 TESTS-expressions.list.List6.xml:[1] Return list size
 TESTS-expressions.list.List6.xml:[2] Setting and returning the size of a list property

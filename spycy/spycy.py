@@ -437,7 +437,19 @@ class CypherExecutor:
         assert add_or_sub_expr
         rhs = self._evaluate_add_or_subtract(add_or_sub_expr)
         # This is an IN expression
-        return pd.Series(lhs[i] in e for i, e in enumerate(rhs))
+        def contains(list_, element):
+            if not isinstance(list_, list):
+                raise ExecutionError("SyntaxError::InvalidArgumentType")
+            for item in list_:
+                if isinstance(element, list):
+                    if isinstance(item, list):
+                        return element == item
+                else:
+                    if element == item:
+                        return True
+            return False
+
+        return pd.Series(contains(e, lhs[i]) for i, e in enumerate(rhs))
 
     def _evaluate_null_predicate(
         self, lhs: pd.Series, expr: CypherParser.OC_NullPredicateExpressionContext
