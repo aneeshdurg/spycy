@@ -2,7 +2,7 @@ from typing import List
 
 import pandas as pd
 
-from pypher.errors import ExecutionError
+from spycy.errors import ExecutionError
 
 
 def exists(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:

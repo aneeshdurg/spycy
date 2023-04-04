@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 
-from pypher.errors import ExecutionError
+from spycy.errors import ExecutionError
 
 
 def _wrap_simple_fn(f):

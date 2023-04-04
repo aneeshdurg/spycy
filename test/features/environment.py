@@ -1,4 +1,4 @@
-from pypher.pypher import CypherExecutor
+from spycy.spycy import CypherExecutor
 
 
 def before_scenario(context, scenario):

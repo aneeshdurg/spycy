@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import networkx as nx
 import pandas as pd
 
-import pypher.pattern_graph as pattern_graph
+import spycy.pattern_graph as pattern_graph
 
 
 @dataclass

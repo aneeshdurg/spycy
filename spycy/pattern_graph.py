@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set
 
-from pypher.gen.CypherParser import CypherParser
+from spycy.gen.CypherParser import CypherParser
 
 
 @dataclass

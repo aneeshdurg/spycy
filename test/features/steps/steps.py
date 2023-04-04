@@ -6,10 +6,10 @@ from behave import given, then, when
 from behave.model import Table
 
 from antlr4 import *
-from pypher import pattern_graph
-from pypher.gen.CypherLexer import CypherLexer
-from pypher.gen.CypherParser import CypherParser
-from pypher.pypher import CypherExecutor
+from spycy import pattern_graph
+from spycy.gen.CypherLexer import CypherLexer
+from spycy.gen.CypherParser import CypherParser
+from spycy.spycy import CypherExecutor
 
 with open("openCypher/tck/graphs/binary-tree-1/binary-tree-1.cypher", "r") as f:
     BINARY_TREE1 = f.read()
@@ -138,13 +138,13 @@ def tck_to_records(context, table: Table) -> List[Dict[str, Any]]:
     return records
 
 
-def normalize_pypher_value(context, value: Any) -> Any:
+def normalize_spycy_value(context, value: Any) -> Any:
     if value is pd.NA:
         return None
     elif isinstance(value, list):
-        return [normalize_pypher_value(context, v) for v in value]
+        return [normalize_spycy_value(context, v) for v in value]
     elif isinstance(value, dict):
-        return {k: normalize_pypher_value(context, v) for k, v in value.items()}
+        return {k: normalize_spycy_value(context, v) for k, v in value.items()}
     elif isinstance(value, CypherExecutor.Node):
         data_node = context.executor.graph.nodes[value.id_]
         id_ = pattern_graph.NodeID(0)
@@ -152,12 +152,12 @@ def normalize_pypher_value(context, value: Any) -> Any:
     return value
 
 
-def normalize_pypher_output(
+def normalize_spycy_output(
     context, py_table: List[Dict[str, Any]]
 ) -> List[Dict[str, Any]]:
     for row in py_table:
         for k, v in row.items():
-            row[k] = normalize_pypher_value(context, v)
+            row[k] = normalize_spycy_value(context, v)
     return py_table
 
 
@@ -172,7 +172,7 @@ def assert_results_in_any_order(context):
     expected_rows = tck_to_records(context, context.table)
     assert len(context.result) == len(expected_rows)
 
-    actual_rows = normalize_pypher_output(context, context.result.to_dict("records"))
+    actual_rows = normalize_spycy_output(context, context.result.to_dict("records"))
     for expected, actual in zip(expected_rows, actual_rows):
         assert expected == actual, f"{expected} != {actual}"
 
@@ -187,7 +187,7 @@ def assert_results_in_order(context):
     expected_rows = tck_to_records(context, context.table)
     assert len(context.result) == len(expected_rows)
 
-    actual_rows = normalize_pypher_output(context, context.result.to_dict("records"))
+    actual_rows = normalize_spycy_output(context, context.result.to_dict("records"))
     for expected, actual in zip(expected_rows, actual_rows):
         assert expected == actual, f"{expected} != {actual}"
 

@@ -11,12 +11,12 @@ import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 
 from antlr4 import *
-from pypher import matcher, pattern_graph
-from pypher.errors import ExecutionError
-from pypher.functions import function_registry
-from pypher.gen.CypherLexer import CypherLexer
-from pypher.gen.CypherParser import CypherParser
-from pypher.visitor import hasType
+from spycy import matcher, pattern_graph
+from spycy.errors import ExecutionError
+from spycy.functions import function_registry
+from spycy.gen.CypherLexer import CypherLexer
+from spycy.gen.CypherParser import CypherParser
+from spycy.visitor import hasType
 
 
 @dataclass

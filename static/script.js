@@ -148,12 +148,12 @@ async function main(){
     async def main():
       global exe
       progress.innerHTML += "Initializing python environment<br>"
-      progress.innerHTML += "Installing pypher<br>"
-      await micropip.install("./dist/pypher_aneeshdurg-0.0.1-py3-none-any.whl", deps=True)
-      progress.innerHTML += "Installed pypher<br>"
+      progress.innerHTML += "Installing spycy<br>"
+      await micropip.install("./dist/spycy_aneeshdurg-0.0.1-py3-none-any.whl", deps=True)
+      progress.innerHTML += "Installed spycy<br>"
       progress.innerHTML += "READY!<br>"
-      import pypher
-      from pypher.pypher import CypherExecutor
+      import spycy
+      from spycy.spycy import CypherExecutor
       exe = CypherExecutor()
 
       preload.style = "display:none;"

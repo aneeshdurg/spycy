@@ -3,8 +3,8 @@ from typing import List
 import numpy as np
 import pandas as pd
 
-from pypher.errors import ExecutionError
-from pypher.functions.numeric_fns import _wrap_simple_fn
+from spycy.errors import ExecutionError
+from spycy.functions.numeric_fns import _wrap_simple_fn
 
 
 def pi(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
