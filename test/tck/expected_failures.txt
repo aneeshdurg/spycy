@@ -95,12 +95,9 @@ TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching w
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match3.xml:[12] Undirected match of self-relationship in self-relationship graph
-TESTS-clauses.match.Match3.xml:[14] Directed match of self-relationship on self-relationship graph
+TESTS-clauses.match.Match3.xml:[10] Matching using self-referencing pattern returns no result
 TESTS-clauses.match.Match3.xml:[15] Mixing directed and undirected pattern parts with self-relationship, simple
 TESTS-clauses.match.Match3.xml:[16] Mixing directed and undirected pattern parts with self-relationship, undirected
-TESTS-clauses.match.Match3.xml:[17] Handling cyclic patterns
-TESTS-clauses.match.Match3.xml:[18] Handling cyclic patterns when separated into two parts
 TESTS-clauses.match.Match3.xml:[19] Two bound nodes pointing to the same node
 TESTS-clauses.match.Match3.xml:[20] Three bound nodes pointing to the same node
 TESTS-clauses.match.Match3.xml:[21] Three bound nodes pointing to the same node with extra connections
@@ -181,6 +178,7 @@ TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[25] Optionally matching self-loops without matches
 TESTS-clauses.match.Match7.xml:[27] Handling optional matches between optionally matched entities
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
+TESTS-clauses.match.Match7.xml:[8] Longer pattern with bound nodes without matches
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match8.xml:[3] Matching and disregarding output, then matching again
@@ -2599,12 +2597,8 @@ TESTS-expressions.typeConversion.TypeConversion4.xml:[9] `toString()` should acc
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[10] Mixing directed and undirected pattern parts with self-relationship, count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[11] Mixing directed and undirected pattern parts with self-relationship, undirected count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[1] Undirected match in self-relationship graph, count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[2] Undirected match of self-relationship in self-relationship graph, count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[3] Undirected match on simple relationship graph, count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[4] Directed match on self-relationship graph, count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[5] Directed match of self-relationship on self-relationship graph, count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[6] Counting undirected self-relationships in self-relationship graph
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[7] Counting distinct undirected self-relationships in self-relationship graph
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[8] Directed match of a simple relationship, count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[9] Counting directed self-relationships
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[10] Handling triadic friend of a friend that is not a friend with implicit superset of labels
