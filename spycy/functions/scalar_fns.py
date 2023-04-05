@@ -1,5 +1,6 @@
 from typing import List
 
+import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
@@ -107,14 +108,16 @@ def toFloat(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 def toInteger(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     if len(params) > 1:
-        raise ExecutionError("Invalid number of arguments to toBoolean")
+        raise ExecutionError("Invalid number of arguments to toInteger")
     arg = params[0]
     output = []
     for i in range(len(arg)):
         val = arg[i]
         if val is pd.NA:
             output.append(pd.NA)
-        elif isinstance(val, float):
+        elif np.issubdtype(type(val), np.integer):
+            output.append(val)
+        elif np.issubdtype(type(val), np.float_):
             output.append(int(val))
         elif isinstance(val, str):
             output.append(pd.NA)
