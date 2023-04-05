@@ -610,6 +610,10 @@ class CypherExecutor:
 
             def get_key(row):
                 def get_tuple(value):
+                    if isinstance(value, Node):
+                        return value.id_
+                    if isinstance(value, Edge):
+                        return value.id_
                     if isinstance(value, list):
                         return tuple(get_tuple(v) for v in value)
                     if isinstance(value, dict):

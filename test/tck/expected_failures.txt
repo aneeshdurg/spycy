@@ -434,7 +434,6 @@ TESTS-clauses.return.Return5.xml:[4] DISTINCT inside aggregation should work wit
 TESTS-clauses.return.Return5.xml:[5] Aggregate on list values
 TESTS-clauses.return.Return6.xml:[10] Multiple aggregates on same variable
 TESTS-clauses.return.Return6.xml:[11] Counting matches
-TESTS-clauses.return.Return6.xml:[12] Counting matches per group
 TESTS-clauses.return.Return6.xml:[13] Returning the minimum length of paths
 TESTS-clauses.return.Return6.xml:[14] Aggregates in aggregates
 TESTS-clauses.return.Return6.xml:[15] Using `rand()` in aggregations
@@ -787,7 +786,6 @@ TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expre
 TESTS-clauses.with.With6.xml:[8] Fail if not projected variables are used inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[9] Fail if more complex expression, even if projected, are used inside expression which contains an aggregation expression
 TESTS-clauses.with.With7.xml:[1] A simple pattern with one bound endpoint
-TESTS-clauses.with.With7.xml:[2] Multiple WITHs using a predicate and aggregation
 TESTS-expressions.aggregation.Aggregation1.xml:[2] Counting loop relationships
 TESTS-expressions.aggregation.Aggregation2.xml:[11] `max()` over mixed values
 TESTS-expressions.aggregation.Aggregation2.xml:[12] `min()` over mixed values
