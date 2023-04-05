@@ -2,6 +2,8 @@ from typing import List
 
 import pandas as pd
 
+from spycy.types import FunctionContext
+
 from . import (
     aggregation_fns,
     list_fns,
@@ -26,11 +28,11 @@ fn_maps = [
 
 
 def function_registry(
-    name: str, params: List[pd.Series], table: pd.DataFrame
+    name: str, params: List[pd.Series], fnctx: FunctionContext
 ) -> pd.Series:
     for fn_map in fn_maps:
         if fn := fn_map.get(name, None):
-            return fn(params, table)
+            return fn(params, fnctx)
 
     raise AssertionError(f"Function {name} not found")
 

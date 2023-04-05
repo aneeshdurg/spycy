@@ -3,10 +3,10 @@ from typing import List
 import pandas as pd
 
 from spycy.errors import ExecutionError
-from spycy.types import Edge, Node
+from spycy.types import Edge, FunctionContext, Node
 
 
-def coalesce(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def coalesce(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     data = []
     for i in range(len(params[0])):
         for param in params:
@@ -16,15 +16,15 @@ def coalesce(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     return pd.Series(data)
 
 
-def endNode(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def endNode(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("endNode unimplemented")
 
 
-def head(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def head(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("head unimplemented")
 
 
-def id_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def id_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     if len(params) > 1:
         raise ExecutionError("Invalid number of arguments to id")
     output = []
@@ -35,31 +35,31 @@ def id_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     return pd.Series(output)
 
 
-def last(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def last(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("last unimplemented")
 
 
-def length(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def length(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("length unimplemented")
 
 
-def properties(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def properties(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("properties unimplemented")
 
 
-def size(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def size(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("size unimplemented")
 
 
-def startNode(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def startNode(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("startNode unimplemented")
 
 
-def timestamp(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def timestamp(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("timestamp unimplemented")
 
 
-def toBoolean(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def toBoolean(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     if len(params) > 1:
         raise ExecutionError("Invalid number of arguments to toBoolean")
     arg = params[0]
@@ -82,11 +82,11 @@ def toBoolean(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     return pd.Series(output)
 
 
-def toFloat(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def toFloat(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("toFloat unimplemented")
 
 
-def toInteger(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def toInteger(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     if len(params) > 1:
         raise ExecutionError("Invalid number of arguments to toBoolean")
     arg = params[0]
@@ -104,8 +104,15 @@ def toInteger(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     return pd.Series(output)
 
 
-def type_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("type unimplemented")
+def type_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to type")
+
+    output = []
+    for edge in params[0]:
+        if not isinstance(edge, Edge):
+            raise ExecutionError("TypeError - type expects an edge argument")
+    return pd.Series(output)
 
 
 fn_map = {

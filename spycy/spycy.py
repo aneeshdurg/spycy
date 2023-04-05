@@ -18,7 +18,7 @@ from spycy.errors import ExecutionError
 from spycy.functions import function_registry, is_aggregation
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
-from spycy.types import Edge, Node
+from spycy.types import Edge, FunctionContext, Node
 from spycy.visitor import hasType, visitor
 
 
@@ -180,7 +180,8 @@ class CypherExecutor:
         if param_exprs := expr.oC_Expression():
             for param_expr in param_exprs:
                 params.append(self._evaluate_expression(param_expr))
-        return function_registry(fnname, params, self.table)
+        fnctx = FunctionContext(self.table, self.graph)
+        return function_registry(fnname, params, fnctx)
 
     def _evaluate_list_comp(
         self, expr: CypherParser.OC_ListComprehensionContext

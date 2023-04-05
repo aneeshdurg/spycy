@@ -4,21 +4,22 @@ import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
+from spycy.types import FunctionContext
 
 
-def keys(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def keys(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("keys not implemented")
 
 
-def labels(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def labels(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("labels not implemented")
 
 
-def nodes(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def nodes(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("nodes not implemented")
 
 
-def range_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def range_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     if len(params) not in [2, 3]:
         raise ExecutionError("Incorrect argument count for range")
 
@@ -52,15 +53,15 @@ def range_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     return pd.Series(output)
 
 
-def relationships(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def relationships(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("relationships not implemented")
 
 
-def reverse(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def reverse(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("reverse not implemented")
 
 
-def tail(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def tail(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("tail not implemented")
 
 

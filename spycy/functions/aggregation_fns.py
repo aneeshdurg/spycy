@@ -4,10 +4,11 @@ import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
+from spycy.types import FunctionContext
 
 
 def agg_func(f):
-    def wrapper(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+    def wrapper(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
         if len(params) != 1:
             raise ExecutionError(f"Invalid number of arguments")
 
@@ -16,19 +17,19 @@ def agg_func(f):
     return wrapper
 
 
-def percentileCont(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def percentileCont(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("percentileCont not implemented")
 
 
-def percentileDisc(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def percentileDisc(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("percentileDisc not implemented")
 
 
-def stDev(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def stDev(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("stDev not implemented")
 
 
-def stDevP(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def stDevP(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     raise AssertionError("stDevP not implemented")
 
 

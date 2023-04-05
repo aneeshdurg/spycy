@@ -5,12 +5,13 @@ import pandas as pd
 
 from spycy.errors import ExecutionError
 from spycy.functions.numeric_fns import _wrap_simple_fn
+from spycy.types import FunctionContext
 
 
-def e_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def e_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     if len(params) != 0:
         raise ExecutionError("Incorrect argument count")
-    return pd.Series([np.e] * len(table), dtype=float)
+    return pd.Series([np.e] * len(fnctx.table), dtype=float)
 
 
 fn_map = {

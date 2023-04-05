@@ -4,10 +4,11 @@ import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
+from spycy.types import FunctionContext
 
 
 def _wrap_simple_fn(f):
-    def wrapped(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+    def wrapped(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
         if len(params) != 1:
             raise ExecutionError(f"Invalid number of arguments")
         return f(params[0].to_numpy(dtype=float))
@@ -15,10 +16,10 @@ def _wrap_simple_fn(f):
     return wrapped
 
 
-def rand(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+def rand(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     if len(params) != 0:
         raise ExecutionError(f"Invalid number of arguments")
-    return pd.Series(np.random.rand(len(table)))
+    return pd.Series(np.random.rand(len(fnctx.table)))
 
 
 fn_map = {
