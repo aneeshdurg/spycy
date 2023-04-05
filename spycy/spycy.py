@@ -382,10 +382,44 @@ class CypherExecutor:
         return output
 
     def _evaluate_bin_op(self, lhs: pd.Series, rhs: pd.Series, op: str) -> pd.Series:
+        def evaluate_equality(v1, v2):
+            if v1 is pd.NA or v2 is pd.NA:
+                return pd.NA
+            if isinstance(v1, list):
+                if not isinstance(v2, list):
+                    return False
+                if len(v1) > len(v2):
+                    return False
+                for e1, e2 in zip(v1, v2):
+                    eq = evaluate_equality(e1, e2)
+                    if eq is pd.NA or not eq:
+                        return eq
+                if len(v1) < len(v2):
+                    return False
+                return True
+            if isinstance(v1, dict):
+                if not isinstance(v2, dict):
+                    return False
+                if set(v1.keys()) != set(v2.keys()):
+                    return False
+                for k, e1 in v1.items():
+                    e2 = v2[k]
+                    eq = evaluate_equality(e1, e2)
+                    if eq is pd.NA or not eq:
+                        return eq
+                return True
+            return v1 == v2
+
         if op == "=":
-            return lhs == rhs
+            return pd.Series(evaluate_equality(l, r) for l, r in zip(lhs, rhs))
         if op == "<>":
-            return lhs != rhs
+
+            def invert(x):
+                if x is pd.NA:
+                    return x
+                return not x
+
+            return pd.Series(invert(evaluate_equality(l, r)) for l, r in zip(lhs, rhs))
 
         if op == "^":
             op = "**"
