@@ -56,9 +56,6 @@ TESTS-clauses.create.Create3.xml:[1] MATCH-CREATE
 TESTS-clauses.create.Create3.xml:[2] WITH-CREATE
 TESTS-clauses.create.Create3.xml:[3] MATCH-CREATE-WITH-CREATE
 TESTS-clauses.create.Create3.xml:[4] MATCH-CREATE: Newly-created nodes not visible to preceding MATCH
-TESTS-clauses.create.Create3.xml:[5] WITH-CREATE: Nodes are not created when aliases are applied to variable names
-TESTS-clauses.create.Create3.xml:[7] WITH-CREATE: Nodes are not created when aliases are applied to variable names multiple times
-TESTS-clauses.create.Create3.xml:[8] WITH-CREATE: Only a single node is created when an alias is applied to a variable name multiple times
 TESTS-clauses.create.Create5.xml:[2] Create a pattern with multiple hops in the reverse direction
 TESTS-clauses.create.Create5.xml:[3] Create a pattern with multiple hops in varying directions
 TESTS-clauses.create.Create5.xml:[4] Create a pattern with multiple hops with multiple types and varying directions
@@ -91,67 +88,43 @@ TESTS-clauses.delete.Delete6.xml:[3] Skipping and limiting to a few results afte
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
 TESTS-clauses.delete.Delete6.xml:[8] Limiting to zero results after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[9] Skipping all results after deleting relationships affects the result set but not the side effects
-TESTS-clauses.match-where.MatchWhere1.xml:[10] Filter node with disjunctive property predicate on single variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[11] Filter relationship with disjunctive relationship type predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[1] Filter node with node label predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[2] Filter node with node label predicate on multi variables without any bindings
-TESTS-clauses.match-where.MatchWhere1.xml:[3] Filter node with property predicate on a single variable with multiple bindings
-TESTS-clauses.match-where.MatchWhere1.xml:[4] Filter start node of relationship with property predicate on multi variables with multiple bindings
-TESTS-clauses.match-where.MatchWhere1.xml:[5] Filter end node of relationship with property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[6] Filter node with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[7] Filter relationship with relationship type predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[9] Filter relationship with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
-TESTS-clauses.match-where.MatchWhere3.xml:[2] Join between node properties of disconnected nodes
-TESTS-clauses.match-where.MatchWhere3.xml:[3] Join between node properties of adjacent nodes
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.match-where.MatchWhere5.xml:[1] Filter out on null
 TESTS-clauses.match-where.MatchWhere5.xml:[2] Filter out on null if the AND'd predicate evaluates to false
 TESTS-clauses.match-where.MatchWhere5.xml:[3] Filter out on null if the AND'd predicate evaluates to true
 TESTS-clauses.match-where.MatchWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
 TESTS-clauses.match-where.MatchWhere6.xml:[1] Filter node with node label predicate on multi variables with multiple bindings after MATCH and OPTIONAL MATCH
 TESTS-clauses.match-where.MatchWhere6.xml:[2] Filter node with false node label predicate after OPTIONAL MATCH
-TESTS-clauses.match-where.MatchWhere6.xml:[3] Filter node with property predicate on multi variables with multiple bindings after OPTIONAL MATCH
 TESTS-clauses.match-where.MatchWhere6.xml:[4] Do not fail when predicates on optionally matched and missed nodes are invalid
 TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching with unbound nodes and equality predicate in reverse direction
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match1.xml:[2] Matching all nodes
-TESTS-clauses.match.Match1.xml:[3] Matching nodes using multiple labels
-TESTS-clauses.match.Match1.xml:[4] Simple node inline property predicate
-TESTS-clauses.match.Match1.xml:[5] Use multiple MATCH clauses to do a Cartesian product
-TESTS-clauses.match.Match2.xml:[2] Matching a relationship pattern using a label predicate on both sides
 TESTS-clauses.match.Match2.xml:[3] Matching a self-loop with an undirected relationship pattern
 TESTS-clauses.match.Match2.xml:[4] Matching a self-loop with a directed relationship pattern
-TESTS-clauses.match.Match2.xml:[6] Match relationships with multiple types
 TESTS-clauses.match.Match3.xml:[11] Undirected match in self-relationship graph
 TESTS-clauses.match.Match3.xml:[12] Undirected match of self-relationship in self-relationship graph
-TESTS-clauses.match.Match3.xml:[13] Directed match on self-relationship graph
 TESTS-clauses.match.Match3.xml:[14] Directed match of self-relationship on self-relationship graph
 TESTS-clauses.match.Match3.xml:[15] Mixing directed and undirected pattern parts with self-relationship, simple
 TESTS-clauses.match.Match3.xml:[16] Mixing directed and undirected pattern parts with self-relationship, undirected
 TESTS-clauses.match.Match3.xml:[17] Handling cyclic patterns
 TESTS-clauses.match.Match3.xml:[18] Handling cyclic patterns when separated into two parts
 TESTS-clauses.match.Match3.xml:[19] Two bound nodes pointing to the same node
-TESTS-clauses.match.Match3.xml:[1] Get neighbours
 TESTS-clauses.match.Match3.xml:[20] Three bound nodes pointing to the same node
 TESTS-clauses.match.Match3.xml:[21] Three bound nodes pointing to the same node with extra connections
-TESTS-clauses.match.Match3.xml:[22] Returning bound nodes that are not part of the pattern
-TESTS-clauses.match.Match3.xml:[24] Matching twice with duplicate relationship types on same relationship
 TESTS-clauses.match.Match3.xml:[25] Matching twice with an additional node label
 TESTS-clauses.match.Match3.xml:[26] Matching twice with a duplicate predicate
 TESTS-clauses.match.Match3.xml:[27] Matching from null nodes should return no results owing to finding no matches
 TESTS-clauses.match.Match3.xml:[28] Matching from null nodes should return no results owing to matches being filtered out
-TESTS-clauses.match.Match3.xml:[2] Directed match of a simple relationship
-TESTS-clauses.match.Match3.xml:[3] Undirected match on simple relationship graph
-TESTS-clauses.match.Match3.xml:[4] Get two related nodes
-TESTS-clauses.match.Match3.xml:[5] Return two subgraphs with bound undirected relationship
-TESTS-clauses.match.Match3.xml:[6] Matching a relationship pattern using a label predicate
-TESTS-clauses.match.Match3.xml:[9] Get related to related to
 TESTS-clauses.match.Match4.xml:[1] Handling fixed-length variable length pattern
 TESTS-clauses.match.Match4.xml:[2] Simple variable length pattern
 TESTS-clauses.match.Match4.xml:[3] Zero-length variable length pattern in the middle of the pattern
@@ -224,13 +197,10 @@ TESTS-clauses.match.Match7.xml:[22] MATCH after OPTIONAL MATCH
 TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[25] Optionally matching self-loops without matches
 TESTS-clauses.match.Match7.xml:[27] Handling optional matches between optionally matched entities
-TESTS-clauses.match.Match7.xml:[28] Handling optional matches with inline label predicate
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
-TESTS-clauses.match.Match7.xml:[3] OPTIONAL MATCH and bound nodes
 TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
 TESTS-clauses.match.Match7.xml:[5] Optionally matching relationship with a relationship that is already bound
 TESTS-clauses.match.Match7.xml:[6] Optionally matching relationship with a relationship and node that are both already bound
-TESTS-clauses.match.Match7.xml:[7] MATCH with OPTIONAL MATCH in longer pattern
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match8.xml:[3] Matching and disregarding output, then matching again
@@ -359,7 +329,6 @@ TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[4] Support sort and distinct
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[5] Support ordering by a property after being distinct-ified
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[6] Count star should count everything in scope
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[7] Ordering with aggregation
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[8] Returning all variables with ordering
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[9] Using aliased DISTINCT expression in ORDER BY
 TESTS-clauses.return-orderby.ReturnOrderBy3.xml:[1] Sort on aggregate function and normal property
 TESTS-clauses.return-orderby.ReturnOrderBy4.xml:[1] ORDER BY of a column introduced in RETURN should return salient results in ascending order
@@ -389,7 +358,6 @@ TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[8] Limit to more rows than
 TESTS-clauses.return-skip-limit.ReturnSkipLimit3.xml:[1] Get rows in the middle
 TESTS-clauses.return-skip-limit.ReturnSkipLimit3.xml:[2] Get rows in the middle by param
 TESTS-clauses.return-skip-limit.ReturnSkipLimit3.xml:[3] Limiting amount of rows when there are fewer left than the LIMIT argument
-TESTS-clauses.return.Return1.xml:[1] Returning a list property
 TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
@@ -397,7 +365,6 @@ TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted
 TESTS-clauses.return.Return2.xml:[1] Arithmetic expressions should propagate null values
 TESTS-clauses.return.Return2.xml:[8] Returning label predicate expression
 TESTS-clauses.return.Return3.xml:[1] Returning multiple expressions
-TESTS-clauses.return.Return3.xml:[3] Projecting nodes and relationships
 TESTS-clauses.return.Return4.xml:[10] Fail when returning multiple columns with same name
 TESTS-clauses.return.Return4.xml:[11] Reusing variable names in RETURN
 TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
@@ -419,10 +386,8 @@ TESTS-clauses.return.Return6.xml:[16] Aggregation on complex expressions
 TESTS-clauses.return.Return6.xml:[17] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[20] Fail if not returned variables are used inside an expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[21] Fail if more complex expressions, even if returned, are used inside expression which contains an aggregation expression
-TESTS-clauses.return.Return6.xml:[2] Projecting an arithmetic expression with aggregation
 TESTS-clauses.return.Return6.xml:[4] Support multiple divisions in aggregate function
 TESTS-clauses.return.Return6.xml:[5] Aggregates inside normal functions
-TESTS-clauses.return.Return6.xml:[7] Aggregate on property
 TESTS-clauses.return.Return6.xml:[8] Handle aggregation on functions
 TESTS-clauses.return.Return6.xml:[9] Aggregates with arithmetics
 TESTS-clauses.return.Return7.xml:[1] Return all variables
@@ -723,33 +688,24 @@ TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[4] Ordering and limiting on ag
 TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[1] Get rows in the middle
 TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[2] Get rows in the middle by param
 TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[3] Limiting amount of rows when there are fewer left than the LIMIT argument
-TESTS-clauses.with-where.WithWhere1.xml:[1] Filter node with property predicate on a single variable with multiple bindings
 TESTS-clauses.with-where.WithWhere1.xml:[2] Filter node with property predicate on a single variable with multiple distinct bindings
 TESTS-clauses.with-where.WithWhere1.xml:[3] Filter for an unbound relationship variable
 TESTS-clauses.with-where.WithWhere1.xml:[4] Filter for an unbound node variable
 TESTS-clauses.with-where.WithWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
-TESTS-clauses.with-where.WithWhere3.xml:[2] Join between node properties of disconnected nodes
-TESTS-clauses.with-where.WithWhere3.xml:[3] Join between node properties of adjacent nodes
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.with-where.WithWhere5.xml:[1] Filter out on null
 TESTS-clauses.with-where.WithWhere5.xml:[2] Filter out on null if the AND'd predicate evaluates to false
 TESTS-clauses.with-where.WithWhere5.xml:[3] Filter out on null if the AND'd predicate evaluates to true
 TESTS-clauses.with-where.WithWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
-TESTS-clauses.with-where.WithWhere6.xml:[1] Filter a single aggregate
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
 TESTS-clauses.with.With1.xml:[2] Forwarind a node variable 2
 TESTS-clauses.with.With1.xml:[3] Forwarding a relationship variable
 TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
 TESTS-clauses.with.With1.xml:[5] Forwarding null
-TESTS-clauses.with.With1.xml:[6] Forwarind a node variable possibly null
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
 TESTS-clauses.with.With2.xml:[2] Forwarding a nested map literal
 TESTS-clauses.with.With3.xml:[1] Forwarding multiple node and relationship variables
-TESTS-clauses.with.With4.xml:[1] Aliasing relationship variable
-TESTS-clauses.with.With4.xml:[2] Aliasing expression to new variable name
-TESTS-clauses.with.With4.xml:[3] Aliasing expression to existing variable name
 TESTS-clauses.with.With4.xml:[4] Fail when forwarding multiple aliases with the same name
 TESTS-clauses.with.With4.xml:[5] Fail when not aliasing expressions in WITH
 TESTS-clauses.with.With4.xml:[6] Reusing variable names in WITH
@@ -757,7 +713,6 @@ TESTS-clauses.with.With4.xml:[7] Multiple aliasing and backreferencing
 TESTS-clauses.with.With5.xml:[1] DISTINCT on an expression
 TESTS-clauses.with.With5.xml:[2] Handling DISTINCT with lists in maps
 TESTS-clauses.with.With6.xml:[2] Implicit grouping with single relationship variable as grouping key and single aggregation
-TESTS-clauses.with.With6.xml:[3] Implicit grouping with multiple node and relationship variables as grouping key and single aggregation
 TESTS-clauses.with.With6.xml:[4] Implicit grouping with single path variable as grouping key and single aggregation
 TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[8] Fail if not projected variables are used inside an expression which contains an aggregation expression
@@ -1035,7 +990,6 @@ TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.6
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.7
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.8
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.9
-TESTS-expressions.null.Null1.xml:[6] IS NULL is case insensitive
 TESTS-expressions.null.Null2.xml:[1] Property not null check on non-null node
 TESTS-expressions.null.Null2.xml:[2] Property not null check on optional non-null node
 TESTS-expressions.null.Null2.xml:[3] Property not null check on null node

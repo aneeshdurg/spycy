@@ -71,7 +71,7 @@ class Matcher:
 
         node_data = self.graph.nodes[data_node]
         if pnode.labels:
-            if not any(label in node_data["labels"] for label in pnode.labels):
+            if not pnode.labels <= set(node_data["labels"]):
                 return False
         if pnode.properties:
             match_props = self.node_ids_to_props[pnode.id_][self.row_id]
@@ -174,12 +174,12 @@ class Matcher:
         if check_out:
             # outgoing to self, in-coming from source
             for edge in self.graph.in_edges(source, keys=True):
-                if self.edge_matches(pedge, edge):
+                if self.edge_matches(pedge, edge) and self.node_matches(pnode, edge[0]):
                     results.append((edge, edge[0]))
         if check_in:
             # incoming to self, out-going from source
             for edge in self.graph.out_edges(source, keys=True):
-                if self.edge_matches(pedge, edge):
+                if self.edge_matches(pedge, edge) and self.node_matches(pnode, edge[1]):
                     results.append((edge, edge[1]))
         return results
 

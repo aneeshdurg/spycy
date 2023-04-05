@@ -86,24 +86,17 @@ class Graph:
     def degree(self, node: NodeID) -> int:
         return self.out_degree(node) + self.in_degree(node) + self.undir_degree(node)
 
-    def add_relationship(
-        self,
-        rel_el: CypherParser.OC_RelationshipPatternContext,
+    @classmethod
+    def build_edge(
+        cls,
+        edgeid: EdgeID,
+        undirected: bool,
         start: NodeID,
         end: NodeID,
-    ):
-        incoming = bool(rel_el.oC_LeftArrowHead())
-        outgoing = bool(rel_el.oC_RightArrowHead())
-        undirected = (incoming and outgoing) or not (incoming or outgoing)
-        if undirected:
-            incoming = False
-            outgoing = False
-        if incoming:
-            start, end = end, start
-
+        details: Optional[CypherParser.OC_RelationshipDetailContext],
+    ) -> Edge:
         name = None
         edge_range = None
-        details = rel_el.oC_RelationshipDetail()
         types = set()
         properties = None
         if details:
@@ -135,12 +128,31 @@ class Graph:
                 if map_lit := props.oC_MapLiteral():
                     properties = map_lit
 
+        return Edge(edgeid, name, undirected, start, end, edge_range, types, properties)
+
+    def add_relationship(
+        self,
+        rel_el: CypherParser.OC_RelationshipPatternContext,
+        start: NodeID,
+        end: NodeID,
+    ):
+        incoming = bool(rel_el.oC_LeftArrowHead())
+        outgoing = bool(rel_el.oC_RightArrowHead())
+        undirected = (incoming and outgoing) or not (incoming or outgoing)
+        if undirected:
+            incoming = False
+            outgoing = False
+        if incoming:
+            start, end = end, start
+
+        details = rel_el.oC_RelationshipDetail()
+
         edgeid = EdgeID(len(self.edges))
-        edge = Edge(edgeid, name, undirected, start, end, edge_range, types, properties)
+        edge = Graph.build_edge(edgeid, undirected, start, end, details)
         self.edges[edgeid] = edge
-        if name:
-            assert name not in self._edge_name_to_id
-            self._edge_name_to_id[name] = edgeid
+        if edge.name:
+            assert edge.name not in self._edge_name_to_id
+            self._edge_name_to_id[edge.name] = edgeid
 
         if undirected:
             if start not in self._node_undir_incident_edges:
