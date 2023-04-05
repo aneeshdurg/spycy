@@ -387,6 +387,9 @@ class CypherExecutor:
         if op == "<>":
             return lhs != rhs
 
+        if op == "^":
+            op = "**"
+
         return eval(f"lhs {op} rhs")
 
     def _evaluate_power_of(
@@ -548,43 +551,110 @@ class CypherExecutor:
 
     def _evaluate_not(self, expr: CypherParser.OC_NotExpressionContext) -> pd.Series:
         assert expr.children
-        # 1 child is the ComparisionExpr, the rest are ["NOT", "SP"]
-        not_count = (len(expr.children) - 1) / 2
+        not_count = sum(1 for e in expr.children if e.getText().lower() == "not")
         negate = not_count % 2 == 1
 
         comp_expr = expr.oC_ComparisonExpression()
         assert comp_expr
         output = self._evaluate_comparision(comp_expr)
         if negate:
-            return ~output
+
+            def invert(x):
+                if x is pd.NA:
+                    return pd.NA
+                if not np.issubdtype(type(x), np.bool_):
+                    raise ExecutionError(
+                        f"TypeError::Not expected boolean got {type(x)}"
+                    )
+                return not x
+
+            return output.apply(lambda x: invert(x))
         return output
 
     def _evaluate_and(self, expr: CypherParser.OC_AndExpressionContext) -> pd.Series:
         expressions = expr.oC_NotExpression()
         assert expressions
 
-        output = self._evaluate_not(expressions[0])
-        for and_expr in expressions[1:]:
-            output = output & self._evaluate_not(and_expr)
-        return output
+        lhs = self._evaluate_not(expressions[0])
+        for not_expr in expressions[1:]:
+            output = []
+            rhs = self._evaluate_not(not_expr)
+            for l, r in zip(lhs, rhs):
+                if l is not pd.NA and not np.issubdtype(type(l), np.bool_):
+                    raise ExecutionError(
+                        f"TypeError - and expected boolean got {type(l)}"
+                    )
+                if r is not pd.NA and not np.issubdtype(type(r), np.bool_):
+                    raise ExecutionError(
+                        f"TypeError - and expected boolean got {type(r)}"
+                    )
+
+                if l is pd.NA and r is pd.NA:
+                    output.append(pd.NA)
+                elif l is pd.NA or r is pd.NA:
+                    if l is True or r is True:
+                        output.append(pd.NA)
+                    else:
+                        output.append(False)
+                else:
+                    output.append(l & r)
+            lhs = pd.Series(output, dtype=object)
+        return lhs
 
     def _evaluate_xor(self, expr: CypherParser.OC_XorExpressionContext) -> pd.Series:
         expressions = expr.oC_AndExpression()
         assert expressions
 
-        output = self._evaluate_and(expressions[0])
+        lhs = self._evaluate_and(expressions[0])
         for and_expr in expressions[1:]:
-            output = output ^ self._evaluate_and(and_expr)
-        return output
+            output = []
+            rhs = self._evaluate_and(and_expr)
+            for l, r in zip(lhs, rhs):
+                if l is not pd.NA and not np.issubdtype(type(l), np.bool_):
+                    raise ExecutionError(
+                        f"TypeError - or expected boolean got {type(l)}"
+                    )
+                if r is not pd.NA and not np.issubdtype(type(r), np.bool_):
+                    raise ExecutionError(
+                        f"TypeError - or expected boolean got {type(r)}"
+                    )
+
+                if l is pd.NA or r is pd.NA:
+                    output.append(pd.NA)
+                else:
+                    output.append(l ^ r)
+            lhs = pd.Series(output, dtype=object)
+        return lhs
 
     def _evaluate_or(self, expr: CypherParser.OC_OrExpressionContext) -> pd.Series:
         expressions = expr.oC_XorExpression()
         assert expressions
 
-        output = self._evaluate_xor(expressions[0])
+        lhs = self._evaluate_xor(expressions[0])
         for xor_expr in expressions[1:]:
-            output = output | self._evaluate_xor(xor_expr)
-        return output
+            output = []
+            rhs = self._evaluate_xor(xor_expr)
+            for l, r in zip(lhs, rhs):
+                if l is not pd.NA and not np.issubdtype(type(l), np.bool_):
+                    raise ExecutionError(
+                        f"TypeError - or expected boolean got {type(l)}"
+                    )
+                if r is not pd.NA and not np.issubdtype(type(r), np.bool_):
+                    raise ExecutionError(
+                        f"TypeError - or expected boolean got {type(r)}"
+                    )
+
+                if l is pd.NA and r is pd.NA:
+                    output.append(pd.NA)
+                elif l is pd.NA or r is pd.NA:
+                    if l is False or r is False:
+                        output.append(pd.NA)
+                    else:
+                        output.append(True)
+                else:
+                    output.append(l | r)
+            lhs = pd.Series(output, dtype=object)
+        return lhs
 
     def _evaluate_expression(
         self, expr: CypherParser.OC_ExpressionContext
@@ -792,6 +862,7 @@ class CypherExecutor:
         new_table = self.table[filter_col]
         assert new_table is not None
         self.table = new_table
+        self.table.reset_index(drop=True, inplace=True)
 
     def _process_with(self, node: CypherParser.OC_WithContext):
         body = node.oC_ProjectionBody()

@@ -168,7 +168,6 @@ TESTS-clauses.match.Match7.xml:[19] Optionally matching named paths with single 
 TESTS-clauses.match.Match7.xml:[20] Variable length optional relationships with bound nodes, no matches
 TESTS-clauses.match.Match7.xml:[22] MATCH after OPTIONAL MATCH
 TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
-TESTS-clauses.match.Match7.xml:[25] Optionally matching self-loops without matches
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
 TESTS-clauses.match.Match7.xml:[8] Longer pattern with bound nodes without matches
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
@@ -308,7 +307,6 @@ TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty gra
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
 TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted relationships
-TESTS-clauses.return.Return2.xml:[1] Arithmetic expressions should propagate null values
 TESTS-clauses.return.Return3.xml:[1] Returning multiple expressions
 TESTS-clauses.return.Return4.xml:[10] Fail when returning multiple columns with same name
 TESTS-clauses.return.Return4.xml:[11] Reusing variable names in RETURN
@@ -541,37 +539,6 @@ TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on
 TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.3
 TESTS-expressions.aggregation.Aggregation8.xml:[3] Collect distinct nulls
 TESTS-expressions.aggregation.Aggregation8.xml:[4] Collect distinct values mixed with nulls
-TESTS-expressions.boolean.Boolean1.xml:[1] Conjunction of two truth values
-TESTS-expressions.boolean.Boolean1.xml:[2] Conjunction of three truth values
-TESTS-expressions.boolean.Boolean1.xml:[3] Conjunction of many truth values
-TESTS-expressions.boolean.Boolean1.xml:[8] Fail on conjunction of at least one non-booleans -- @1.1
-TESTS-expressions.boolean.Boolean1.xml:[8] Fail on conjunction of at least one non-booleans -- @1.10
-TESTS-expressions.boolean.Boolean1.xml:[8] Fail on conjunction of at least one non-booleans -- @1.11
-TESTS-expressions.boolean.Boolean1.xml:[8] Fail on conjunction of at least one non-booleans -- @1.12
-TESTS-expressions.boolean.Boolean1.xml:[8] Fail on conjunction of at least one non-booleans -- @1.15
-TESTS-expressions.boolean.Boolean1.xml:[8] Fail on conjunction of at least one non-booleans -- @1.17
-TESTS-expressions.boolean.Boolean2.xml:[1] Disjunction of two truth values
-TESTS-expressions.boolean.Boolean2.xml:[2] Disjunction of three truth values
-TESTS-expressions.boolean.Boolean2.xml:[3] Disjunction of many truth values
-TESTS-expressions.boolean.Boolean2.xml:[8] Fail on disjunction of at least one non-booleans -- @1.1
-TESTS-expressions.boolean.Boolean2.xml:[8] Fail on disjunction of at least one non-booleans -- @1.10
-TESTS-expressions.boolean.Boolean2.xml:[8] Fail on disjunction of at least one non-booleans -- @1.11
-TESTS-expressions.boolean.Boolean2.xml:[8] Fail on disjunction of at least one non-booleans -- @1.12
-TESTS-expressions.boolean.Boolean2.xml:[8] Fail on disjunction of at least one non-booleans -- @1.15
-TESTS-expressions.boolean.Boolean2.xml:[8] Fail on disjunction of at least one non-booleans -- @1.17
-TESTS-expressions.boolean.Boolean3.xml:[1] Exclusive disjunction of two truth values
-TESTS-expressions.boolean.Boolean3.xml:[2] Exclusive disjunction of three truth values
-TESTS-expressions.boolean.Boolean3.xml:[3] Exclusive disjunction of many truth values
-TESTS-expressions.boolean.Boolean3.xml:[8] Fail on exclusive disjunction of at least one non-booleans -- @1.1
-TESTS-expressions.boolean.Boolean3.xml:[8] Fail on exclusive disjunction of at least one non-booleans -- @1.10
-TESTS-expressions.boolean.Boolean3.xml:[8] Fail on exclusive disjunction of at least one non-booleans -- @1.11
-TESTS-expressions.boolean.Boolean3.xml:[8] Fail on exclusive disjunction of at least one non-booleans -- @1.12
-TESTS-expressions.boolean.Boolean3.xml:[8] Fail on exclusive disjunction of at least one non-booleans -- @1.15
-TESTS-expressions.boolean.Boolean3.xml:[8] Fail on exclusive disjunction of at least one non-booleans -- @1.17
-TESTS-expressions.boolean.Boolean4.xml:[3] NOT and false
-TESTS-expressions.boolean.Boolean4.xml:[4] Fail when using NOT on a non-boolean literal -- @1.1
-TESTS-expressions.boolean.Boolean4.xml:[4] Fail when using NOT on a non-boolean literal -- @1.2
-TESTS-expressions.boolean.Boolean4.xml:[4] Fail when using NOT on a non-boolean literal -- @1.3
 TESTS-expressions.boolean.Boolean5.xml:[6] Conjunction is not distributive over exclusive disjunction on null
 TESTS-expressions.comparison.Comparison1.xml:[14] Direction of traversed relationship is not significant for path equality, simple
 TESTS-expressions.comparison.Comparison1.xml:[15] It is unknown - i.e. null - if a null is equal to a null
@@ -883,12 +850,7 @@ TESTS-expressions.precedence.Precedence2.xml:[1] Numeric multiplicative operatio
 TESTS-expressions.precedence.Precedence2.xml:[1] Numeric multiplicative operations takes precedence over numeric additive operations -- @1.7
 TESTS-expressions.precedence.Precedence2.xml:[1] Numeric multiplicative operations takes precedence over numeric additive operations -- @1.8
 TESTS-expressions.precedence.Precedence2.xml:[1] Numeric multiplicative operations takes precedence over numeric additive operations -- @1.9
-TESTS-expressions.precedence.Precedence2.xml:[2] Exponentiation takes precedence over numeric multiplicative operations -- @1.1
 TESTS-expressions.precedence.Precedence2.xml:[2] Exponentiation takes precedence over numeric multiplicative operations -- @1.2
-TESTS-expressions.precedence.Precedence2.xml:[2] Exponentiation takes precedence over numeric multiplicative operations -- @1.3
-TESTS-expressions.precedence.Precedence2.xml:[3] Exponentiation takes precedence over numeric additive operations -- @1.1
-TESTS-expressions.precedence.Precedence2.xml:[3] Exponentiation takes precedence over numeric additive operations -- @1.2
-TESTS-expressions.precedence.Precedence2.xml:[4] Numeric unary negative takes precedence over exponentiation
 TESTS-expressions.precedence.Precedence3.xml:[1] List element access takes precedence over list appending
 TESTS-expressions.precedence.Precedence3.xml:[4] List appending takes precedence over list element containment
 TESTS-expressions.precedence.Precedence3.xml:[5] List concatenation takes precedence over list element containment
@@ -901,10 +863,7 @@ TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes 
 TESTS-expressions.precedence.Precedence4.xml:[1] Null predicate takes precedence over comparison operator -- @1.1
 TESTS-expressions.precedence.Precedence4.xml:[1] Null predicate takes precedence over comparison operator -- @1.2
 TESTS-expressions.precedence.Precedence4.xml:[1] Null predicate takes precedence over comparison operator -- @1.3
-TESTS-expressions.precedence.Precedence4.xml:[3] Null predicate takes precedence over binary boolean operator -- @1.1
-TESTS-expressions.precedence.Precedence4.xml:[3] Null predicate takes precedence over binary boolean operator -- @1.2
 TESTS-expressions.precedence.Precedence4.xml:[3] Null predicate takes precedence over binary boolean operator -- @1.3
-TESTS-expressions.precedence.Precedence4.xml:[3] Null predicate takes precedence over binary boolean operator -- @1.4
 TESTS-expressions.precedence.Precedence4.xml:[3] Null predicate takes precedence over binary boolean operator -- @1.6
 TESTS-expressions.precedence.Precedence4.xml:[4] String predicate takes precedence over binary boolean operator
 TESTS-expressions.quantifier.Quantifier1.xml:[10] None quantifier on lists containing nulls -- @1.1
