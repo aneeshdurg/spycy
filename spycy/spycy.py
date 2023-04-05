@@ -425,8 +425,21 @@ class CypherExecutor:
 
         if op == "^":
             op = "**"
+        op_f = eval(f"lambda x, y: x {op} y")
 
-        return eval(f"lhs {op} rhs")
+        def f(x, y):
+            return op_f(x, y)
+
+        output = []
+        for l, r in zip(lhs, rhs):
+            try:
+                output.append(f(l, r))
+            except ZeroDivisionError:
+                output.append(math.nan)
+            except Exception as e:
+                output.append(pd.NA)
+        output = pd.Series(output)
+        return output
 
     def _evaluate_power_of(
         self, expr: CypherParser.OC_PowerOfExpressionContext
@@ -899,7 +912,7 @@ class CypherExecutor:
         filter_expr = node.oC_Expression()
         assert filter_expr
         filter_col = self._evaluate_expression(filter_expr)
-        new_table = self.table[filter_col]
+        new_table = self.table[[e if e is not pd.NA else False for e in filter_col]]
         assert new_table is not None
         self.table = new_table
         self.table.reset_index(drop=True, inplace=True)

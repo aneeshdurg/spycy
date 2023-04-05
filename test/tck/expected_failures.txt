@@ -75,18 +75,14 @@ TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
 TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all results after deleting relationships does not affect the result set nor the side effects
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
-TESTS-clauses.match-where.MatchWhere1.xml:[10] Filter node with disjunctive property predicate on single variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[2] Filter node with node label predicate on multi variables without any bindings
-TESTS-clauses.match-where.MatchWhere1.xml:[3] Filter node with property predicate on a single variable with multiple bindings
-TESTS-clauses.match-where.MatchWhere1.xml:[5] Filter end node of relationship with property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[6] Filter node with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[9] Filter relationship with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.match-where.MatchWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
 TESTS-clauses.match-where.MatchWhere6.xml:[2] Filter node with false node label predicate after OPTIONAL MATCH
 TESTS-clauses.match-where.MatchWhere6.xml:[4] Do not fail when predicates on optionally matched and missed nodes are invalid
 TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching with unbound nodes and equality predicate in reverse direction
@@ -281,7 +277,6 @@ TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[11] ORDER BY should order disti
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[12] ORDER BY DESC should order distinct types in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[9] ORDER BY should order lists in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[10] Returned columns do not change from using ORDER BY
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[11] Aggregates ordered by arithmetics
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[12] Aggregation of named paths
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[1] ORDER BY should return results in ascending order
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[2] ORDER BY DESC should return results in descending order
@@ -499,7 +494,6 @@ TESTS-clauses.with-where.WithWhere1.xml:[4] Filter for an unbound node variable
 TESTS-clauses.with-where.WithWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.with-where.WithWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
 TESTS-clauses.with.With1.xml:[2] Forwarind a node variable 2
@@ -538,17 +532,10 @@ TESTS-expressions.aggregation.Aggregation8.xml:[3] Collect distinct nulls
 TESTS-expressions.aggregation.Aggregation8.xml:[4] Collect distinct values mixed with nulls
 TESTS-expressions.boolean.Boolean5.xml:[6] Conjunction is not distributive over exclusive disjunction on null
 TESTS-expressions.comparison.Comparison1.xml:[14] Direction of traversed relationship is not significant for path equality, simple
-TESTS-expressions.comparison.Comparison2.xml:[1] Comparing strings and integers using > in an AND'd predicate
-TESTS-expressions.comparison.Comparison2.xml:[2] Comparing strings and integers using > in a OR'd predicate
 TESTS-expressions.comparison.Comparison2.xml:[3] Comparing across types yields null, except numbers -- @1.1
 TESTS-expressions.comparison.Comparison2.xml:[3] Comparing across types yields null, except numbers -- @1.2
 TESTS-expressions.comparison.Comparison2.xml:[3] Comparing across types yields null, except numbers -- @1.3
 TESTS-expressions.comparison.Comparison2.xml:[3] Comparing across types yields null, except numbers -- @1.4
-TESTS-expressions.comparison.Comparison2.xml:[4] Comparing lists -- @1.3
-TESTS-expressions.comparison.Comparison2.xml:[4] Comparing lists -- @1.4
-TESTS-expressions.comparison.Comparison2.xml:[5] Comparing NaN -- @1.4
-TESTS-expressions.comparison.Comparison2.xml:[6] Comparability between numbers and strings -- @1.3
-TESTS-expressions.comparison.Comparison2.xml:[6] Comparability between numbers and strings -- @1.4
 TESTS-expressions.comparison.Comparison3.xml:[1] Handling numerical ranges 1
 TESTS-expressions.comparison.Comparison3.xml:[2] Handling numerical ranges 2
 TESTS-expressions.comparison.Comparison3.xml:[3] Handling numerical ranges 3
