@@ -179,6 +179,9 @@ class Matcher:
         if check_in:
             # incoming to self, out-going from source
             for edge in self.graph.out_edges(source, keys=True):
+                if check_out and edge[1] == source:
+                    # self-loop is already matched as outgoing to self
+                    continue
                 if self.edge_matches(pedge, edge) and self.node_matches(pnode, edge[1]):
                     results.append((edge, edge[1]))
         return results

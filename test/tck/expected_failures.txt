@@ -95,8 +95,6 @@ TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching w
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match2.xml:[3] Matching a self-loop with an undirected relationship pattern
-TESTS-clauses.match.Match3.xml:[11] Undirected match in self-relationship graph
 TESTS-clauses.match.Match3.xml:[12] Undirected match of self-relationship in self-relationship graph
 TESTS-clauses.match.Match3.xml:[14] Directed match of self-relationship on self-relationship graph
 TESTS-clauses.match.Match3.xml:[15] Mixing directed and undirected pattern parts with self-relationship, simple
@@ -536,7 +534,6 @@ TESTS-clauses.with.With6.xml:[4] Implicit grouping with single path variable as 
 TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[8] Fail if not projected variables are used inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[9] Fail if more complex expression, even if projected, are used inside expression which contains an aggregation expression
-TESTS-expressions.aggregation.Aggregation1.xml:[2] Counting loop relationships
 TESTS-expressions.aggregation.Aggregation2.xml:[11] `max()` over mixed values
 TESTS-expressions.aggregation.Aggregation2.xml:[12] `min()` over mixed values
 TESTS-expressions.aggregation.Aggregation2.xml:[7] `max()` over strings
