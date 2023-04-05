@@ -129,6 +129,10 @@ def type_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
     output = []
     for edge in params[0]:
+        if edge is pd.NA:
+            output.append(pd.NA)
+            continue
+
         if not isinstance(edge, Edge):
             raise ExecutionError("TypeError - type expects an edge argument")
         edge_data = fnctx.graph.edges[edge.id_]
