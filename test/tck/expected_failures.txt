@@ -62,6 +62,7 @@ TESTS-clauses.create.Create5.xml:[4] Create a pattern with multiple hops with mu
 TESTS-clauses.create.Create5.xml:[5] Create a pattern with multiple hops and varying directions
 TESTS-clauses.create.Create6.xml:[11] Skipping zero result and limiting to all results after creating relationships does not affect the result set nor the side effects
 TESTS-clauses.create.Create6.xml:[4] Skipping zero result and limiting to all results after creating nodes does not affect the result set nor the side effects
+TESTS-clauses.delete.Delete1.xml:[8] Failing when deleting a label
 TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
 TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
@@ -78,17 +79,14 @@ TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all r
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
-TESTS-clauses.match-where.MatchWhere1.xml:[1] Filter node with node label predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[2] Filter node with node label predicate on multi variables without any bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[6] Filter node with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[9] Filter relationship with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.match-where.MatchWhere5.xml:[2] Filter out on null if the AND'd predicate evaluates to false
 TESTS-clauses.match-where.MatchWhere5.xml:[3] Filter out on null if the AND'd predicate evaluates to true
 TESTS-clauses.match-where.MatchWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
-TESTS-clauses.match-where.MatchWhere6.xml:[1] Filter node with node label predicate on multi variables with multiple bindings after MATCH and OPTIONAL MATCH
 TESTS-clauses.match-where.MatchWhere6.xml:[2] Filter node with false node label predicate after OPTIONAL MATCH
 TESTS-clauses.match-where.MatchWhere6.xml:[4] Do not fail when predicates on optionally matched and missed nodes are invalid
 TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching with unbound nodes and equality predicate in reverse direction
@@ -311,7 +309,6 @@ TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationshi
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
 TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted relationships
 TESTS-clauses.return.Return2.xml:[1] Arithmetic expressions should propagate null values
-TESTS-clauses.return.Return2.xml:[8] Returning label predicate expression
 TESTS-clauses.return.Return3.xml:[1] Returning multiple expressions
 TESTS-clauses.return.Return4.xml:[10] Fail when returning multiple columns with same name
 TESTS-clauses.return.Return4.xml:[11] Reusing variable names in RETURN
@@ -504,7 +501,6 @@ TESTS-clauses.with-where.WithWhere1.xml:[4] Filter for an unbound node variable
 TESTS-clauses.with-where.WithWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.with-where.WithWhere5.xml:[2] Filter out on null if the AND'd predicate evaluates to false
 TESTS-clauses.with-where.WithWhere5.xml:[3] Filter out on null if the AND'd predicate evaluates to true
 TESTS-clauses.with-where.WithWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
@@ -638,17 +634,6 @@ TESTS-expressions.graph.Graph3.xml:[7] `labels()` on null node
 TESTS-expressions.graph.Graph4.xml:[3] `type()` on null relationship
 TESTS-expressions.graph.Graph4.xml:[4] `type()` on mixed null and non-null relationships
 TESTS-expressions.graph.Graph4.xml:[7] Failing when using `type()` on a node
-TESTS-expressions.graph.Graph5.xml:[1] Single-labels expression on nodes
-TESTS-expressions.graph.Graph5.xml:[2] Single-labels expression on relationships
-TESTS-expressions.graph.Graph5.xml:[3] Conjunctive labels expression on nodes
-TESTS-expressions.graph.Graph5.xml:[4] Conjunctive labels expression on nodes with varying order and repeating labels -- @1.1
-TESTS-expressions.graph.Graph5.xml:[4] Conjunctive labels expression on nodes with varying order and repeating labels -- @1.2
-TESTS-expressions.graph.Graph5.xml:[4] Conjunctive labels expression on nodes with varying order and repeating labels -- @1.3
-TESTS-expressions.graph.Graph5.xml:[4] Conjunctive labels expression on nodes with varying order and repeating labels -- @1.4
-TESTS-expressions.graph.Graph5.xml:[4] Conjunctive labels expression on nodes with varying order and repeating labels -- @1.5
-TESTS-expressions.graph.Graph5.xml:[5] Label expression on null
-TESTS-expressions.graph.Graph6.xml:[3] Statically access a property of a null node
-TESTS-expressions.graph.Graph6.xml:[7] Statically access a property of a null relationship
 TESTS-expressions.graph.Graph7.xml:[1] Execute n['name'] in read queries
 TESTS-expressions.graph.Graph7.xml:[2] Execute n['name'] in update queries
 TESTS-expressions.graph.Graph7.xml:[3] Use dynamic property lookup based on parameters when there is lhs type information
@@ -739,7 +724,6 @@ TESTS-expressions.literals.Literals7.xml:[12] Return 40-deep nested empty lists
 TESTS-expressions.literals.Literals7.xml:[1] Return an empty list
 TESTS-expressions.literals.Literals7.xml:[9] Return a list containing an empty lists
 TESTS-expressions.map.Map1.xml:[1] Statically access a field of a non-null map
-TESTS-expressions.map.Map1.xml:[2] Statically access a field of a null map
 TESTS-expressions.map.Map1.xml:[3] Statically access a field of a map resulting from an expression
 TESTS-expressions.map.Map1.xml:[4] Statically access a field is case-sensitive -- @1.1
 TESTS-expressions.map.Map1.xml:[4] Statically access a field is case-sensitive -- @1.2
@@ -762,11 +746,9 @@ TESTS-expressions.map.Map2.xml:[7] Fail at runtime when trying to index into a m
 TESTS-expressions.map.Map2.xml:[8] Fail at runtime when trying to index something which is not a map
 TESTS-expressions.map.Map3.xml:[1] Using `keys()` on a literal map
 TESTS-expressions.map.Map3.xml:[2] Using `keys()` on a parameter map
-TESTS-expressions.null.Null1.xml:[3] Property null check on null node
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.1
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.10
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.11
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.12
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.2
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.3
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.4

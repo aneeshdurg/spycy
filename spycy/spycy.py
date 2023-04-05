@@ -312,7 +312,9 @@ class CypherExecutor:
         key_expr = expr.oC_PropertyKeyName()
         assert key_expr
         key = key_expr.getText()
-        if isinstance(el, Node):
+        if el is pd.NA:
+            output.append(pd.NA)
+        elif isinstance(el, Node):
             for row in lhs:
                 output.append(self.graph.nodes[row.id_]["properties"].get(key, pd.NA))
         elif isinstance(el, Edge):
@@ -320,6 +322,31 @@ class CypherExecutor:
                 output.append(self.graph.edges[row.id_]["properties"].get(key, pd.NA))
         else:
             raise ExecutionError("TypeError::InvalidPropertyAccess")
+        return pd.Series(output)
+
+    def _evaluate_node_labels(
+        self, lhs: pd.Series, labels: CypherParser.OC_NodeLabelsContext
+    ) -> pd.Series:
+        label_exprs = labels.oC_NodeLabel()
+        assert label_exprs
+        label_vals = set()
+        for label in label_exprs:
+            name = label.oC_LabelName()
+            assert name
+            label_vals.add(name.getText())
+
+        output = []
+        for el in lhs:
+            if el is pd.NA:
+                output.append(pd.NA)
+            elif isinstance(el, Node):
+                node_data = self.graph.nodes[el.id_]
+                output.append(all(l in node_data["labels"] for l in label_vals))
+            elif isinstance(el, Edge):
+                node_data = self.graph.edges[el.id_]
+                output.append(all(l == node_data["type"] for l in label_vals))
+            else:
+                raise ExecutionError("TypeError - labels requires Node or Edge")
         return pd.Series(output)
 
     def _evaluate_non_arithmetic_operator(
@@ -335,10 +362,10 @@ class CypherExecutor:
                 lhs = self._evaluate_list_op(lhs, child)
 
             if isinstance(child, CypherParser.OC_PropertyLookupContext):
-                return self._evaluate_property_lookup(lhs, child)
+                lhs = self._evaluate_property_lookup(lhs, child)
 
             if isinstance(child, CypherParser.OC_NodeLabelsContext):
-                raise AssertionError("Unsupported query - labels unsupported")
+                return self._evaluate_node_labels(lhs, child)
         return lhs
 
     def _evaluate_unary_add_or_sub(
