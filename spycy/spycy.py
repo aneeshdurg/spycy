@@ -889,6 +889,8 @@ class CypherExecutor:
                         data.append(data_node)
 
             for eid, e in pgraph.edges.items():
+                if e.name and e.name in self.table:
+                    assert ExecutionError("SyntaxError::Cannot bind edge in create")
                 props = edge_ids_to_props.get(eid)
                 data = {
                     "type": list(e.types)[0],
@@ -916,6 +918,8 @@ class CypherExecutor:
         for expr in exprs:
             output = self._evaluate_expression(expr)
             for entity in output:
+                if entity is pd.NA:
+                    continue
                 if isinstance(entity, Node):
                     nodes_to_delete.add(entity.id_)
                 elif isinstance(entity, Edge):

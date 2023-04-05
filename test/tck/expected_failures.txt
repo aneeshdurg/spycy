@@ -71,9 +71,7 @@ TESTS-clauses.create.Create6.xml:[3] Skipping and limiting to a few results afte
 TESTS-clauses.create.Create6.xml:[4] Skipping zero result and limiting to all results after creating nodes does not affect the result set nor the side effects
 TESTS-clauses.create.Create6.xml:[8] Limiting to zero results after creating relationships affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[9] Skipping all results after creating relationships affects the result set but not the side effects
-TESTS-clauses.delete.Delete1.xml:[5] Ignore null when deleting node
 TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
-TESTS-clauses.delete.Delete2.xml:[4] Ignore null when deleting relationship
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
 TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
 TESTS-clauses.delete.Delete4.xml:[2] Undirected variable length expand followed by delete and count
