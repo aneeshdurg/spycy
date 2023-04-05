@@ -22,7 +22,17 @@ def endNode(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def head(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("head unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to id")
+    output = []
+    for el in params[0]:
+        if el is pd.NA:
+            output.append(pd.NA)
+        elif isinstance(el, list):
+            output.append(el[0] if len(el) else pd.NA)
+        else:
+            raise ExecutionError(f"TypeError::head expected list, got {type(el)}")
+    return pd.Series(output)
 
 
 def id_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:

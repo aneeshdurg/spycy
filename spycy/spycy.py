@@ -832,7 +832,9 @@ class CypherExecutor:
 
         self.table = old_table.head(limit)
 
-    def _process_projection_body(self, node: CypherParser.OC_ProjectionBodyContext):
+    def _process_projection_body(
+        self, node: CypherParser.OC_ProjectionBodyContext, is_with: bool = False
+    ):
         is_distinct = node.DISTINCT()
         assert not is_distinct, "Unsupported query - DISTINCT not implemented"
 
@@ -849,17 +851,32 @@ class CypherExecutor:
                 alias = var.getText()
             else:
                 expr = proj.oC_Expression()
+                if is_with:
+                    var_expr = []
+
+                    def get_var_expr(f):
+                        if isinstance(f, CypherParser.OC_VariableContext):
+                            var_expr.append(f)
+                        return True
+
+                    visitor(expr, get_var_expr)
+                    if len(var_expr) != 1 or var_expr[0].getText() != expr.getText():
+                        raise ExecutionError("SyntaxError::NoExpressionAlias")
                 alias = expr.getText()
             return alias
 
         group_by_keys = OrderedDict()
         aggregations = {}
+        all_aliases = set()
         for proj in proj_items.oC_ProjectionItem():
             alias = get_alias(proj)
             if self._has_aggregation(proj):
                 aggregations[alias] = proj
             else:
                 group_by_keys[alias] = proj
+            if alias in all_aliases:
+                raise ExecutionError("SyntaxError::ColumnNameConflict")
+            all_aliases.add(alias)
 
         output_table = pd.DataFrame()
 
@@ -976,7 +993,7 @@ class CypherExecutor:
     def _process_with(self, node: CypherParser.OC_WithContext):
         body = node.oC_ProjectionBody()
         assert body
-        self._process_projection_body(body)
+        self._process_projection_body(body, is_with=True)
 
         where = node.oC_Where()
         if where:

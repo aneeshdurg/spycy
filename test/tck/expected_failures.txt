@@ -157,6 +157,7 @@ TESTS-clauses.match.Match7.xml:[20] Variable length optional relationships with 
 TESTS-clauses.match.Match7.xml:[22] MATCH after OPTIONAL MATCH
 TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
+TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
 TESTS-clauses.match.Match7.xml:[8] Longer pattern with bound nodes without matches
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
@@ -276,12 +277,11 @@ TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[9] Using aliased DISTINCT expre
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
+TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[3] SKIP with an expression that does not depend on variables
 TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
 TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted relationships
-TESTS-clauses.return.Return4.xml:[10] Fail when returning multiple columns with same name
-TESTS-clauses.return.Return4.xml:[11] Reusing variable names in RETURN
 TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
 TESTS-clauses.return.Return4.xml:[5] Keeping used expression 2
 TESTS-clauses.return.Return4.xml:[6] Keeping used expression 3
@@ -428,15 +428,10 @@ TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-p
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
-TESTS-clauses.with.With1.xml:[3] Forwarding a relationship variable
 TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
-TESTS-clauses.with.With4.xml:[4] Fail when forwarding multiple aliases with the same name
-TESTS-clauses.with.With4.xml:[5] Fail when not aliasing expressions in WITH
-TESTS-clauses.with.With4.xml:[6] Reusing variable names in WITH
 TESTS-clauses.with.With5.xml:[1] DISTINCT on an expression
 TESTS-clauses.with.With5.xml:[2] Handling DISTINCT with lists in maps
-TESTS-clauses.with.With6.xml:[2] Implicit grouping with single relationship variable as grouping key and single aggregation
 TESTS-clauses.with.With6.xml:[4] Implicit grouping with single path variable as grouping key and single aggregation
 TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[8] Fail if not projected variables are used inside an expression which contains an aggregation expression

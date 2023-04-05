@@ -195,8 +195,30 @@ class Matcher:
             if not self.node_matches(self.pgraph.nodes[node_id], data_id):
                 return MatchResultSet()
         for edge_id, data_id in initial_matched.edge_ids_to_data_ids.items():
-            if not self.edge_matches(self.pgraph.edges[edge_id], data_id):
+            pedge = self.pgraph.edges[edge_id]
+            if not self.edge_matches(pedge, data_id):
                 return MatchResultSet()
+
+            def check_node(pnode: pattern_graph.NodeID, dnode: int) -> bool:
+                if init_n := initial_matched.node_ids_to_data_ids.get(pnode):
+                    if init_n != dnode:
+                        return False
+                else:
+                    if not self.node_matches(self.pgraph.nodes[pnode], dnode):
+                        return False
+                return True
+
+            src, dst, _ = data_id
+            src_pnode = pedge.start
+            if not check_node(src_pnode, src):
+                return MatchResultSet()
+            initial_matched.node_ids_to_data_ids[src_pnode] = src
+            dst_pnode = pedge.end
+            if not check_node(dst_pnode, dst):
+                return MatchResultSet()
+            initial_matched.node_ids_to_data_ids[dst_pnode] = dst
+            if pedge.undirected:
+                raise AssertionError("Not implemented binding as undirected")
 
         num_matched = len(initial_matched.node_ids_to_data_ids)
         iteration_order = [id_ for id_ in initial_matched.node_ids_to_data_ids]
