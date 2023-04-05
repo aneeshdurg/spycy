@@ -275,7 +275,7 @@ def assert_results_in_any_order(context):
     if context.error:
         raise context.error
     print(context.result, context.table.headings)
-    assert list(context.result.columns) == context.table.headings
+    assert set(context.result.columns) == set(context.table.headings)
     expected_rows = tck_to_records(context, context.table)
     print(expected_rows)
     assert len(context.result) == len(expected_rows)

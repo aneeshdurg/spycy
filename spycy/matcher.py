@@ -212,6 +212,8 @@ class Matcher:
                 for neighbor_id in neighbors:
                     neighbor = self.pgraph.edges[neighbor_id]
                     other_n = neighbor.end if neighbor.start == node else neighbor.start
+                    if other_n in iteration_order:
+                        continue
                     curr_deg = self.pgraph.degree(other_n)
                     if degree is None or curr_deg < degree:
                         degree = curr_deg

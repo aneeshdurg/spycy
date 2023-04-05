@@ -115,7 +115,7 @@ class CypherExecutor:
         for _ in range(rows):
             data.append([])
         elems = expr.oC_Expression()
-        assert elems
+        assert elems is not None
         for list_el in elems:
             values = self._evaluate_expression(list_el)
             for i, l in enumerate(data):
@@ -775,8 +775,19 @@ class CypherExecutor:
             else:
                 sort_asc.append(True)
 
+        # TODO this actually needs a much more nuanced approach where
+        # we build up the table by using row-wise comparisions.
         def key(col):
-            return pd.Series([x if x is not pd.NA else math.inf for x in col])
+            def no_NA(x):
+                if x is pd.NA:
+                    return math.inf
+                if isinstance(x, list):
+                    return (len(x), [no_NA(e) for e in x])
+                if isinstance(x, dict):
+                    return {k: no_NA(v) for k, v in x.items()}
+                return x
+
+            return pd.Series([no_NA(x) for x in col])
 
         self.table.sort_values(
             sort_keys,
@@ -924,6 +935,12 @@ class CypherExecutor:
                 else:
                     output_table[alias] = aggregated_columns[alias]
 
+        columns_to_remove = []
+        if len(aggregations) == 0:
+            for col in self.table:
+                if col not in output_table:
+                    columns_to_remove.append(col)
+                    output_table[col] = self.table[col]
         self.table = output_table
 
         if order := node.oC_Order():
@@ -933,6 +950,9 @@ class CypherExecutor:
         if limit := node.oC_Limit():
             self._process_limit(limit)
 
+        for col in columns_to_remove:
+            del self.table[col]
+
     def _process_return(self, node: CypherParser.OC_ReturnContext):
         body = node.oC_ProjectionBody()
         assert body
@@ -940,6 +960,7 @@ class CypherExecutor:
         self._returned = True
 
     def _process_where(self, node: CypherParser.OC_WhereContext):
+        old_columns = self.table.columns
         filter_expr = node.oC_Expression()
         assert filter_expr
         filter_col = self._evaluate_expression(filter_expr)
@@ -947,6 +968,10 @@ class CypherExecutor:
         assert new_table is not None
         self.table = new_table
         self.table.reset_index(drop=True, inplace=True)
+
+        if len(self.table) == 0:
+            for c in old_columns:
+                self.table[c] = []
 
     def _process_with(self, node: CypherParser.OC_WithContext):
         body = node.oC_ProjectionBody()

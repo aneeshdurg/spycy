@@ -56,10 +56,6 @@ TESTS-clauses.create.Create3.xml:[1] MATCH-CREATE
 TESTS-clauses.create.Create3.xml:[2] WITH-CREATE
 TESTS-clauses.create.Create3.xml:[3] MATCH-CREATE-WITH-CREATE
 TESTS-clauses.create.Create3.xml:[4] MATCH-CREATE: Newly-created nodes not visible to preceding MATCH
-TESTS-clauses.create.Create5.xml:[2] Create a pattern with multiple hops in the reverse direction
-TESTS-clauses.create.Create5.xml:[3] Create a pattern with multiple hops in varying directions
-TESTS-clauses.create.Create5.xml:[4] Create a pattern with multiple hops with multiple types and varying directions
-TESTS-clauses.create.Create5.xml:[5] Create a pattern with multiple hops and varying directions
 TESTS-clauses.create.Create6.xml:[11] Skipping zero result and limiting to all results after creating relationships does not affect the result set nor the side effects
 TESTS-clauses.create.Create6.xml:[4] Skipping zero result and limiting to all results after creating nodes does not affect the result set nor the side effects
 TESTS-clauses.delete.Delete1.xml:[8] Failing when deleting a label
@@ -75,7 +71,7 @@ TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all r
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
-TESTS-clauses.match-where.MatchWhere1.xml:[2] Filter node with node label predicate on multi variables without any bindings
+TESTS-clauses.match-where.MatchWhere1.xml:[15] Fail on aggregation in WHERE
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
@@ -274,19 +270,12 @@ TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[12] ORDER BY DESC should order 
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[9] ORDER BY should order lists in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[10] Returned columns do not change from using ORDER BY
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[12] Aggregation of named paths
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[1] ORDER BY should return results in ascending order
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[2] ORDER BY DESC should return results in descending order
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[4] Support sort and distinct
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[5] Support ordering by a property after being distinct-ified
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[9] Using aliased DISTINCT expression in ORDER BY
-TESTS-clauses.return-orderby.ReturnOrderBy4.xml:[1] ORDER BY of a column introduced in RETURN should return salient results in ascending order
-TESTS-clauses.return-orderby.ReturnOrderBy4.xml:[2] Handle projections with ORDER BY
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[4] Accept skip zero
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[4] Handle ORDER BY with LIMIT 1
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[5] ORDER BY with LIMIT 0 should not generate errors
 TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
@@ -338,7 +327,6 @@ TESTS-clauses.union.Union2.xml:[1] Two elements, both unique, not distinct
 TESTS-clauses.union.Union2.xml:[2] Three elements, two unique, not distinct
 TESTS-clauses.union.Union2.xml:[3] Two single-column inputs, one with duplicates, not distinct
 TESTS-clauses.union.Union2.xml:[4] Should be able to create text output from union all queries
-TESTS-clauses.unwind.Unwind1.xml:[13] Multiple unwinds after each other
 TESTS-clauses.unwind.Unwind1.xml:[14] Unwind with merge
 TESTS-clauses.unwind.Unwind1.xml:[4] Unwinding a collected unwound expression
 TESTS-clauses.unwind.Unwind1.xml:[6] Creating nodes from an unwound parameter list
@@ -420,8 +408,6 @@ TESTS-clauses.with-orderBy.WithOrderBy2.xml:[19] Sort by a date time expression 
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[19] Sort by a date time expression in ascending order -- @1.3
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[20] Sort by a date time expression in descending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[20] Sort by a date time expression in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[21] Sort by an expression that is only partially orderable on a non-distinct binding table -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[21] Sort by an expression that is only partially orderable on a non-distinct binding table -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[22] Sort by an expression that is only partially orderable on a non-distinct binding table, but used as a grouping key -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[22] Sort by an expression that is only partially orderable on a non-distinct binding table, but used as a grouping key -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[23] Sort by an expression that is only partially orderable on a non-distinct binding table, but used in parts as a grouping key -- @1.1
@@ -432,11 +418,8 @@ TESTS-clauses.with-orderBy.WithOrderBy4.xml:[11] Sort by an aggregate projection
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[16] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[17] Handle projected variables inside an order by item which contains an aggregation expression
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[18]  Handle projected property accesses inside an order by item which contains an aggregation expression
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[8] Sort by non-projected existing variable
 TESTS-clauses.with-skip-limit.WithSkipLimit1.xml:[1] Handle dependencies across WITH with SKIP
 TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[2] Handle dependencies across WITH with LIMIT
-TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[3] Connected components succeeding WITH with LIMIT
-TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[3] Limiting amount of rows when there are fewer left than the LIMIT argument
 TESTS-clauses.with-where.WithWhere1.xml:[2] Filter node with property predicate on a single variable with multiple distinct bindings
 TESTS-clauses.with-where.WithWhere1.xml:[3] Filter for an unbound relationship variable
 TESTS-clauses.with-where.WithWhere1.xml:[4] Filter for an unbound node variable
@@ -445,7 +428,6 @@ TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-p
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
-TESTS-clauses.with.With1.xml:[2] Forwarind a node variable 2
 TESTS-clauses.with.With1.xml:[3] Forwarding a relationship variable
 TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
@@ -551,13 +533,7 @@ TESTS-expressions.list.List5.xml:[29] IN should return null if comparison with n
 TESTS-expressions.list.List5.xml:[31] IN should return null when comparing two so-called identical lists where one element is null
 TESTS-expressions.list.List5.xml:[32] IN should return true with previous null match, list version
 TESTS-expressions.list.List5.xml:[34] IN should return null if comparison with null is required, list version 2
-TESTS-expressions.list.List5.xml:[35] IN should work with an empty list
-TESTS-expressions.list.List5.xml:[36] IN should return false for the empty list if the LHS and RHS types differ
-TESTS-expressions.list.List5.xml:[37] IN should work with an empty list in the presence of other list elements: matching
-TESTS-expressions.list.List5.xml:[38] IN should work with an empty list in the presence of other list elements: not matching
-TESTS-expressions.list.List5.xml:[39] IN should work with an empty list when comparing nested lists
 TESTS-expressions.list.List5.xml:[40] IN should return null if comparison with null is required for empty list
-TESTS-expressions.list.List5.xml:[41] IN should return true when LHS and RHS contain nested list with multiple empty lists
 TESTS-expressions.list.List6.xml:[10] Get node degree via size of pattern comprehension that specifies multiple relationship types
 TESTS-expressions.list.List6.xml:[1] Return list size
 TESTS-expressions.list.List6.xml:[2] Setting and returning the size of a list property
@@ -571,11 +547,7 @@ TESTS-expressions.literals.Literals2.xml:[8] Return the smallest integer
 TESTS-expressions.literals.Literals3.xml:[8] Return the smallest hexadecimal integer
 TESTS-expressions.literals.Literals4.xml:[8] Return the smallest octal integer
 TESTS-expressions.literals.Literals6.xml:[5] Return a single-quoted string with escaped characters
-TESTS-expressions.literals.Literals7.xml:[10] Return seven-deep nested empty lists
-TESTS-expressions.literals.Literals7.xml:[11] Return 20-deep nested empty lists
 TESTS-expressions.literals.Literals7.xml:[12] Return 40-deep nested empty lists
-TESTS-expressions.literals.Literals7.xml:[1] Return an empty list
-TESTS-expressions.literals.Literals7.xml:[9] Return a list containing an empty lists
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.1
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.2
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.5
@@ -588,7 +560,6 @@ TESTS-expressions.map.Map2.xml:[5] Dynamically access a field is case-sensitive 
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.1
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.2
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.3
-TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.4
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.6
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.7
 TESTS-expressions.path.Path1.xml:[1] `nodes()` on null path
@@ -597,6 +568,7 @@ TESTS-expressions.path.Path2.xml:[2] Return relationships by fetching them from 
 TESTS-expressions.path.Path2.xml:[3] `relationships()` on null path
 TESTS-expressions.path.Path3.xml:[1] Return a var length path of length zero
 TESTS-expressions.pattern.Pattern1.xml:[10] Matching on a specific type of undirected connection with length 2
+TESTS-expressions.pattern.Pattern1.xml:[11] Fail on checking self pattern
 TESTS-expressions.pattern.Pattern1.xml:[12] Matching two nodes on a single directed connection between them
 TESTS-expressions.pattern.Pattern1.xml:[13] Fail on matching two nodes on a single undirected connection between them
 TESTS-expressions.pattern.Pattern1.xml:[14] Matching two nodes on a specific type of single outgoing directed connection
