@@ -630,9 +630,6 @@ TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[3] Nested full
 TESTS-expressions.graph.Graph3.xml:[2] Creating node with two labels
 TESTS-expressions.graph.Graph3.xml:[3] Ignore space when creating node with labels
 TESTS-expressions.graph.Graph3.xml:[6] `labels()` should accept type Any
-TESTS-expressions.graph.Graph3.xml:[7] `labels()` on null node
-TESTS-expressions.graph.Graph4.xml:[3] `type()` on null relationship
-TESTS-expressions.graph.Graph4.xml:[4] `type()` on mixed null and non-null relationships
 TESTS-expressions.graph.Graph4.xml:[7] Failing when using `type()` on a node
 TESTS-expressions.graph.Graph7.xml:[1] Execute n['name'] in read queries
 TESTS-expressions.graph.Graph7.xml:[2] Execute n['name'] in update queries

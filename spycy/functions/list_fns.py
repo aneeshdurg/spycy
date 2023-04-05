@@ -36,6 +36,10 @@ def labels(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
     output = []
     for node in params[0]:
+        if node is pd.NA:
+            output.append(pd.NA)
+            continue
+
         if not isinstance(node, Node):
             raise ExecutionError("TypeError - labels expects a Node argument")
         node_data = fnctx.graph.nodes[node.id_]
