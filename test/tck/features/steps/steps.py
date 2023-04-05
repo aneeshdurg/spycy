@@ -57,7 +57,12 @@ def setup_query(context):
 @given("parameters are")
 @given("parameter values are")
 def define_params(context):
-    raise Exception("Parameters unsupported")
+    print(context.table.headings)
+    parameter_map = {}
+    parameter_map[context.table.headings[0]] = context.table.headings[1]
+    for row in context.table:
+        parameter_map[row[0]] = row[1]
+    context.executor.set_params(parameter_map)
 
 
 @when("executing query")
@@ -315,6 +320,7 @@ def assert_empty_result(context):
 @then("a {errorType} should be raised at runtime: {error}")
 @then("{errorType} should be raised at compile time: {error}")
 @then("a {errorType} should be raised at compile time: {error}")
+@then("a {errorType} should be raised at any time: {error}")
 def assert_error(context, errorType, error):
     assert context.error is not None
 

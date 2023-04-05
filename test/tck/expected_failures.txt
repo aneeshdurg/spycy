@@ -68,8 +68,6 @@ TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
 TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
 TESTS-clauses.delete.Delete4.xml:[2] Undirected variable length expand followed by delete and count
 TESTS-clauses.delete.Delete4.xml:[3] Create and delete in same query
-TESTS-clauses.delete.Delete5.xml:[1] Delete node from a list
-TESTS-clauses.delete.Delete5.xml:[2] Delete relationship from a list
 TESTS-clauses.delete.Delete5.xml:[5] Detach delete nodes from nested map/list
 TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
@@ -78,8 +76,6 @@ TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all r
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[2] Filter node with node label predicate on multi variables without any bindings
-TESTS-clauses.match-where.MatchWhere1.xml:[6] Filter node with a parameter in a property predicate on multi variables with one binding
-TESTS-clauses.match-where.MatchWhere1.xml:[9] Filter relationship with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
@@ -288,17 +284,9 @@ TESTS-clauses.return-orderby.ReturnOrderBy4.xml:[2] Handle projections with ORDE
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[2] Start the result from the second row by param
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[4] Accept skip zero
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[6] Negative parameter for SKIP should fail
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[8] Floating point parameter for SKIP should fail
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[10] Negative parameter for LIMIT should fail
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[11] Negative parameter for LIMIT with ORDER BY should fail
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[14] Floating point parameter for LIMIT should fail
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[15] Floating point parameter for LIMIT with ORDER BY should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[4] Handle ORDER BY with LIMIT 1
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[5] ORDER BY with LIMIT 0 should not generate errors
-TESTS-clauses.return-skip-limit.ReturnSkipLimit3.xml:[2] Get rows in the middle by param
 TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
@@ -486,7 +474,6 @@ TESTS-clauses.with-orderBy.WithOrderBy4.xml:[8] Sort by non-projected existing v
 TESTS-clauses.with-skip-limit.WithSkipLimit1.xml:[1] Handle dependencies across WITH with SKIP
 TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[2] Handle dependencies across WITH with LIMIT
 TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[3] Connected components succeeding WITH with LIMIT
-TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[2] Get rows in the middle by param
 TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[3] Limiting amount of rows when there are fewer left than the LIMIT argument
 TESTS-clauses.with-where.WithWhere1.xml:[2] Filter node with property predicate on a single variable with multiple distinct bindings
 TESTS-clauses.with-where.WithWhere1.xml:[3] Filter for an unbound relationship variable
@@ -522,12 +509,6 @@ TESTS-expressions.aggregation.Aggregation6.xml:[1] `percentileDisc()` -- @1.3
 TESTS-expressions.aggregation.Aggregation6.xml:[2] `percentileCont()` -- @1.1
 TESTS-expressions.aggregation.Aggregation6.xml:[2] `percentileCont()` -- @1.2
 TESTS-expressions.aggregation.Aggregation6.xml:[2] `percentileCont()` -- @1.3
-TESTS-expressions.aggregation.Aggregation6.xml:[3] `percentileCont()` failing on bad arguments -- @1.1
-TESTS-expressions.aggregation.Aggregation6.xml:[3] `percentileCont()` failing on bad arguments -- @1.2
-TESTS-expressions.aggregation.Aggregation6.xml:[3] `percentileCont()` failing on bad arguments -- @1.3
-TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.1
-TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.2
-TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.3
 TESTS-expressions.aggregation.Aggregation8.xml:[3] Collect distinct nulls
 TESTS-expressions.aggregation.Aggregation8.xml:[4] Collect distinct values mixed with nulls
 TESTS-expressions.boolean.Boolean5.xml:[6] Conjunction is not distributive over exclusive disjunction on null
@@ -577,27 +558,9 @@ TESTS-expressions.graph.Graph8.xml:[4] Using `keys()` on an optionally matched n
 TESTS-expressions.graph.Graph8.xml:[5] Using `keys()` on a relationship, non-empty result
 TESTS-expressions.graph.Graph8.xml:[6] Using `keys()` on a relationship, empty result
 TESTS-expressions.graph.Graph8.xml:[7] Using `keys()` on an optionally matched relationship
-TESTS-expressions.list.List1.xml:[3] Use list lookup based on parameters when there is no type information
-TESTS-expressions.list.List1.xml:[4] Use list lookup based on parameters when there is lhs type information
-TESTS-expressions.list.List1.xml:[5] Use list lookup based on parameters when there is rhs type information
-TESTS-expressions.list.List1.xml:[6] Fail when indexing a non-list #Example: boolean -- @1.1
-TESTS-expressions.list.List1.xml:[6] Fail when indexing a non-list #Example: float -- @1.3
-TESTS-expressions.list.List1.xml:[6] Fail when indexing a non-list #Example: integer -- @1.2
 TESTS-expressions.list.List1.xml:[6] Fail when indexing a non-list #Example: string -- @1.4
-TESTS-expressions.list.List1.xml:[7] Fail when indexing a non-list given by a parameter #Example: boolean -- @1.1
-TESTS-expressions.list.List1.xml:[7] Fail when indexing a non-list given by a parameter #Example: float -- @1.3
-TESTS-expressions.list.List1.xml:[7] Fail when indexing a non-list given by a parameter #Example: integer -- @1.2
 TESTS-expressions.list.List1.xml:[7] Fail when indexing a non-list given by a parameter #Example: string -- @1.4
 TESTS-expressions.list.List1.xml:[8] Fail when indexing with a non-integer #Example: boolean -- @1.1
-TESTS-expressions.list.List1.xml:[8] Fail when indexing with a non-integer #Example: float -- @1.2
-TESTS-expressions.list.List1.xml:[8] Fail when indexing with a non-integer #Example: list -- @1.4
-TESTS-expressions.list.List1.xml:[8] Fail when indexing with a non-integer #Example: map -- @1.5
-TESTS-expressions.list.List1.xml:[8] Fail when indexing with a non-integer #Example: string -- @1.3
-TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: boolean -- @1.1
-TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: float -- @1.2
-TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: list -- @1.4
-TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: map -- @1.5
-TESTS-expressions.list.List1.xml:[9] Fail when indexing with a non-integer given by a parameter #Example: string -- @1.3
 TESTS-expressions.list.List11.xml:[3] Create an empty list if range direction and step direction are inconsistent
 TESTS-expressions.list.List12.xml:[1] Collect and extract using a list comprehension
 TESTS-expressions.list.List12.xml:[2] Collect and filter using a list comprehension
@@ -605,8 +568,6 @@ TESTS-expressions.list.List12.xml:[3] Size of list comprehension
 TESTS-expressions.list.List12.xml:[4] Returning a list comprehension
 TESTS-expressions.list.List12.xml:[5] Using a list comprehension in a WITH
 TESTS-expressions.list.List12.xml:[7] Fail when using aggregation in list comprehension
-TESTS-expressions.list.List2.xml:[10] List slice with parameterised range
-TESTS-expressions.list.List2.xml:[11] List slice with parameterised invalid range
 TESTS-expressions.list.List2.xml:[2] List slice with implicit end
 TESTS-expressions.list.List2.xml:[3] List slice with implicit start
 TESTS-expressions.list.List2.xml:[9] List slice with null range -- @1.1
@@ -658,21 +619,15 @@ TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited id
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.2
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.5
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.6
-TESTS-expressions.map.Map2.xml:[1] Dynamically access a field based on parameters when there is no type information
 TESTS-expressions.map.Map2.xml:[2] Dynamically access a field based on parameters when there is rhs type information
 TESTS-expressions.map.Map2.xml:[3] Dynamically access a field on null results in null
 TESTS-expressions.map.Map2.xml:[4] Dynamically access a field with null results in null
 TESTS-expressions.map.Map2.xml:[5] Dynamically access a field is case-sensitive -- @1.4
 TESTS-expressions.map.Map2.xml:[5] Dynamically access a field is case-sensitive -- @1.5
-TESTS-expressions.map.Map2.xml:[6] Fail at runtime when attempting to index with an Int into a Map
-TESTS-expressions.map.Map2.xml:[7] Fail at runtime when trying to index into a map with a non-string
-TESTS-expressions.map.Map2.xml:[8] Fail at runtime when trying to index something which is not a map
-TESTS-expressions.map.Map3.xml:[2] Using `keys()` on a parameter map
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.1
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.2
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.3
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.4
-TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.5
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.6
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.7
 TESTS-expressions.path.Path1.xml:[1] `nodes()` on null path
@@ -2419,7 +2374,6 @@ TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.8
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.9
 TESTS-expressions.typeConversion.TypeConversion2.xml:[4] `toInteger()` handling Any type
 TESTS-expressions.typeConversion.TypeConversion2.xml:[5] `toInteger()` on a list of strings
-TESTS-expressions.typeConversion.TypeConversion2.xml:[6] `toInteger()` on a complex-typed expression
 TESTS-expressions.typeConversion.TypeConversion2.xml:[7] `toInteger()` on node property
 TESTS-expressions.typeConversion.TypeConversion3.xml:[1] `toFloat()` on mixed number types
 TESTS-expressions.typeConversion.TypeConversion3.xml:[2] `toFloat()` returning null on non-numerical string

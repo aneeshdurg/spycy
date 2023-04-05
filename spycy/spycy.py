@@ -44,6 +44,11 @@ class CypherExecutor:
 
     _deleted_ids: Set[int] = field(default_factory=set)
 
+    _parameters: Dict[str, str] = field(default_factory=dict)
+
+    def set_params(self, parameters: Dict[str, str]):
+        self._parameters = parameters
+
     def _has_aggregation(self, ctx) -> bool:
         found_aggregation = False
 
@@ -230,6 +235,26 @@ class CypherExecutor:
             output.append(new_row)
         self.table = old_table
         return pd.Series(output)
+
+    def _evaluate_parameter(self, expr: CypherParser.OC_ParameterContext) -> pd.Series:
+        name_expr = expr.oC_SymbolicName()
+        assert name_expr
+        name = name_expr.getText()
+
+        if name not in self._parameters:
+            raise ExecutionError("ParameterNotFound")
+
+        old_table = self.table
+        self.reset_table()
+        ast = self._getAST(
+            self._parameters[name], get_root=lambda parser: parser.oC_Expression()
+        )
+        assert ast
+        col = self._evaluate_expression(ast)
+        assert len(col) == 1
+        value = col[0]
+        self.table = old_table
+        return pd.Series([value] * len(self.table))
 
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if literal := expr.oC_Literal():
@@ -1214,7 +1239,7 @@ class CypherExecutor:
             if isinstance(child, CypherParser.OC_SinglePartQueryContext):
                 self._process_single_part_query(child)
 
-    def _getAST(self, query: str):
+    def _getAST(self, query: str, get_root=None):
         error_listener = GeneratorErrorListener()
 
         input_stream = InputStream(query)
@@ -1228,7 +1253,10 @@ class CypherExecutor:
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
 
-        root = parser.oC_Cypher()
+        if get_root is not None:
+            root = get_root(parser)
+        else:
+            root = parser.oC_Cypher()
 
         if error_listener.errors_caught > 0:
             raise ExecutionError("Failed to parse query")
