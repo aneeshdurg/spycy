@@ -277,7 +277,6 @@ TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[9] Using aliased DISTINCT expre
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[3] SKIP with an expression that does not depend on variables
 TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
@@ -487,9 +486,6 @@ TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[1] Nested simp
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[2] Nested full existential subquery
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[3] Nested full existential subquery with pattern predicate
 TESTS-expressions.graph.Graph4.xml:[7] Failing when using `type()` on a node
-TESTS-expressions.graph.Graph7.xml:[1] Execute n['name'] in read queries
-TESTS-expressions.graph.Graph7.xml:[2] Execute n['name'] in update queries
-TESTS-expressions.graph.Graph7.xml:[3] Use dynamic property lookup based on parameters when there is lhs type information
 TESTS-expressions.graph.Graph8.xml:[1] Using `keys()` on a single node, non-empty result
 TESTS-expressions.graph.Graph8.xml:[2] Using `keys()` on multiple nodes, non-empty result
 TESTS-expressions.graph.Graph8.xml:[3] Using `keys()` on a single node, empty result
@@ -497,9 +493,6 @@ TESTS-expressions.graph.Graph8.xml:[4] Using `keys()` on an optionally matched n
 TESTS-expressions.graph.Graph8.xml:[5] Using `keys()` on a relationship, non-empty result
 TESTS-expressions.graph.Graph8.xml:[6] Using `keys()` on a relationship, empty result
 TESTS-expressions.graph.Graph8.xml:[7] Using `keys()` on an optionally matched relationship
-TESTS-expressions.list.List1.xml:[6] Fail when indexing a non-list #Example: string -- @1.4
-TESTS-expressions.list.List1.xml:[7] Fail when indexing a non-list given by a parameter #Example: string -- @1.4
-TESTS-expressions.list.List1.xml:[8] Fail when indexing with a non-integer #Example: boolean -- @1.1
 TESTS-expressions.list.List11.xml:[3] Create an empty list if range direction and step direction are inconsistent
 TESTS-expressions.list.List12.xml:[2] Collect and filter using a list comprehension
 TESTS-expressions.list.List12.xml:[3] Size of list comprehension
@@ -548,10 +541,7 @@ TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited id
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.5
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.6
 TESTS-expressions.map.Map2.xml:[2] Dynamically access a field based on parameters when there is rhs type information
-TESTS-expressions.map.Map2.xml:[3] Dynamically access a field on null results in null
 TESTS-expressions.map.Map2.xml:[4] Dynamically access a field with null results in null
-TESTS-expressions.map.Map2.xml:[5] Dynamically access a field is case-sensitive -- @1.4
-TESTS-expressions.map.Map2.xml:[5] Dynamically access a field is case-sensitive -- @1.5
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.1
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.2
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.3

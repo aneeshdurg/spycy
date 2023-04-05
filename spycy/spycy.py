@@ -330,7 +330,35 @@ class CypherExecutor:
         else:
             assert pre_range_accessor
             rhs = self._evaluate_expression(pre_range_accessor)
-            return pd.Series(l[r] for l, r in zip(lhs, rhs))
+            output = []
+            for l, r in zip(lhs, rhs):
+                if l is pd.NA:
+                    output.append(pd.NA)
+                elif isinstance(l, Node):
+                    if not isinstance(r, str):
+                        raise ExecutionError("TypeError::Map access with non-str index")
+                    props = self.graph.nodes[l.id_]["properties"]
+                    output.append(props.get(r, pd.NA))
+                elif isinstance(l, Edge):
+                    if not isinstance(r, str):
+                        raise ExecutionError("TypeError::Map access with non-str index")
+                    props = self.graph.edges[l.id_]["properties"]
+                    output.append(props.get(r, pd.NA))
+                elif isinstance(l, dict):
+                    if not isinstance(r, str):
+                        raise ExecutionError("TypeError::Map access with non-str index")
+                    output.append(l.get(r, pd.NA))
+                elif isinstance(l, list):
+                    if not np.issubdtype(type(r), np.integer):
+                        raise ExecutionError(
+                            "TypeError::List access with non-integer index"
+                        )
+                    output.append(l[r])
+                else:
+                    raise ExecutionError(
+                        f"TypeError::subscript access on non-subscriptable type {type(l)}"
+                    )
+            return pd.Series(output)
 
     def _evaluate_property_lookup(
         self, lhs: pd.Series, expr: CypherParser.OC_PropertyLookupContext
