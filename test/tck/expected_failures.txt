@@ -60,14 +60,8 @@ TESTS-clauses.create.Create5.xml:[2] Create a pattern with multiple hops in the 
 TESTS-clauses.create.Create5.xml:[3] Create a pattern with multiple hops in varying directions
 TESTS-clauses.create.Create5.xml:[4] Create a pattern with multiple hops with multiple types and varying directions
 TESTS-clauses.create.Create5.xml:[5] Create a pattern with multiple hops and varying directions
-TESTS-clauses.create.Create6.xml:[10] Skipping and limiting to a few results after creating relationships does not affect the result set nor the side effects
 TESTS-clauses.create.Create6.xml:[11] Skipping zero result and limiting to all results after creating relationships does not affect the result set nor the side effects
-TESTS-clauses.create.Create6.xml:[1] Limiting to zero results after creating nodes affects the result set but not the side effects
-TESTS-clauses.create.Create6.xml:[2] Skipping all results after creating nodes affects the result set but not the side effects
-TESTS-clauses.create.Create6.xml:[3] Skipping and limiting to a few results after creating nodes does not affect the result set nor the side effects
 TESTS-clauses.create.Create6.xml:[4] Skipping zero result and limiting to all results after creating nodes does not affect the result set nor the side effects
-TESTS-clauses.create.Create6.xml:[8] Limiting to zero results after creating relationships affects the result set but not the side effects
-TESTS-clauses.create.Create6.xml:[9] Skipping all results after creating relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
 TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
@@ -80,14 +74,8 @@ TESTS-clauses.delete.Delete5.xml:[4] Delete relationships from a map
 TESTS-clauses.delete.Delete5.xml:[5] Detach delete nodes from nested map/list
 TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
-TESTS-clauses.delete.Delete6.xml:[10] Skipping and limiting to a few results after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all results after deleting relationships does not affect the result set nor the side effects
-TESTS-clauses.delete.Delete6.xml:[1] Limiting to zero results after deleting nodes affects the result set but not the side effects
-TESTS-clauses.delete.Delete6.xml:[2] Skipping all results after deleting nodes affects the result set but not the side effects
-TESTS-clauses.delete.Delete6.xml:[3] Skipping and limiting to a few results after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
-TESTS-clauses.delete.Delete6.xml:[8] Limiting to zero results after deleting relationships affects the result set but not the side effects
-TESTS-clauses.delete.Delete6.xml:[9] Skipping all results after deleting relationships affects the result set but not the side effects
 TESTS-clauses.match-where.MatchWhere1.xml:[11] Filter relationship with disjunctive relationship type predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
@@ -198,9 +186,6 @@ TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[25] Optionally matching self-loops without matches
 TESTS-clauses.match.Match7.xml:[27] Handling optional matches between optionally matched entities
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
-TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
-TESTS-clauses.match.Match7.xml:[5] Optionally matching relationship with a relationship that is already bound
-TESTS-clauses.match.Match7.xml:[6] Optionally matching relationship with a relationship and node that are both already bound
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match8.xml:[3] Matching and disregarding output, then matching again
@@ -310,54 +295,31 @@ TESTS-clauses.remove.Remove3.xml:[9] Skipping all results after removing a label
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[10] ORDER BY DESC should order lists in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[11] ORDER BY should order distinct types in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[12] ORDER BY DESC should order distinct types in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[1] ORDER BY should order booleans in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[2] ORDER BY DESC should order booleans in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[3] ORDER BY should order strings in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[4] ORDER BY DESC should order strings in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[5] ORDER BY should order ints in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[6] ORDER BY DESC should order ints in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[7] ORDER BY should order floats in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[8] ORDER BY DESC should order floats in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[9] ORDER BY should order lists in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[10] Returned columns do not change from using ORDER BY
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[11] Aggregates ordered by arithmetics
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[12] Aggregation of named paths
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[1] ORDER BY should return results in ascending order
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[2] ORDER BY DESC should return results in descending order
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[3] Sort on aggregated function
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[4] Support sort and distinct
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[5] Support ordering by a property after being distinct-ified
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[6] Count star should count everything in scope
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[7] Ordering with aggregation
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[9] Using aliased DISTINCT expression in ORDER BY
-TESTS-clauses.return-orderby.ReturnOrderBy3.xml:[1] Sort on aggregate function and normal property
 TESTS-clauses.return-orderby.ReturnOrderBy4.xml:[1] ORDER BY of a column introduced in RETURN should return salient results in ascending order
 TESTS-clauses.return-orderby.ReturnOrderBy4.xml:[2] Handle projections with ORDER BY
-TESTS-clauses.return-orderby.ReturnOrderBy5.xml:[1] Renaming columns before ORDER BY should return results in ascending order
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[1] Start the result from the second row
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[2] Start the result from the second row by param
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[3] SKIP with an expression that does not depend on variables
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[4] Accept skip zero
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[6] Negative parameter for SKIP should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[8] Floating point parameter for SKIP should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[10] Negative parameter for LIMIT should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[11] Negative parameter for LIMIT with ORDER BY should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[14] Floating point parameter for LIMIT should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[15] Floating point parameter for LIMIT with ORDER BY should fail
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[1] Limit to two hits
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[2] Limit to two hits with explicit order
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[3] LIMIT 0 should return an empty result
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[4] Handle ORDER BY with LIMIT 1
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[5] ORDER BY with LIMIT 0 should not generate errors
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[6] LIMIT with an expression that does not depend on variables
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[7] Limit to more rows than actual results 1
-TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[8] Limit to more rows than actual results 2
-TESTS-clauses.return-skip-limit.ReturnSkipLimit3.xml:[1] Get rows in the middle
 TESTS-clauses.return-skip-limit.ReturnSkipLimit3.xml:[2] Get rows in the middle by param
-TESTS-clauses.return-skip-limit.ReturnSkipLimit3.xml:[3] Limiting amount of rows when there are fewer left than the LIMIT argument
 TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
@@ -466,36 +428,9 @@ TESTS-clauses.with-orderBy.WithOrderBy1.xml:[16] Sort times in descending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[17] Sort local date times in ascending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[18] Sort local date times in descending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[19] Sort date times in ascending order
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[1] Sort booleans in ascending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[20] Sort date times in descending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[21] Sort distinct types in ascending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[22] Sort distinct types in descending order
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[23] Sort by a boolean variable projected from a node property in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[23] Sort by a boolean variable projected from a node property in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[23] Sort by a boolean variable projected from a node property in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[24] Sort by a boolean variable projected from a node property in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[24] Sort by a boolean variable projected from a node property in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[25] Sort by an integer variable projected from a node property in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[25] Sort by an integer variable projected from a node property in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[25] Sort by an integer variable projected from a node property in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[26] Sort by an integer variable projected from a node property in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[26] Sort by an integer variable projected from a node property in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[27] Sort by a float variable projected from a node property in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[27] Sort by a float variable projected from a node property in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[27] Sort by a float variable projected from a node property in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[28] Sort by a float variable projected from a node property in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[28] Sort by a float variable projected from a node property in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[29] Sort by a string variable projected from a node property in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[29] Sort by a string variable projected from a node property in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[29] Sort by a string variable projected from a node property in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[2] Sort booleans in descending order
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[30] Sort by a string variable projected from a node property in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[30] Sort by a string variable projected from a node property in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[31] Sort by a list variable projected from a node property in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[31] Sort by a list variable projected from a node property in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[31] Sort by a list variable projected from a node property in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[32] Sort by a list variable projected from a node property in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[32] Sort by a list variable projected from a node property in descending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[33] Sort by a date variable projected from a node property in ascending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[33] Sort by a date variable projected from a node property in ascending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[33] Sort by a date variable projected from a node property in ascending order -- @1.3
@@ -514,7 +449,6 @@ TESTS-clauses.with-orderBy.WithOrderBy1.xml:[38] Sort by a time variable project
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[39] Sort by a local date time variable projected from a node property in ascending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[39] Sort by a local date time variable projected from a node property in ascending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[39] Sort by a local date time variable projected from a node property in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[3] Sort integers in ascending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[40] Sort by a local date time variable projected from a node property in descending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[40] Sort by a local date time variable projected from a node property in descending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[41] Sort by a date time variable projected from a node property in ascending order -- @1.1
@@ -522,8 +456,6 @@ TESTS-clauses.with-orderBy.WithOrderBy1.xml:[41] Sort by a date time variable pr
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[41] Sort by a date time variable projected from a node property in ascending order -- @1.3
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[42] Sort by a date time variable projected from a node property in descending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[42] Sort by a date time variable projected from a node property in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[43] Sort by a variable that is only partially orderable on a non-distinct binding table -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[43] Sort by a variable that is only partially orderable on a non-distinct binding table -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[44] Sort by a variable that is only partially orderable on a non-distinct binding table, but made distinct -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[44] Sort by a variable that is only partially orderable on a non-distinct binding table, but made distinct -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: booleans -- @1.1
@@ -536,14 +468,7 @@ TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: localtimes -- @1.7
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: string -- @1.4
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: times -- @1.8
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[4] Sort integers in descending order
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[5] Sort floats in ascending order
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[6] Sort floats in descending order
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[7] Sort strings in ascending order
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[8] Sort strings in descending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[9] Sort lists in ascending order
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[10] Sort by a list expression in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[10] Sort by a list expression in descending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[11] Sort by a date expression in ascending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[11] Sort by a date expression in ascending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[11] Sort by a date expression in ascending order -- @1.3
@@ -567,9 +492,6 @@ TESTS-clauses.with-orderBy.WithOrderBy2.xml:[18] Sort by a local date time expre
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[19] Sort by a date time expression in ascending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[19] Sort by a date time expression in ascending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[19] Sort by a date time expression in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[1] Sort by a boolean expression in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[1] Sort by a boolean expression in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[1] Sort by a boolean expression in ascending order -- @1.3
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[20] Sort by a date time expression in descending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[20] Sort by a date time expression in descending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[21] Sort by an expression that is only partially orderable on a non-distinct binding table -- @1.1
@@ -580,112 +502,14 @@ TESTS-clauses.with-orderBy.WithOrderBy2.xml:[23] Sort by an expression that is o
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[23] Sort by an expression that is only partially orderable on a non-distinct binding table, but used in parts as a grouping key -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[24] Sort by an expression that is only partially orderable on a non-distinct binding table, but made distinct -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[24] Sort by an expression that is only partially orderable on a non-distinct binding table, but made distinct -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[2] Sort by a boolean expression in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[2] Sort by a boolean expression in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[3] Sort by an integer expression in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[3] Sort by an integer expression in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[3] Sort by an integer expression in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[4] Sort by an integer expression in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[4] Sort by an integer expression in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[5] Sort by a float expression in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[5] Sort by a float expression in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[5] Sort by a float expression in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[6] Sort by a float expression in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[6] Sort by a float expression in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[7] Sort by a string expression in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[7] Sort by a string expression in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[7] Sort by a string expression in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[8] Sort by a string expression in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[8] Sort by a string expression in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[9] Sort by a list expression in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[9] Sort by a list expression in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[9] Sort by a list expression in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.4
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.5
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.6
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.7
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.8
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[1] Sort by two expressions, both in ascending order -- @1.9
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[2] Sort by two expressions, first in ascending order, second in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[2] Sort by two expressions, first in ascending order, second in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[2] Sort by two expressions, first in ascending order, second in descending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[2] Sort by two expressions, first in ascending order, second in descending order -- @1.4
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[2] Sort by two expressions, first in ascending order, second in descending order -- @1.5
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[2] Sort by two expressions, first in ascending order, second in descending order -- @1.6
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[3] Sort by two expressions, first in descending order, second in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[3] Sort by two expressions, first in descending order, second in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[3] Sort by two expressions, first in descending order, second in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[3] Sort by two expressions, first in descending order, second in ascending order -- @1.4
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[3] Sort by two expressions, first in descending order, second in ascending order -- @1.5
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[3] Sort by two expressions, first in descending order, second in ascending order -- @1.6
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[4] Sort by two expressions, both in descending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[4] Sort by two expressions, both in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[4] Sort by two expressions, both in descending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[4] Sort by two expressions, both in descending order -- @1.4
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[5] An expression without explicit sort direction is sorted in ascending order -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[5] An expression without explicit sort direction is sorted in ascending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[5] An expression without explicit sort direction is sorted in ascending order -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[5] An expression without explicit sort direction is sorted in ascending order -- @1.4
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.10
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.11
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.12
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.13
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.14
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.15
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.16
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.17
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.18
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.19
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.20
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.21
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.22
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.23
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.24
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.4
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.5
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.6
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.7
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.8
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[6] An constant expression does not influence the order determined by other expression before and after the constant expression -- @1.9
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.10
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.4
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.5
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.6
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.7
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.8
-TESTS-clauses.with-orderBy.WithOrderBy3.xml:[7] The order direction cannot be overwritten -- @1.9
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[10] Sort by a non-projected expression containing an alias of a projected expression containing the variable shadowed by the alias
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[11] Sort by an aggregate projection
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[12] Sort by an aliased aggregate projection
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[15] Sort by an aliased aggregate projection does allow subsequent matching
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[16] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[17] Handle projected variables inside an order by item which contains an aggregation expression
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[18]  Handle projected property accesses inside an order by item which contains an aggregation expression
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[1] Sort by a projected expression
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[2] Sort by an alias of a projected expression
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[3] Sort by two projected expressions with order priority being different than projection order
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[4] Sort by one projected expression and one alias of a projected expression with order priority being different than projection order
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[5] Sort by one alias of a projected expression and one projected expression with order priority being different than projection order
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[6] Sort by aliases of two projected expressions with order priority being different than projection order
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[7] Sort by an alias of a projected expression where the alias shadows an existing variable
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[8] Sort by non-projected existing variable
-TESTS-clauses.with-orderBy.WithOrderBy4.xml:[9] Sort by an alias of a projected expression containing the variable shadowed by the alias
 TESTS-clauses.with-skip-limit.WithSkipLimit1.xml:[1] Handle dependencies across WITH with SKIP
-TESTS-clauses.with-skip-limit.WithSkipLimit1.xml:[2] Ordering and skipping on aggregate
-TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[1] ORDER BY and LIMIT can be used
 TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[2] Handle dependencies across WITH with LIMIT
 TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[3] Connected components succeeding WITH with LIMIT
-TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[4] Ordering and limiting on aggregate
-TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[1] Get rows in the middle
 TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[2] Get rows in the middle by param
 TESTS-clauses.with-skip-limit.WithSkipLimit3.xml:[3] Limiting amount of rows when there are fewer left than the LIMIT argument
 TESTS-clauses.with-where.WithWhere1.xml:[2] Filter node with property predicate on a single variable with multiple distinct bindings
@@ -705,7 +529,6 @@ TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
 TESTS-clauses.with.With1.xml:[5] Forwarding null
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
 TESTS-clauses.with.With2.xml:[2] Forwarding a nested map literal
-TESTS-clauses.with.With3.xml:[1] Forwarding multiple node and relationship variables
 TESTS-clauses.with.With4.xml:[4] Fail when forwarding multiple aliases with the same name
 TESTS-clauses.with.With4.xml:[5] Fail when not aliasing expressions in WITH
 TESTS-clauses.with.With4.xml:[6] Reusing variable names in WITH
@@ -717,13 +540,11 @@ TESTS-clauses.with.With6.xml:[4] Implicit grouping with single path variable as 
 TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[8] Fail if not projected variables are used inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[9] Fail if more complex expression, even if projected, are used inside expression which contains an aggregation expression
-TESTS-clauses.with.With7.xml:[1] A simple pattern with one bound endpoint
 TESTS-expressions.aggregation.Aggregation1.xml:[2] Counting loop relationships
 TESTS-expressions.aggregation.Aggregation2.xml:[11] `max()` over mixed values
 TESTS-expressions.aggregation.Aggregation2.xml:[12] `min()` over mixed values
 TESTS-expressions.aggregation.Aggregation2.xml:[7] `max()` over strings
 TESTS-expressions.aggregation.Aggregation2.xml:[8] `min()` over strings
-TESTS-expressions.aggregation.Aggregation3.xml:[2] No overflow during summation
 TESTS-expressions.aggregation.Aggregation5.xml:[1] `collect()` filtering nulls
 TESTS-expressions.aggregation.Aggregation5.xml:[2] OPTIONAL MATCH and `collect()` on node property
 TESTS-expressions.aggregation.Aggregation6.xml:[1] `percentileDisc()` -- @1.1

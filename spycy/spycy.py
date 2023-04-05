@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, Set, Tuple
 
 import networkx as nx
+import numpy as np
 import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 
@@ -42,6 +43,29 @@ class CypherExecutor:
     _returned: bool = False
 
     _deleted_ids: Set[int] = field(default_factory=set)
+
+    def _has_aggregation(self, ctx) -> bool:
+        found_aggregation = False
+
+        def is_aggregation_visitor(ctx) -> bool:
+            nonlocal found_aggregation
+            if isinstance(ctx, CypherParser.OC_AtomContext):
+                assert ctx.children
+                count = ctx.children[0].getText().lower() == "count"
+                if count:
+                    found_aggregation = True
+                    return False
+            if isinstance(ctx, CypherParser.OC_FunctionInvocationContext):
+                fnname = ctx.oC_FunctionName()
+                assert fnname
+                fnname = fnname.getText()
+                if is_aggregation(fnname):
+                    found_aggregation = True
+                    return False
+            return True
+
+        visitor(ctx, is_aggregation_visitor)
+        return found_aggregation
 
     def _vend_node_id(self) -> int:
         if len(self._deleted_ids):
@@ -542,6 +566,79 @@ class CypherExecutor:
         assert or_expr
         return self._evaluate_or(or_expr)
 
+    def _process_order(self, node: CypherParser.OC_OrderContext):
+        sort_keys = []
+        sort_asc = []
+        keys_to_remove = set()
+
+        sort_items = node.oC_SortItem()
+        assert sort_items
+        for sort_item in sort_items:
+            expr = sort_item.oC_Expression()
+            assert expr
+            alias = expr.getText()
+            if alias not in self.table:
+                if self._has_aggregation(expr):
+                    raise ExecutionError(
+                        "SyntaxError::InvalidAggregation - cannot aggregate during ORDER BY"
+                    )
+                col = self._evaluate_expression(expr)
+                self.table[alias] = col
+                keys_to_remove.add(alias)
+            sort_keys.append(alias)
+
+            if len(sort_item.children) > 2:
+                asc = sort_item.children[2].getText().lower().startswith("asc")
+                sort_asc.append(asc)
+            else:
+                sort_asc.append(True)
+
+        def key(col):
+            return pd.Series([x if x is not pd.NA else math.inf for x in col])
+
+        self.table.sort_values(
+            sort_keys,
+            ascending=sort_asc,
+            ignore_index=True,
+            inplace=True,
+            key=key,
+        )
+        for key in keys_to_remove:
+            del self.table[key]
+
+    def _process_skip(self, node: CypherParser.OC_SkipContext):
+        old_table = self.table
+
+        self.reset_table()
+        expr = node.oC_Expression()
+        assert expr
+        skip = self._evaluate_expression(expr)
+        assert len(skip) == 1
+        skip = skip[0]
+        if skip < 0:
+            raise ExecutionError("SyntaxError::NegativeIntegerArgument in skip")
+
+        assert np.issubdtype(type(skip), np.integer)
+
+        self.table = old_table.tail(-skip)
+        self.table.reset_index(drop=True, inplace=True)
+
+    def _process_limit(self, node: CypherParser.OC_LimitContext):
+        old_table = self.table
+
+        self.reset_table()
+        expr = node.oC_Expression()
+        assert expr
+        limit = self._evaluate_expression(expr)
+        assert len(limit) == 1
+        limit = limit[0]
+
+        assert np.issubdtype(type(limit), np.integer)
+        if limit < 0:
+            raise ExecutionError("SyntaxError::NegativeIntegerArgument in limit")
+
+        self.table = old_table.head(limit)
+
     def _process_projection_body(self, node: CypherParser.OC_ProjectionBodyContext):
         is_distinct = node.DISTINCT()
         assert not is_distinct, "Unsupported query - DISTINCT not implemented"
@@ -552,29 +649,6 @@ class CypherExecutor:
         if proj_items.children[0].getText() == "*":
             assert len(proj_items.children) == 1
             return
-
-        def has_aggregation(ctx) -> bool:
-            found_aggregation = False
-
-            def is_aggregation_visitor(ctx) -> bool:
-                nonlocal found_aggregation
-                if isinstance(ctx, CypherParser.OC_AtomContext):
-                    assert ctx.children
-                    count = ctx.children[0].getText().lower() == "count"
-                    if count:
-                        found_aggregation = True
-                        return False
-                if isinstance(ctx, CypherParser.OC_FunctionInvocationContext):
-                    fnname = ctx.oC_FunctionName()
-                    assert fnname
-                    fnname = fnname.getText()
-                    if is_aggregation(fnname):
-                        found_aggregation = True
-                        return False
-                return True
-
-            visitor(ctx, is_aggregation_visitor)
-            return found_aggregation
 
         def get_alias(ctx: CypherParser.OC_ProjectionItemContext):
             var = ctx.oC_Variable()
@@ -589,7 +663,7 @@ class CypherExecutor:
         aggregations = {}
         for proj in proj_items.oC_ProjectionItem():
             alias = get_alias(proj)
-            if has_aggregation(proj):
+            if self._has_aggregation(proj):
                 aggregations[alias] = proj
             else:
                 group_by_keys[alias] = proj
@@ -670,9 +744,12 @@ class CypherExecutor:
 
         self.table = output_table
 
-        assert not node.oC_Order(), "Unsupported query - ORDER BY not implemented"
-        assert not node.oC_Skip(), "Unsupported query - ORDER BY not implemented"
-        assert not node.oC_Limit(), "Unsupported query - ORDER BY not implemented"
+        if order := node.oC_Order():
+            self._process_order(order)
+        if skip := node.oC_Skip():
+            self._process_skip(skip)
+        if limit := node.oC_Limit():
+            self._process_limit(limit)
 
     def _process_return(self, node: CypherParser.OC_ReturnContext):
         body = node.oC_ProjectionBody()
