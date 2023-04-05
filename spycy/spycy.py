@@ -312,16 +312,18 @@ class CypherExecutor:
         key_expr = expr.oC_PropertyKeyName()
         assert key_expr
         key = key_expr.getText()
-        if el is pd.NA:
-            output.append(pd.NA)
-        elif isinstance(el, Node):
-            for row in lhs:
-                output.append(self.graph.nodes[row.id_]["properties"].get(key, pd.NA))
-        elif isinstance(el, Edge):
-            for row in lhs:
-                output.append(self.graph.edges[row.id_]["properties"].get(key, pd.NA))
-        else:
-            raise ExecutionError("TypeError::InvalidPropertyAccess")
+
+        for el in lhs:
+            if el is pd.NA:
+                output.append(pd.NA)
+            elif isinstance(el, Node):
+                output.append(self.graph.nodes[el.id_]["properties"].get(key, pd.NA))
+            elif isinstance(el, Edge):
+                output.append(self.graph.edges[el.id_]["properties"].get(key, pd.NA))
+            elif isinstance(el, dict):
+                output.append(el.get(key, pd.NA))
+            else:
+                raise ExecutionError("TypeError::InvalidPropertyAccess")
         return pd.Series(output)
 
     def _evaluate_node_labels(
@@ -546,7 +548,11 @@ class CypherExecutor:
     def _evaluate_null_predicate(
         self, lhs: pd.Series, expr: CypherParser.OC_NullPredicateExpressionContext
     ) -> pd.Series:
-        return lhs.apply(lambda x: x is pd.NA)
+
+        result = lhs.apply(lambda x: x is pd.NA)
+        if any(x.getText().lower() == "not" for x in expr.children):
+            result = ~result
+        return result
 
     def _evaluate_string_list_null_predicate(
         self, expr: CypherParser.OC_StringListNullPredicateExpressionContext

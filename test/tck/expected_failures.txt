@@ -70,8 +70,6 @@ TESTS-clauses.delete.Delete4.xml:[2] Undirected variable length expand followed 
 TESTS-clauses.delete.Delete4.xml:[3] Create and delete in same query
 TESTS-clauses.delete.Delete5.xml:[1] Delete node from a list
 TESTS-clauses.delete.Delete5.xml:[2] Delete relationship from a list
-TESTS-clauses.delete.Delete5.xml:[3] Delete nodes from a map
-TESTS-clauses.delete.Delete5.xml:[4] Delete relationships from a map
 TESTS-clauses.delete.Delete5.xml:[5] Detach delete nodes from nested map/list
 TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
@@ -88,7 +86,6 @@ TESTS-clauses.match-where.MatchWhere1.xml:[9] Filter relationship with a paramet
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.match-where.MatchWhere5.xml:[3] Filter out on null if the AND'd predicate evaluates to true
 TESTS-clauses.match-where.MatchWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
 TESTS-clauses.match-where.MatchWhere6.xml:[2] Filter node with false node label predicate after OPTIONAL MATCH
 TESTS-clauses.match-where.MatchWhere6.xml:[4] Do not fail when predicates on optionally matched and missed nodes are invalid
@@ -311,7 +308,6 @@ TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty gra
 TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
 TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
 TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted relationships
-TESTS-clauses.return.Return3.xml:[1] Returning multiple expressions
 TESTS-clauses.return.Return4.xml:[10] Fail when returning multiple columns with same name
 TESTS-clauses.return.Return4.xml:[11] Reusing variable names in RETURN
 TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
@@ -503,7 +499,6 @@ TESTS-clauses.with-where.WithWhere1.xml:[4] Filter for an unbound node variable
 TESTS-clauses.with-where.WithWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
-TESTS-clauses.with-where.WithWhere5.xml:[3] Filter out on null if the AND'd predicate evaluates to true
 TESTS-clauses.with-where.WithWhere5.xml:[4] Do not filter out on null if the OR'd predicate evaluates to true
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
@@ -511,11 +506,9 @@ TESTS-clauses.with.With1.xml:[2] Forwarind a node variable 2
 TESTS-clauses.with.With1.xml:[3] Forwarding a relationship variable
 TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
-TESTS-clauses.with.With2.xml:[2] Forwarding a nested map literal
 TESTS-clauses.with.With4.xml:[4] Fail when forwarding multiple aliases with the same name
 TESTS-clauses.with.With4.xml:[5] Fail when not aliasing expressions in WITH
 TESTS-clauses.with.With4.xml:[6] Reusing variable names in WITH
-TESTS-clauses.with.With4.xml:[7] Multiple aliasing and backreferencing
 TESTS-clauses.with.With5.xml:[1] DISTINCT on an expression
 TESTS-clauses.with.With5.xml:[2] Handling DISTINCT with lists in maps
 TESTS-clauses.with.With6.xml:[2] Implicit grouping with single relationship variable as grouping key and single aggregation
@@ -677,16 +670,8 @@ TESTS-expressions.literals.Literals7.xml:[11] Return 20-deep nested empty lists
 TESTS-expressions.literals.Literals7.xml:[12] Return 40-deep nested empty lists
 TESTS-expressions.literals.Literals7.xml:[1] Return an empty list
 TESTS-expressions.literals.Literals7.xml:[9] Return a list containing an empty lists
-TESTS-expressions.map.Map1.xml:[1] Statically access a field of a non-null map
-TESTS-expressions.map.Map1.xml:[3] Statically access a field of a map resulting from an expression
-TESTS-expressions.map.Map1.xml:[4] Statically access a field is case-sensitive -- @1.1
-TESTS-expressions.map.Map1.xml:[4] Statically access a field is case-sensitive -- @1.2
-TESTS-expressions.map.Map1.xml:[4] Statically access a field is case-sensitive -- @1.3
-TESTS-expressions.map.Map1.xml:[4] Statically access a field is case-sensitive -- @1.4
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.1
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.2
-TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.3
-TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.4
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.5
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.6
 TESTS-expressions.map.Map2.xml:[1] Dynamically access a field based on parameters when there is no type information
@@ -700,34 +685,6 @@ TESTS-expressions.map.Map2.xml:[7] Fail at runtime when trying to index into a m
 TESTS-expressions.map.Map2.xml:[8] Fail at runtime when trying to index something which is not a map
 TESTS-expressions.map.Map3.xml:[1] Using `keys()` on a literal map
 TESTS-expressions.map.Map3.xml:[2] Using `keys()` on a parameter map
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.1
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.10
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.11
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.2
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.3
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.4
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.5
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.6
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.7
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.8
-TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.9
-TESTS-expressions.null.Null2.xml:[1] Property not null check on non-null node
-TESTS-expressions.null.Null2.xml:[2] Property not null check on optional non-null node
-TESTS-expressions.null.Null2.xml:[3] Property not null check on null node
-TESTS-expressions.null.Null2.xml:[4] A literal null is not IS NOT null
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.1
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.10
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.11
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.12
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.2
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.3
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.4
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.5
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.6
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.7
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.8
-TESTS-expressions.null.Null2.xml:[5] IS NOT NULL on a map -- @1.9
-TESTS-expressions.null.Null2.xml:[6] IS NOT NULL is case insensitive
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.1
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.2
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.3
@@ -848,10 +805,6 @@ TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes 
 TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes precedence over comparison operator -- @1.4
 TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes precedence over comparison operator -- @1.5
 TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes precedence over comparison operator -- @1.6
-TESTS-expressions.precedence.Precedence4.xml:[1] Null predicate takes precedence over comparison operator -- @1.1
-TESTS-expressions.precedence.Precedence4.xml:[1] Null predicate takes precedence over comparison operator -- @1.3
-TESTS-expressions.precedence.Precedence4.xml:[3] Null predicate takes precedence over binary boolean operator -- @1.3
-TESTS-expressions.precedence.Precedence4.xml:[3] Null predicate takes precedence over binary boolean operator -- @1.6
 TESTS-expressions.precedence.Precedence4.xml:[4] String predicate takes precedence over binary boolean operator
 TESTS-expressions.quantifier.Quantifier1.xml:[10] None quantifier on lists containing nulls -- @1.1
 TESTS-expressions.quantifier.Quantifier1.xml:[10] None quantifier on lists containing nulls -- @1.2
