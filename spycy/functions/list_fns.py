@@ -4,11 +4,30 @@ import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
-from spycy.types import FunctionContext, Node
+from spycy.types import Edge, FunctionContext, Node
 
 
 def keys(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("keys not implemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to keys")
+
+    output = []
+    for el in params[0]:
+        if el is pd.NA:
+            output.append(pd.NA)
+        elif isinstance(el, dict):
+            output.append(sorted(list(el.keys())))
+        elif isinstance(el, Node):
+            node_props = fnctx.graph.nodes[el.id_]["properties"]
+            non_null_keys = [k for k, v in node_props.items() if v is not pd.NA]
+            output.append(sorted(non_null_keys))
+        elif isinstance(el, Edge):
+            edge_props = fnctx.graph.edges[el.id_]["properties"]
+            non_null_keys = [k for k, v in edge_props.items() if v is not pd.NA]
+            output.append(sorted(non_null_keys))
+        else:
+            raise ExecutionError("TypeError - expected map-like type for keys")
+    return pd.Series(output)
 
 
 def labels(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:

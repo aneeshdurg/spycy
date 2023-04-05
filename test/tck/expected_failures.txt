@@ -659,7 +659,6 @@ TESTS-expressions.graph.Graph8.xml:[4] Using `keys()` on an optionally matched n
 TESTS-expressions.graph.Graph8.xml:[5] Using `keys()` on a relationship, non-empty result
 TESTS-expressions.graph.Graph8.xml:[6] Using `keys()` on a relationship, empty result
 TESTS-expressions.graph.Graph8.xml:[7] Using `keys()` on an optionally matched relationship
-TESTS-expressions.graph.Graph8.xml:[8] Using `keys()` and `IN` to check property existence
 TESTS-expressions.list.List1.xml:[3] Use list lookup based on parameters when there is no type information
 TESTS-expressions.list.List1.xml:[4] Use list lookup based on parameters when there is lhs type information
 TESTS-expressions.list.List1.xml:[5] Use list lookup based on parameters when there is rhs type information
@@ -763,15 +762,6 @@ TESTS-expressions.map.Map2.xml:[7] Fail at runtime when trying to index into a m
 TESTS-expressions.map.Map2.xml:[8] Fail at runtime when trying to index something which is not a map
 TESTS-expressions.map.Map3.xml:[1] Using `keys()` on a literal map
 TESTS-expressions.map.Map3.xml:[2] Using `keys()` on a parameter map
-TESTS-expressions.map.Map3.xml:[3] Using `keys()` on null map
-TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.1
-TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.2
-TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.3
-TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.4
-TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.5
-TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.6
-TESTS-expressions.map.Map3.xml:[4] Using `keys()` on map with null values -- @1.7
-TESTS-expressions.map.Map3.xml:[5] Using `keys()` and `IN` to check field existence
 TESTS-expressions.null.Null1.xml:[3] Property null check on null node
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.1
 TESTS-expressions.null.Null1.xml:[5] IS NULL on a map -- @1.10
