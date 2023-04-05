@@ -5,7 +5,7 @@ import math
 import sys
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from typing import Any, Dict, Set, Tuple
+from typing import Any, Dict, List, Set, Tuple
 
 import networkx as nx
 import numpy as np
@@ -1212,11 +1212,92 @@ class CypherExecutor:
             self.graph.remove_node(node_)
             self._deleted_ids.add(node_)
 
+    def _set_prop(self, src: Any, path: List[str], value: Any):
+        if isinstance(src, Node):
+            self._set_prop(self.graph.nodes[src.id_]["properties"], path, value)
+        elif isinstance(src, Edge):
+            self._set_prop(self.graph.edges[src.id_]["properties"], path, value)
+        elif isinstance(src, dict):
+            if len(path) == 1:
+                src[path[0]] = value
+            else:
+                self._set_prop(src[path[0]], path[1:], value)
+        else:
+            raise ExecutionError(f"TypeError - called SET on a {type(src)}")
+
+    def _set_labels(self, node_col, label_exprs: CypherParser.OC_NodeLabelsContext):
+        label_name_exprs = label_exprs.oC_NodeLabel()
+        assert label_name_exprs
+        labels = set(lexpr.oC_LabelName().getText() for lexpr in label_name_exprs)
+        for n in node_col:
+            if not isinstance(n, Node):
+                raise ExecutionError("TypeError::Cannot SET label on non-node type")
+            self.graph.nodes[n.id_]["labels"].update(labels)
+
+    def _copy_values(self, dest_col, source_col, update: bool):
+        for dst, src in zip(dest_col, source_col):
+            source_obj = src
+            if isinstance(src, Node):
+                source_obj = self.graph.nodes[src.id_]["properties"]
+            elif isinstance(src, Edge):
+                source_obj = self.graph.edges[src.id_]["properties"]
+            elif not isinstance(src, dict):
+                raise ExecutionError("Cannot SET properties from a non-map type")
+
+            if isinstance(dst, Node):
+                if update:
+                    self.graph.nodes[dst.id_]["properties"].update(source_obj)
+                else:
+                    self.graph.nodes[dst.id_]["properties"] = source_obj.copy()
+            elif isinstance(dst, Edge):
+                if update:
+                    self.graph.edges[dst.id_]["properties"].update(source_obj)
+                else:
+                    self.graph.edges[dst.id_]["properties"] = source_obj.copy()
+            else:
+                raise ExecutionError("Cannot SET properties to a non-graphtype")
+
+    def _process_set(self, node: CypherParser.OC_SetContext):
+        set_items = node.oC_SetItem()
+        assert set_items
+        for set_item in set_items:
+            expr = set_item.oC_Expression()
+            if self._has_aggregation(expr):
+                raise ExecutionError("Cannot aggregate in SET")
+
+            if prop_expr := set_item.oC_PropertyExpression():
+                new_values = self._evaluate_expression(expr)
+                source = self._evaluate_atom(prop_expr.oC_Atom())
+                prop_key_names = [
+                    prop.oC_PropertyKeyName().getText()
+                    for prop in prop_expr.oC_PropertyLookup()
+                ]
+                for i, src in enumerate(source):
+                    self._set_prop(src, prop_key_names, new_values[i])
+            else:
+                graph_el_expr = set_item.oC_Variable()
+                assert graph_el_expr
+                graph_el_name = graph_el_expr.getText()
+                if graph_el_name not in self.table:
+                    raise ExecutionError(
+                        f"SyntaxError::UndefinedVariable {graph_el_name}"
+                    )
+                graph_el_col = self.table[graph_el_name]
+                if label_exprs := set_item.oC_NodeLabels():
+                    self._set_labels(graph_el_col, label_exprs)
+                else:
+                    new_values = self._evaluate_expression(expr)
+                    assert set_item.children
+                    is_update = any(c.getText() == "+=" for c in set_item.children)
+                    self._copy_values(graph_el_col, new_values, is_update)
+
     def _process_updating_clause(self, node: CypherParser.OC_UpdatingClauseContext):
         if create := node.oC_Create():
             self._process_create(create)
         elif delete := node.oC_Delete():
             self._process_delete(delete)
+        elif set_ := node.oC_Set():
+            self._process_set(set_)
         else:
             raise AssertionError(
                 "Unsupported query - only CREATE/DELETE updates supported"

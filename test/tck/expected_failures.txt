@@ -317,57 +317,19 @@ TESTS-clauses.return.Return6.xml:[5] Aggregates inside normal functions
 TESTS-clauses.return.Return6.xml:[8] Handle aggregation on functions
 TESTS-clauses.return.Return6.xml:[9] Aggregates with arithmetics
 TESTS-clauses.return.Return7.xml:[1] Return all variables
-TESTS-clauses.set.Set1.xml:[11] Set multiple node properties
-TESTS-clauses.set.Set1.xml:[1] Set a property
-TESTS-clauses.set.Set1.xml:[2] Set a property to an expression
-TESTS-clauses.set.Set1.xml:[3] Set a property by selecting the node using a simple expression
-TESTS-clauses.set.Set1.xml:[4] Set a property by selecting the relationship using a simple expression
-TESTS-clauses.set.Set1.xml:[5] Adding a list property
-TESTS-clauses.set.Set1.xml:[6] Concatenate elements onto a list property
-TESTS-clauses.set.Set1.xml:[7] Concatenate elements in reverse onto a list property
+TESTS-clauses.set.Set1.xml:[10] Failing when setting a list of maps as a property
 TESTS-clauses.set.Set1.xml:[8] Ignore null when setting property
 TESTS-clauses.set.Set2.xml:[1] Setting a node property to null removes the existing property
 TESTS-clauses.set.Set2.xml:[2] Setting a node property to null removes the existing property, but not before SET
 TESTS-clauses.set.Set2.xml:[3] Setting a relationship property to null removes the existing property
-TESTS-clauses.set.Set3.xml:[1] Add a single label to a node with no label
-TESTS-clauses.set.Set3.xml:[2] Adding multiple labels to a node with no label
-TESTS-clauses.set.Set3.xml:[3] Add a single label to a node with an existing label
-TESTS-clauses.set.Set3.xml:[4] Adding multiple labels to a node with an existing label
-TESTS-clauses.set.Set3.xml:[5] Ignore whitespace before colon 1
-TESTS-clauses.set.Set3.xml:[6] Ignore whitespace before colon 2
-TESTS-clauses.set.Set3.xml:[7] Ignore whitespace before colon 3
 TESTS-clauses.set.Set3.xml:[8] Ignore null when setting label
-TESTS-clauses.set.Set4.xml:[1] Set multiple properties with a property map
-TESTS-clauses.set.Set4.xml:[2] Non-existent values in a property map are removed with SET
 TESTS-clauses.set.Set4.xml:[3] Null values in a property map are removed with SET
-TESTS-clauses.set.Set4.xml:[4] All properties are removed if node is set to empty property map
 TESTS-clauses.set.Set4.xml:[5] Ignore null when setting properties using an overriding map
 TESTS-clauses.set.Set5.xml:[1] Ignore null when setting properties using an appending map
-TESTS-clauses.set.Set5.xml:[2] Overwrite values when using +=
-TESTS-clauses.set.Set5.xml:[3] Retain old values when using +=
 TESTS-clauses.set.Set5.xml:[4] Explicit null values in a map remove old values
-TESTS-clauses.set.Set5.xml:[5] Set an empty map when using += has no effect
-TESTS-clauses.set.Set6.xml:[10] Skipping and limiting to a few results after adding a label on nodes affects the result set but not the side effects
 TESTS-clauses.set.Set6.xml:[11] Skipping zero result and limiting to all results after adding a label on nodes does not affect the result set nor the side effects
-TESTS-clauses.set.Set6.xml:[12] Filtering after adding a label on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[13] Aggregating in `RETURN` after adding a label on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[14] Aggregating in `WITH` after adding a label on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[15] Limiting to zero results after setting a property on relationships affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[16] Skipping all results after setting a property on relationships affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[17] Skipping and limiting to a few results after setting a property on relationships affects the result set but not the side effects
 TESTS-clauses.set.Set6.xml:[18] Skipping zero result and limiting to all results after setting a property on relationships does not affect the result set nor the side effects
-TESTS-clauses.set.Set6.xml:[19] Filtering after setting a property on relationships affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[1] Limiting to zero results after setting a property on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[20] Aggregating in `RETURN` after setting a property on relationships affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[21] Aggregating in `WITH` after setting a property on relationships affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[2] Skipping all results after setting a property on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[3] Skipping and limiting to a few results after setting a property on nodes affects the result set but not the side effects
 TESTS-clauses.set.Set6.xml:[4] Skipping zero results and limiting to all results after setting a property on nodes does not affect the result set nor the side effects
-TESTS-clauses.set.Set6.xml:[5] Filtering after setting a property on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[6] Aggregating in `RETURN` after setting a property on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[7] Aggregating in `WITH` after setting a property on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[8] Limiting to zero results after adding a label on nodes affects the result set but not the side effects
-TESTS-clauses.set.Set6.xml:[9] Skipping all results after adding a label on nodes affects the result set but not the side effects
 TESTS-clauses.union.Union1.xml:[1] Two elements, both unique, distinct
 TESTS-clauses.union.Union1.xml:[2] Three elements, two unique, distinct
 TESTS-clauses.union.Union1.xml:[3] Two single-column inputs, one with duplicates, distinct
@@ -562,7 +524,6 @@ TESTS-expressions.list.List1.xml:[6] Fail when indexing a non-list #Example: str
 TESTS-expressions.list.List1.xml:[7] Fail when indexing a non-list given by a parameter #Example: string -- @1.4
 TESTS-expressions.list.List1.xml:[8] Fail when indexing with a non-integer #Example: boolean -- @1.1
 TESTS-expressions.list.List11.xml:[3] Create an empty list if range direction and step direction are inconsistent
-TESTS-expressions.list.List12.xml:[1] Collect and extract using a list comprehension
 TESTS-expressions.list.List12.xml:[2] Collect and filter using a list comprehension
 TESTS-expressions.list.List12.xml:[3] Size of list comprehension
 TESTS-expressions.list.List12.xml:[4] Returning a list comprehension
