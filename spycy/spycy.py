@@ -708,6 +708,9 @@ class CypherExecutor:
         self.table = self.table.explode(alias, ignore_index=True)
 
     def _process_match(self, node: CypherParser.OC_MatchContext):
+        assert node.children
+        is_optional = node.children[0].getText().lower() == "optional"
+
         pattern = node.oC_Pattern()
         assert pattern
         pgraph = self._interpret_pattern(pattern)
@@ -749,18 +752,34 @@ class CypherExecutor:
                     found = True
                     if not isinstance(self.table[name][i], Edge):
                         raise ExecutionError("TypeError cannot rebind as edge")
-                    initial_state.edge_ids_to_data_ids[edge.id_] = self.table[name][i].id_
+                    initial_state.edge_ids_to_data_ids[edge.id_] = self.table[name][
+                        i
+                    ].id_
                 assert found
             results = m.match_dfs(initial_state)
             for nid, pnode in pgraph.nodes.items():
                 if node_name := pnode.name:
                     data = results.node_ids_to_data_ids.get(nid, [])
-                    names_to_data[node_name].append([Node(d) for d in data])
+                    if is_optional and not data:
+                        if node_name in self.table:
+                            data = [self.table[node_name][i]]
+                        else:
+                            data = [pd.NA]
+                    else:
+                        data = [Node(d) for d in data]
+                    names_to_data[node_name].append(data)
 
             for eid, pedge in pgraph.edges.items():
                 if edge_name := pedge.name:
                     data = results.edge_ids_to_data_ids.get(eid, [])
-                    names_to_data[edge_name].append([Edge(d) for d in data])
+                    if is_optional and not data:
+                        if edge_name in self.table:
+                            data = [self.table[edge_name][i]]
+                        else:
+                            data = [pd.NA]
+                    else:
+                        data = [Edge(d) for d in data]
+                    names_to_data[edge_name].append(data)
 
         for name, data in names_to_data.items():
             self.table[name] = data

@@ -220,25 +220,19 @@ TESTS-clauses.match.Match7.xml:[16] Optionally matching named paths - null resul
 TESTS-clauses.match.Match7.xml:[17] Optionally matching named paths - existing result
 TESTS-clauses.match.Match7.xml:[18] Named paths inside optional matches with node predicates
 TESTS-clauses.match.Match7.xml:[19] Optionally matching named paths with single and variable length patterns
-TESTS-clauses.match.Match7.xml:[1] Simple OPTIONAL MATCH on empty graph
 TESTS-clauses.match.Match7.xml:[20] Variable length optional relationships with bound nodes, no matches
 TESTS-clauses.match.Match7.xml:[21] Handling optional matches between nulls
 TESTS-clauses.match.Match7.xml:[22] MATCH after OPTIONAL MATCH
-TESTS-clauses.match.Match7.xml:[23] OPTIONAL MATCH with labels on the optional end node
 TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[25] Optionally matching self-loops without matches
-TESTS-clauses.match.Match7.xml:[26] Handling correlated optional matches; first does not match implies second does not match
 TESTS-clauses.match.Match7.xml:[27] Handling optional matches between optionally matched entities
 TESTS-clauses.match.Match7.xml:[28] Handling optional matches with inline label predicate
-TESTS-clauses.match.Match7.xml:[2] OPTIONAL MATCH with previously bound nodes
-TESTS-clauses.match.Match7.xml:[30] Satisfies the open world assumption, single relationship
-TESTS-clauses.match.Match7.xml:[31] Satisfies the open world assumption, relationships between different nodes
+TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
 TESTS-clauses.match.Match7.xml:[3] OPTIONAL MATCH and bound nodes
 TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
 TESTS-clauses.match.Match7.xml:[5] Optionally matching relationship with a relationship that is already bound
 TESTS-clauses.match.Match7.xml:[6] Optionally matching relationship with a relationship and node that are both already bound
 TESTS-clauses.match.Match7.xml:[7] MATCH with OPTIONAL MATCH in longer pattern
-TESTS-clauses.match.Match7.xml:[8] Longer pattern with bound nodes without matches
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match8.xml:[3] Matching and disregarding output, then matching again
@@ -249,7 +243,6 @@ TESTS-clauses.match.Match9.xml:[4] Return relationships by collecting them as a 
 TESTS-clauses.match.Match9.xml:[5] Variable length pattern with label predicate on both sides
 TESTS-clauses.match.Match9.xml:[6] Matching relationships into a list and matching variable length using the list, with bound nodes
 TESTS-clauses.match.Match9.xml:[7] Matching relationships into a list and matching variable length using the list, with bound nodes, wrong direction
-TESTS-clauses.match.Match9.xml:[8] Variable length relationship in OPTIONAL MATCH
 TESTS-clauses.match.Match9.xml:[9] Optionally matching named paths with variable length patterns
 TESTS-clauses.merge.Merge1.xml:[10] Merge must properly handle multiple labels
 TESTS-clauses.merge.Merge1.xml:[11] Merge should be able to merge using property of bound node
