@@ -103,8 +103,6 @@ TESTS-clauses.match.Match3.xml:[20] Three bound nodes pointing to the same node
 TESTS-clauses.match.Match3.xml:[21] Three bound nodes pointing to the same node with extra connections
 TESTS-clauses.match.Match3.xml:[25] Matching twice with an additional node label
 TESTS-clauses.match.Match3.xml:[26] Matching twice with a duplicate predicate
-TESTS-clauses.match.Match3.xml:[27] Matching from null nodes should return no results owing to finding no matches
-TESTS-clauses.match.Match3.xml:[28] Matching from null nodes should return no results owing to matches being filtered out
 TESTS-clauses.match.Match4.xml:[1] Handling fixed-length variable length pattern
 TESTS-clauses.match.Match4.xml:[2] Simple variable length pattern
 TESTS-clauses.match.Match4.xml:[3] Zero-length variable length pattern in the middle of the pattern
@@ -162,21 +160,17 @@ TESTS-clauses.match.Match6.xml:[6] Handling direction of named paths
 TESTS-clauses.match.Match6.xml:[7] Respecting direction when matching existing path
 TESTS-clauses.match.Match6.xml:[8] Respecting direction when matching non-existent path with multiple directions
 TESTS-clauses.match.Match6.xml:[9] Longer path query should return results in written order
-TESTS-clauses.match.Match7.xml:[10] Optionally matching from null nodes should return null
 TESTS-clauses.match.Match7.xml:[11] Return two subgraphs with bound undirected relationship and optional relationship
 TESTS-clauses.match.Match7.xml:[12] Variable length optional relationships
 TESTS-clauses.match.Match7.xml:[14] Variable length optional relationships with length predicates
-TESTS-clauses.match.Match7.xml:[15] Variable length patterns and nulls
 TESTS-clauses.match.Match7.xml:[16] Optionally matching named paths - null result
 TESTS-clauses.match.Match7.xml:[17] Optionally matching named paths - existing result
 TESTS-clauses.match.Match7.xml:[18] Named paths inside optional matches with node predicates
 TESTS-clauses.match.Match7.xml:[19] Optionally matching named paths with single and variable length patterns
 TESTS-clauses.match.Match7.xml:[20] Variable length optional relationships with bound nodes, no matches
-TESTS-clauses.match.Match7.xml:[21] Handling optional matches between nulls
 TESTS-clauses.match.Match7.xml:[22] MATCH after OPTIONAL MATCH
 TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[25] Optionally matching self-loops without matches
-TESTS-clauses.match.Match7.xml:[27] Handling optional matches between optionally matched entities
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
 TESTS-clauses.match.Match7.xml:[8] Longer pattern with bound nodes without matches
 TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
@@ -518,7 +512,6 @@ TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound befo
 TESTS-clauses.with.With1.xml:[2] Forwarind a node variable 2
 TESTS-clauses.with.With1.xml:[3] Forwarding a relationship variable
 TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
-TESTS-clauses.with.With1.xml:[5] Forwarding null
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
 TESTS-clauses.with.With2.xml:[2] Forwarding a nested map literal
 TESTS-clauses.with.With4.xml:[4] Fail when forwarding multiple aliases with the same name
@@ -667,8 +660,6 @@ TESTS-expressions.graph.Graph8.xml:[5] Using `keys()` on a relationship, non-emp
 TESTS-expressions.graph.Graph8.xml:[6] Using `keys()` on a relationship, empty result
 TESTS-expressions.graph.Graph8.xml:[7] Using `keys()` on an optionally matched relationship
 TESTS-expressions.graph.Graph8.xml:[8] Using `keys()` and `IN` to check property existence
-TESTS-expressions.graph.Graph9.xml:[3] `properties()` on null
-TESTS-expressions.graph.Graph9.xml:[4] `properties()` on a map
 TESTS-expressions.list.List1.xml:[3] Use list lookup based on parameters when there is no type information
 TESTS-expressions.list.List1.xml:[4] Use list lookup based on parameters when there is lhs type information
 TESTS-expressions.list.List1.xml:[5] Use list lookup based on parameters when there is rhs type information

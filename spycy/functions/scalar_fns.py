@@ -49,7 +49,11 @@ def properties(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
     output = []
     for el in params[0]:
-        if isinstance(el, Edge):
+        if el is pd.NA:
+            output.append(pd.NA)
+        elif isinstance(el, dict):
+            output.append(el)
+        elif isinstance(el, Edge):
             data = fnctx.graph.edges[el.id_]
             output.append(data["properties"])
         elif isinstance(el, Node):

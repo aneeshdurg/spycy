@@ -808,6 +808,7 @@ class CypherExecutor:
                 self.graph, pgraph, i, node_ids_to_props, edge_ids_to_props
             )
             initial_state = matcher.MatchResult()
+            skip_row = False
             for name in names_to_data:
                 if name not in self.table:
                     continue
@@ -816,11 +817,14 @@ class CypherExecutor:
                     if node_.name != name:
                         continue
                     found = True
-                    if not isinstance(self.table[name][i], Node):
-                        raise ExecutionError("TypeError cannot rebind as node")
-                    initial_state.node_ids_to_data_ids[node_.id_] = self.table[name][
-                        i
-                    ].id_
+                    value = self.table[name][i]
+                    if value is pd.NA:
+                        skip_row = True
+                    else:
+                        if not isinstance(value, Node):
+                            raise ExecutionError("TypeError cannot rebind as node")
+                        value = value.id_
+                    initial_state.node_ids_to_data_ids[node_.id_] = value
                 if found:
                     continue
 
@@ -828,13 +832,19 @@ class CypherExecutor:
                     if edge.name != name:
                         continue
                     found = True
-                    if not isinstance(self.table[name][i], Edge):
-                        raise ExecutionError("TypeError cannot rebind as edge")
-                    initial_state.edge_ids_to_data_ids[edge.id_] = self.table[name][
-                        i
-                    ].id_
+                    value = self.table[name][i]
+                    if value is pd.NA:
+                        skip_row = True
+                    else:
+                        if not isinstance(value, Edge):
+                            raise ExecutionError("TypeError cannot rebind as edge")
+                        value = value.id_
+                    initial_state.edge_ids_to_data_ids[edge.id_] = value
                 assert found
-            results = m.match_dfs(initial_state)
+            if skip_row:
+                results = matcher.MatchResultSet()
+            else:
+                results = m.match_dfs(initial_state)
             for nid, pnode in pgraph.nodes.items():
                 if node_name := pnode.name:
                     data = results.node_ids_to_data_ids.get(nid, [])
