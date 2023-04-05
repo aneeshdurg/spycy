@@ -95,6 +95,12 @@ class CypherExecutor:
             elif isinstance(x, list):
                 for i, v in enumerate(x):
                     x[i] = make_serializable(v)
+            elif np.issubdtype(type(x), np.integer):
+                return int(x)
+            elif np.issubdtype(type(x), np.bool_):
+                return bool(x)
+            elif np.issubdtype(type(x), np.float_):
+                return float(x)
             return x
 
         rows = self.table.to_dict("records")
