@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
-from spycy.types import FunctionContext
+from spycy.types import FunctionContext, Node
 
 
 def keys(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
@@ -12,7 +12,16 @@ def keys(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def labels(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("labels not implemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to labels")
+
+    output = []
+    for node in params[0]:
+        if not isinstance(node, Node):
+            raise ExecutionError("TypeError - labels expects a Node argument")
+        node_data = fnctx.graph.nodes[node.id_]
+        output.append(sorted(list(node_data["labels"])))
+    return pd.Series(output)
 
 
 def nodes(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:

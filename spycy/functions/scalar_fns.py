@@ -44,7 +44,22 @@ def length(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def properties(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("properties unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to type")
+
+    output = []
+    for el in params[0]:
+        if isinstance(el, Edge):
+            data = fnctx.graph.edges[el.id_]
+            output.append(data["properties"])
+        elif isinstance(el, Node):
+            data = fnctx.graph.nodes[el.id_]
+            output.append(data["properties"])
+        else:
+            raise ExecutionError(
+                "TypeError - properties expects a node or an edge argument"
+            )
+    return pd.Series(output)
 
 
 def size(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
@@ -112,6 +127,8 @@ def type_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     for edge in params[0]:
         if not isinstance(edge, Edge):
             raise ExecutionError("TypeError - type expects an edge argument")
+        edge_data = fnctx.graph.edges[edge.id_]
+        output.append(edge_data["type"])
     return pd.Series(output)
 
 

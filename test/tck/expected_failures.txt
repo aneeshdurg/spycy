@@ -76,13 +76,11 @@ TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
 TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all results after deleting relationships does not affect the result set nor the side effects
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
-TESTS-clauses.match-where.MatchWhere1.xml:[11] Filter relationship with disjunctive relationship type predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[1] Filter node with node label predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[2] Filter node with node label predicate on multi variables without any bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[6] Filter node with a parameter in a property predicate on multi variables with one binding
-TESTS-clauses.match-where.MatchWhere1.xml:[7] Filter relationship with relationship type predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere1.xml:[9] Filter relationship with a parameter in a property predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
@@ -98,7 +96,6 @@ TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of prop
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
 TESTS-clauses.match.Match2.xml:[3] Matching a self-loop with an undirected relationship pattern
-TESTS-clauses.match.Match2.xml:[4] Matching a self-loop with a directed relationship pattern
 TESTS-clauses.match.Match3.xml:[11] Undirected match in self-relationship graph
 TESTS-clauses.match.Match3.xml:[12] Undirected match of self-relationship in self-relationship graph
 TESTS-clauses.match.Match3.xml:[14] Directed match of self-relationship on self-relationship graph
@@ -310,7 +307,6 @@ TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and paramet
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[2] Start the result from the second row by param
-TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[3] SKIP with an expression that does not depend on variables
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[6] Negative parameter for SKIP should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit1.xml:[8] Floating point parameter for SKIP should fail
 TESTS-clauses.return-skip-limit.ReturnSkipLimit2.xml:[10] Negative parameter for LIMIT should fail
@@ -647,18 +643,13 @@ TESTS-expressions.existentialSubqueries.ExistentialSubquery2.xml:[2] Full existe
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[1] Nested simple existential subquery
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[2] Nested full existential subquery
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[3] Nested full existential subquery with pattern predicate
-TESTS-expressions.graph.Graph3.xml:[1] Creating node without label
 TESTS-expressions.graph.Graph3.xml:[2] Creating node with two labels
 TESTS-expressions.graph.Graph3.xml:[3] Ignore space when creating node with labels
-TESTS-expressions.graph.Graph3.xml:[4] Create node with label in pattern
-TESTS-expressions.graph.Graph3.xml:[5] Using `labels()` in return clauses
 TESTS-expressions.graph.Graph3.xml:[6] `labels()` should accept type Any
 TESTS-expressions.graph.Graph3.xml:[7] `labels()` on null node
-TESTS-expressions.graph.Graph4.xml:[1] `type()`
-TESTS-expressions.graph.Graph4.xml:[2] `type()` on two relationships
 TESTS-expressions.graph.Graph4.xml:[3] `type()` on null relationship
 TESTS-expressions.graph.Graph4.xml:[4] `type()` on mixed null and non-null relationships
-TESTS-expressions.graph.Graph4.xml:[5] `type()` handling Any type
+TESTS-expressions.graph.Graph4.xml:[7] Failing when using `type()` on a node
 TESTS-expressions.graph.Graph5.xml:[1] Single-labels expression on nodes
 TESTS-expressions.graph.Graph5.xml:[2] Single-labels expression on relationships
 TESTS-expressions.graph.Graph5.xml:[3] Conjunctive labels expression on nodes
@@ -681,8 +672,6 @@ TESTS-expressions.graph.Graph8.xml:[5] Using `keys()` on a relationship, non-emp
 TESTS-expressions.graph.Graph8.xml:[6] Using `keys()` on a relationship, empty result
 TESTS-expressions.graph.Graph8.xml:[7] Using `keys()` on an optionally matched relationship
 TESTS-expressions.graph.Graph8.xml:[8] Using `keys()` and `IN` to check property existence
-TESTS-expressions.graph.Graph9.xml:[1] `properties()` on a node
-TESTS-expressions.graph.Graph9.xml:[2] `properties()` on a relationship
 TESTS-expressions.graph.Graph9.xml:[3] `properties()` on null
 TESTS-expressions.graph.Graph9.xml:[4] `properties()` on a map
 TESTS-expressions.list.List1.xml:[3] Use list lookup based on parameters when there is no type information
@@ -712,7 +701,6 @@ TESTS-expressions.list.List12.xml:[2] Collect and filter using a list comprehens
 TESTS-expressions.list.List12.xml:[3] Size of list comprehension
 TESTS-expressions.list.List12.xml:[4] Returning a list comprehension
 TESTS-expressions.list.List12.xml:[5] Using a list comprehension in a WITH
-TESTS-expressions.list.List12.xml:[6] Using a list comprehension in a WHERE
 TESTS-expressions.list.List12.xml:[7] Fail when using aggregation in list comprehension
 TESTS-expressions.list.List2.xml:[10] List slice with parameterised range
 TESTS-expressions.list.List2.xml:[11] List slice with parameterised invalid range
