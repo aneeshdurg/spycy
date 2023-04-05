@@ -1,26 +1,19 @@
 from typing import List
 
+import numpy as np
 import pandas as pd
 
-
-def avg(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("avg not implemented")
+from spycy.errors import ExecutionError
 
 
-def collect(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("collect not implemented")
+def agg_func(f):
+    def wrapper(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
+        if len(params) != 1:
+            raise ExecutionError(f"Invalid number of arguments")
 
+        return pd.Series([f(params[0])])
 
-def count(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("count not implemented")
-
-
-def max_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("max not implemented")
-
-
-def min_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("min not implemented")
+    return wrapper
 
 
 def percentileCont(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
@@ -39,19 +32,15 @@ def stDevP(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("stDevP not implemented")
 
 
-def sum_(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
-    raise AssertionError("sum not implemented")
-
-
 fn_map = {
-    "avg": avg,
-    "colect": collect,
-    "count": count,
-    "max": max_,
-    "min": min_,
+    "avg": agg_func(np.mean),
+    "collect": agg_func(list),
+    "count": agg_func(lambda f: np.sum(f.apply(lambda e: e is not pd.NA))),
+    "max": agg_func(np.max),
+    "min": agg_func(np.min),
     "percentileCont": percentileCont,
     "percentileDisc": percentileDisc,
     "stDev": stDev,
     "stDevP": stDevP,
-    "sum": sum_,
+    "sum": agg_func(np.sum),
 }

@@ -14,6 +14,8 @@ def string_func(f):
 
         return params[0].apply(f)
 
+    return wrapper
+
 
 def left(params: List[pd.Series], table: pd.DataFrame) -> pd.Series:
     raise AssertionError("left is unimplemented")

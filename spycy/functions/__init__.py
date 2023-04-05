@@ -33,3 +33,7 @@ def function_registry(
             return fn(params, table)
 
     raise AssertionError(f"Function {name} not found")
+
+
+def is_aggregation(name: str):
+    return name in aggregation_fns.fn_map

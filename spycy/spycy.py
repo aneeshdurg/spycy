@@ -13,11 +13,11 @@ from antlr4.error.ErrorListener import ErrorListener
 from antlr4 import *
 from spycy import matcher, pattern_graph
 from spycy.errors import ExecutionError
-from spycy.functions import function_registry
+from spycy.functions import function_registry, is_aggregation
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
 from spycy.types import Edge, Node
-from spycy.visitor import hasType
+from spycy.visitor import hasType, visitor
 
 
 @dataclass
@@ -234,6 +234,8 @@ class CypherExecutor:
 
         assert expr.children
         operation = expr.children[0].getText()
+        if operation == "count":
+            return pd.Series([len(self.table)])
         raise AssertionError(f"Operation {operation} unsupported")
 
     def _evaluate_list_op(
@@ -550,16 +552,56 @@ class CypherExecutor:
             assert len(proj_items.children) == 1
             return
 
-        output_table = pd.DataFrame()
-        for proj in proj_items.oC_ProjectionItem():
-            expr = proj.oC_Expression()
-            expr_column = self._evaluate_expression(expr)
-            var = proj.oC_Variable()
+        def has_aggregation(ctx) -> bool:
+            found_aggregation = False
+
+            def is_aggregation_visitor(ctx) -> bool:
+                nonlocal found_aggregation
+                if isinstance(ctx, CypherParser.OC_AtomContext):
+                    assert ctx.children
+                    count = ctx.children[0].getText().lower() == "count"
+                    if count:
+                        found_aggregation = True
+                        return False
+                if isinstance(ctx, CypherParser.OC_FunctionInvocationContext):
+                    fnname = ctx.oC_FunctionName()
+                    assert fnname
+                    fnname = fnname.getText()
+                    if is_aggregation(fnname):
+                        found_aggregation = True
+                        return False
+                return True
+
+            visitor(ctx, is_aggregation_visitor)
+            return found_aggregation
+
+        def get_alias(ctx: CypherParser.OC_ProjectionItemContext):
+            var = ctx.oC_Variable()
             if var:
                 alias = var.getText()
             else:
+                expr = proj.oC_Expression()
                 alias = expr.getText()
-            output_table[alias] = expr_column
+            return alias
+
+        group_by_keys = set()
+        aggregations = set()
+        for proj in proj_items.oC_ProjectionItem():
+            if has_aggregation(proj):
+                aggregations.add(get_alias(proj))
+            else:
+                group_by_keys.add(get_alias(proj))
+
+        output_table = pd.DataFrame()
+
+        if len(aggregations) == 0 or len(group_by_keys) == 0:
+            for proj in proj_items.oC_ProjectionItem():
+                expr = proj.oC_Expression()
+                expr_column = self._evaluate_expression(expr)
+                alias = get_alias(proj)
+                output_table[alias] = expr_column
+        else:
+            raise AssertionError("Group by not implemented")
         self.table = output_table
 
         assert not node.oC_Order(), "Unsupported query - ORDER BY not implemented"

@@ -65,14 +65,10 @@ TESTS-clauses.create.Create5.xml:[4] Create a pattern with multiple hops with mu
 TESTS-clauses.create.Create5.xml:[5] Create a pattern with multiple hops and varying directions
 TESTS-clauses.create.Create6.xml:[10] Skipping and limiting to a few results after creating relationships does not affect the result set nor the side effects
 TESTS-clauses.create.Create6.xml:[11] Skipping zero result and limiting to all results after creating relationships does not affect the result set nor the side effects
-TESTS-clauses.create.Create6.xml:[13] Aggregating in `RETURN` after creating relationships affects the result set but not the side effects
-TESTS-clauses.create.Create6.xml:[14] Aggregating in `WITH` after creating relationships affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[1] Limiting to zero results after creating nodes affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[2] Skipping all results after creating nodes affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[3] Skipping and limiting to a few results after creating nodes does not affect the result set nor the side effects
 TESTS-clauses.create.Create6.xml:[4] Skipping zero result and limiting to all results after creating nodes does not affect the result set nor the side effects
-TESTS-clauses.create.Create6.xml:[6] Aggregating in `RETURN` after creating nodes affects the result set but not the side effects
-TESTS-clauses.create.Create6.xml:[7] Aggregating in `WITH` after creating nodes affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[8] Limiting to zero results after creating relationships affects the result set but not the side effects
 TESTS-clauses.create.Create6.xml:[9] Skipping all results after creating relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete1.xml:[5] Ignore null when deleting node
@@ -80,7 +76,6 @@ TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matc
 TESTS-clauses.delete.Delete2.xml:[4] Ignore null when deleting relationship
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
 TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
-TESTS-clauses.delete.Delete4.xml:[1] Undirected expand followed by delete and count
 TESTS-clauses.delete.Delete4.xml:[2] Undirected variable length expand followed by delete and count
 TESTS-clauses.delete.Delete4.xml:[3] Create and delete in same query
 TESTS-clauses.delete.Delete5.xml:[1] Delete node from a list
@@ -92,14 +87,10 @@ TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
 TESTS-clauses.delete.Delete6.xml:[10] Skipping and limiting to a few results after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all results after deleting relationships does not affect the result set nor the side effects
-TESTS-clauses.delete.Delete6.xml:[13] Aggregating in `RETURN` after deleting relationships affects the result set but not the side effects
-TESTS-clauses.delete.Delete6.xml:[14] Aggregating in `WITH` after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[1] Limiting to zero results after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[2] Skipping all results after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[3] Skipping and limiting to a few results after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
-TESTS-clauses.delete.Delete6.xml:[6] Aggregating in `RETURN` after deleting nodes affects the result set but not the side effects
-TESTS-clauses.delete.Delete6.xml:[7] Aggregating in `WITH` after deleting nodes affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[8] Limiting to zero results after deleting relationships affects the result set but not the side effects
 TESTS-clauses.delete.Delete6.xml:[9] Skipping all results after deleting relationships affects the result set but not the side effects
 TESTS-clauses.match-where.MatchWhere1.xml:[10] Filter node with disjunctive property predicate on single variables with multiple bindings
@@ -447,11 +438,14 @@ TESTS-clauses.return.Return6.xml:[10] Multiple aggregates on same variable
 TESTS-clauses.return.Return6.xml:[11] Counting matches
 TESTS-clauses.return.Return6.xml:[12] Counting matches per group
 TESTS-clauses.return.Return6.xml:[13] Returning the minimum length of paths
+TESTS-clauses.return.Return6.xml:[14] Aggregates in aggregates
+TESTS-clauses.return.Return6.xml:[15] Using `rand()` in aggregations
 TESTS-clauses.return.Return6.xml:[16] Aggregation on complex expressions
 TESTS-clauses.return.Return6.xml:[17] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[18] Handle returned variables inside an expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[19] Handle returned property accesses inside an expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[1] Return count aggregation over nodes
+TESTS-clauses.return.Return6.xml:[20] Fail if not returned variables are used inside an expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[2] Projecting an arithmetic expression with aggregation
 TESTS-clauses.return.Return6.xml:[3] Aggregating by a list property has a correct definition of equality
 TESTS-clauses.return.Return6.xml:[4] Support multiple divisions in aggregate function
@@ -461,7 +455,6 @@ TESTS-clauses.return.Return6.xml:[7] Aggregate on property
 TESTS-clauses.return.Return6.xml:[8] Handle aggregation on functions
 TESTS-clauses.return.Return6.xml:[9] Aggregates with arithmetics
 TESTS-clauses.return.Return7.xml:[1] Return all variables
-TESTS-clauses.return.Return8.xml:[1] Return aggregation after With filtering
 TESTS-clauses.set.Set1.xml:[11] Set multiple node properties
 TESTS-clauses.set.Set1.xml:[1] Set a property
 TESTS-clauses.set.Set1.xml:[2] Set a property to an expression
@@ -525,7 +518,6 @@ TESTS-clauses.unwind.Unwind1.xml:[12] Unwind does not remove variables from scop
 TESTS-clauses.unwind.Unwind1.xml:[13] Multiple unwinds after each other
 TESTS-clauses.unwind.Unwind1.xml:[14] Unwind with merge
 TESTS-clauses.unwind.Unwind1.xml:[4] Unwinding a collected unwound expression
-TESTS-clauses.unwind.Unwind1.xml:[5] Unwinding a collected expression
 TESTS-clauses.unwind.Unwind1.xml:[6] Creating nodes from an unwound parameter list
 TESTS-clauses.unwind.Unwind1.xml:[8] Unwinding the empty list
 TESTS-clauses.unwind.Unwind1.xml:[9] Unwinding null
@@ -800,22 +792,15 @@ TESTS-clauses.with.With6.xml:[4] Implicit grouping with single path variable as 
 TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[6] Handle projected variables inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[7] Handle projected property accesses inside an expression which contains an aggregation expression
+TESTS-clauses.with.With6.xml:[8] Fail if not projected variables are used inside an expression which contains an aggregation expression
 TESTS-clauses.with.With7.xml:[1] A simple pattern with one bound endpoint
 TESTS-clauses.with.With7.xml:[2] Multiple WITHs using a predicate and aggregation
 TESTS-expressions.aggregation.Aggregation1.xml:[1] Count only non-null values
 TESTS-expressions.aggregation.Aggregation1.xml:[2] Counting loop relationships
-TESTS-expressions.aggregation.Aggregation2.xml:[10] `min()` over list values
 TESTS-expressions.aggregation.Aggregation2.xml:[11] `max()` over mixed values
 TESTS-expressions.aggregation.Aggregation2.xml:[12] `min()` over mixed values
-TESTS-expressions.aggregation.Aggregation2.xml:[1] `max()` over integers
-TESTS-expressions.aggregation.Aggregation2.xml:[2] `min()` over integers
-TESTS-expressions.aggregation.Aggregation2.xml:[3] `max()` over floats
-TESTS-expressions.aggregation.Aggregation2.xml:[4] `min()` over floats
-TESTS-expressions.aggregation.Aggregation2.xml:[5] `max()` over mixed numeric values
-TESTS-expressions.aggregation.Aggregation2.xml:[6] `min()` over mixed numeric values
 TESTS-expressions.aggregation.Aggregation2.xml:[7] `max()` over strings
 TESTS-expressions.aggregation.Aggregation2.xml:[8] `min()` over strings
-TESTS-expressions.aggregation.Aggregation2.xml:[9] `max()` over list values
 TESTS-expressions.aggregation.Aggregation3.xml:[1] Sum only non-null values
 TESTS-expressions.aggregation.Aggregation3.xml:[2] No overflow during summation
 TESTS-expressions.aggregation.Aggregation5.xml:[1] `collect()` filtering nulls
@@ -832,8 +817,6 @@ TESTS-expressions.aggregation.Aggregation6.xml:[3] `percentileCont()` failing on
 TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.1
 TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.2
 TESTS-expressions.aggregation.Aggregation6.xml:[4] `percentileDisc()` failing on bad arguments -- @1.3
-TESTS-expressions.aggregation.Aggregation8.xml:[1] Distinct on unbound node
-TESTS-expressions.aggregation.Aggregation8.xml:[2] Distinct on null
 TESTS-expressions.aggregation.Aggregation8.xml:[3] Collect distinct nulls
 TESTS-expressions.aggregation.Aggregation8.xml:[4] Collect distinct values mixed with nulls
 TESTS-expressions.boolean.Boolean1.xml:[1] Conjunction of two truth values
@@ -874,8 +857,6 @@ TESTS-expressions.comparison.Comparison1.xml:[16] It is unknown - i.e. null - if
 TESTS-expressions.comparison.Comparison1.xml:[1] Number-typed integer comparison
 TESTS-expressions.comparison.Comparison1.xml:[2] Number-typed float comparison
 TESTS-expressions.comparison.Comparison1.xml:[3] Any-typed string comparison
-TESTS-expressions.comparison.Comparison1.xml:[4] Comparing nodes to nodes
-TESTS-expressions.comparison.Comparison1.xml:[5] Comparing relationships to relationships
 TESTS-expressions.comparison.Comparison1.xml:[6] Comparing lists to lists -- @1.2
 TESTS-expressions.comparison.Comparison1.xml:[6] Comparing lists to lists -- @1.5
 TESTS-expressions.comparison.Comparison1.xml:[7] Comparing maps to maps -- @1.12
