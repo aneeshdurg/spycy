@@ -579,9 +579,6 @@ TESTS-expressions.existentialSubqueries.ExistentialSubquery2.xml:[2] Full existe
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[1] Nested simple existential subquery
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[2] Nested full existential subquery
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[3] Nested full existential subquery with pattern predicate
-TESTS-expressions.graph.Graph3.xml:[2] Creating node with two labels
-TESTS-expressions.graph.Graph3.xml:[3] Ignore space when creating node with labels
-TESTS-expressions.graph.Graph3.xml:[6] `labels()` should accept type Any
 TESTS-expressions.graph.Graph4.xml:[7] Failing when using `type()` on a node
 TESTS-expressions.graph.Graph7.xml:[1] Execute n['name'] in read queries
 TESTS-expressions.graph.Graph7.xml:[2] Execute n['name'] in update queries
@@ -683,7 +680,6 @@ TESTS-expressions.map.Map2.xml:[5] Dynamically access a field is case-sensitive 
 TESTS-expressions.map.Map2.xml:[6] Fail at runtime when attempting to index with an Int into a Map
 TESTS-expressions.map.Map2.xml:[7] Fail at runtime when trying to index into a map with a non-string
 TESTS-expressions.map.Map2.xml:[8] Fail at runtime when trying to index something which is not a map
-TESTS-expressions.map.Map3.xml:[1] Using `keys()` on a literal map
 TESTS-expressions.map.Map3.xml:[2] Using `keys()` on a parameter map
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.1
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.2

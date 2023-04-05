@@ -215,7 +215,56 @@ def normalize_spycy_output(
     return py_table
 
 
+def equivalent_ignoring_list_order(tck_value, spycy_value):
+    if isinstance(tck_value, dict):
+        if not isinstance(spycy_value, dict):
+            return False
+        if set(tck_value.keys()) != set(spycy_value.keys()):
+            return False
+        for k, tvalue in tck_value.items():
+            if not equivalent_ignoring_list_order(tvalue, spycy_value[k]):
+                return False
+        return True
+
+    if not isinstance(tck_value, list):
+        return tck_value == spycy_value
+
+    if not isinstance(spycy_value, list):
+        return False
+    if len(tck_value) != len(spycy_value):
+        return False
+    used_indicies = set()
+    for svalue in spycy_value:
+        found = False
+        for i, tvalue in enumerate(tck_value):
+            if i in used_indicies:
+                continue
+            if equivalent_ignoring_list_order(tvalue, svalue):
+                used_indicies.add(i)
+                found = True
+                break
+        if not found:
+            return False
+    return True
+
+
 @then("the result should be (ignoring element order for lists)")
+def assert_results_in_order_ignoring_list_order(context):
+    if context.error:
+        raise context.error
+    print(context.result, context.table.headings)
+    assert list(context.result.columns) == context.table.headings
+    print(type(context.table))
+    expected_rows = tck_to_records(context, context.table)
+    assert len(context.result) == len(expected_rows)
+
+    actual_rows = normalize_spycy_output(context, context.result.to_dict("records"))
+    for expected, actual in zip(expected_rows, actual_rows):
+        assert equivalent_ignoring_list_order(
+            expected, actual
+        ), f"{expected} != {actual}"
+
+
 @then("the result should be, in any order")
 def assert_results_in_any_order(context):
     if context.error:
