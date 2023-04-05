@@ -3,6 +3,7 @@ import argparse
 import json
 import math
 import sys
+from collections import OrderedDict
 from dataclasses import dataclass, field
 from typing import Any, Dict, Set, Tuple
 
@@ -584,13 +585,14 @@ class CypherExecutor:
                 alias = expr.getText()
             return alias
 
-        group_by_keys = set()
-        aggregations = set()
+        group_by_keys = OrderedDict()
+        aggregations = {}
         for proj in proj_items.oC_ProjectionItem():
+            alias = get_alias(proj)
             if has_aggregation(proj):
-                aggregations.add(get_alias(proj))
+                aggregations[alias] = proj
             else:
-                group_by_keys.add(get_alias(proj))
+                group_by_keys[alias] = proj
 
         output_table = pd.DataFrame()
 
@@ -601,7 +603,67 @@ class CypherExecutor:
                 alias = get_alias(proj)
                 output_table[alias] = expr_column
         else:
-            raise AssertionError("Group by not implemented")
+            group_by_columns = OrderedDict()
+            for alias, proj in group_by_keys.items():
+                expr = proj.oC_Expression()
+                group_by_columns[alias] = self._evaluate_expression(expr)
+
+            def get_key(row):
+                def get_tuple(value):
+                    if isinstance(value, list):
+                        return tuple(get_tuple(v) for v in value)
+                    if isinstance(value, dict):
+                        return tuple((k, get_tuple(v)) for k, v in value.items())
+                    return value
+
+                values = []
+                for alias in group_by_columns:
+                    values.append(group_by_columns[alias][row])
+                return get_tuple(values)
+
+            output_keys = OrderedDict()
+            for alias in group_by_columns:
+                output_keys[alias] = []
+            output_keys_row_count = 0
+
+            keys_to_row = {}
+            keys_to_subtable = {}
+            for i in range(len(self.table)):
+                key = get_key(i)
+                if key not in keys_to_row:
+                    for alias in group_by_columns:
+                        output_keys[alias].append(group_by_columns[alias][i])
+                    keys_to_row[key] = output_keys_row_count
+                    output_keys_row_count += 1
+                    keys_to_subtable[key] = pd.DataFrame(
+                        [{k: self.table[k][i] for k in self.table}]
+                    )
+                else:
+                    keys_to_subtable[key].loc[
+                        len(keys_to_subtable[key])
+                    ] = self.table.iloc[i]
+
+            old_table = self.table
+            aggregated_columns = {}
+            for alias in aggregations:
+                aggregated_columns[alias] = [pd.NA] * len(keys_to_row)
+            for key, table in keys_to_subtable.items():
+                self.table = table
+                for alias, proj in aggregations.items():
+                    expr = proj.oC_Expression()
+                    col = self._evaluate_expression(expr)
+                    assert len(col) == 1
+                    aggregated_columns[alias][keys_to_row[key]] = col[0]
+            self.table = old_table
+
+            output_table = pd.DataFrame()
+            for proj in proj_items.oC_ProjectionItem():
+                alias = get_alias(proj)
+                if alias in output_keys:
+                    output_table[alias] = output_keys[alias]
+                else:
+                    output_table[alias] = aggregated_columns[alias]
+
         self.table = output_table
 
         assert not node.oC_Order(), "Unsupported query - ORDER BY not implemented"
