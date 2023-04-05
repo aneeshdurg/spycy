@@ -183,8 +183,16 @@ class Matcher:
                     results.append((edge, edge[1]))
         return results
 
-    def match_dfs(self) -> MatchResultSet:
-        iteration_order = []
+    def match_dfs(self, initial_matched: MatchResult) -> MatchResultSet:
+        for node_id, data_id in initial_matched.node_ids_to_data_ids.items():
+            if not self.node_matches(self.pgraph.nodes[node_id], data_id):
+                return MatchResultSet()
+        for edge_id, data_id in initial_matched.edge_ids_to_data_ids.items():
+            if not self.edge_matches(self.pgraph.edges[edge_id], data_id):
+                return MatchResultSet()
+
+        num_matched = len(initial_matched.node_ids_to_data_ids)
+        iteration_order = [id_ for id_ in initial_matched.node_ids_to_data_ids]
         while len(iteration_order) != len(self.pgraph.nodes):
             connected_node: Optional[pattern_graph.NodeID] = None
             degree: Optional[int] = None
@@ -239,7 +247,7 @@ class Matcher:
                         connected_node = curr_node
                 assert connected_node
             iteration_order.append(connected_node)
-        self._match_dfs(iteration_order, MatchResult())
+        self._match_dfs(iteration_order[num_matched:], initial_matched)
         return self.results
 
     def _match_dfs(

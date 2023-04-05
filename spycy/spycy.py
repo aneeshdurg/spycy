@@ -726,7 +726,32 @@ class CypherExecutor:
             m = matcher.Matcher(
                 self.graph, pgraph, i, node_ids_to_props, edge_ids_to_props
             )
-            results = m.match_dfs()
+            initial_state = matcher.MatchResult()
+            for name in names_to_data:
+                if name not in self.table:
+                    continue
+                found = False
+                for _, node_ in pgraph.nodes.items():
+                    if node_.name != name:
+                        continue
+                    found = True
+                    if not isinstance(self.table[name][i], Node):
+                        raise ExecutionError("TypeError cannot rebind as node")
+                    initial_state.node_ids_to_data_ids[node_.id_] = self.table[name][
+                        i
+                    ].id_
+                if found:
+                    continue
+
+                for _, edge in pgraph.edges.items():
+                    if edge.name != name:
+                        continue
+                    found = True
+                    if not isinstance(self.table[name][i], Edge):
+                        raise ExecutionError("TypeError cannot rebind as edge")
+                    initial_state.edge_ids_to_data_ids[edge.id_] = self.table[name][i].id_
+                assert found
+            results = m.match_dfs(initial_state)
             for nid, pnode in pgraph.nodes.items():
                 if node_name := pnode.name:
                     data = results.node_ids_to_data_ids.get(nid, [])

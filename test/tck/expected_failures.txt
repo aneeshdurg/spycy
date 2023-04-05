@@ -122,22 +122,10 @@ TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching w
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match1.xml:[11] Fail when matching a node variable bound to a value -- @1.1
-TESTS-clauses.match.Match1.xml:[11] Fail when matching a node variable bound to a value -- @1.2
-TESTS-clauses.match.Match1.xml:[11] Fail when matching a node variable bound to a value -- @1.3
-TESTS-clauses.match.Match1.xml:[11] Fail when matching a node variable bound to a value -- @1.4
-TESTS-clauses.match.Match1.xml:[11] Fail when matching a node variable bound to a value -- @1.6
-TESTS-clauses.match.Match1.xml:[11] Fail when matching a node variable bound to a value -- @1.7
 TESTS-clauses.match.Match1.xml:[2] Matching all nodes
 TESTS-clauses.match.Match1.xml:[3] Matching nodes using multiple labels
 TESTS-clauses.match.Match1.xml:[4] Simple node inline property predicate
 TESTS-clauses.match.Match1.xml:[5] Use multiple MATCH clauses to do a Cartesian product
-TESTS-clauses.match.Match2.xml:[13] Fail when matching a relationship variable bound to a value -- @1.1
-TESTS-clauses.match.Match2.xml:[13] Fail when matching a relationship variable bound to a value -- @1.2
-TESTS-clauses.match.Match2.xml:[13] Fail when matching a relationship variable bound to a value -- @1.3
-TESTS-clauses.match.Match2.xml:[13] Fail when matching a relationship variable bound to a value -- @1.4
-TESTS-clauses.match.Match2.xml:[13] Fail when matching a relationship variable bound to a value -- @1.6
-TESTS-clauses.match.Match2.xml:[13] Fail when matching a relationship variable bound to a value -- @1.7
 TESTS-clauses.match.Match2.xml:[2] Matching a relationship pattern using a label predicate on both sides
 TESTS-clauses.match.Match2.xml:[3] Matching a self-loop with an undirected relationship pattern
 TESTS-clauses.match.Match2.xml:[4] Matching a self-loop with a directed relationship pattern
@@ -226,7 +214,6 @@ TESTS-clauses.match.Match6.xml:[9] Longer path query should return results in wr
 TESTS-clauses.match.Match7.xml:[10] Optionally matching from null nodes should return null
 TESTS-clauses.match.Match7.xml:[11] Return two subgraphs with bound undirected relationship and optional relationship
 TESTS-clauses.match.Match7.xml:[12] Variable length optional relationships
-TESTS-clauses.match.Match7.xml:[13] Variable length optional relationships with bound nodes
 TESTS-clauses.match.Match7.xml:[14] Variable length optional relationships with length predicates
 TESTS-clauses.match.Match7.xml:[15] Variable length patterns and nulls
 TESTS-clauses.match.Match7.xml:[16] Optionally matching named paths - null result
@@ -507,7 +494,6 @@ TESTS-clauses.union.Union2.xml:[1] Two elements, both unique, not distinct
 TESTS-clauses.union.Union2.xml:[2] Three elements, two unique, not distinct
 TESTS-clauses.union.Union2.xml:[3] Two single-column inputs, one with duplicates, not distinct
 TESTS-clauses.union.Union2.xml:[4] Should be able to create text output from union all queries
-TESTS-clauses.unwind.Unwind1.xml:[12] Unwind does not remove variables from scope
 TESTS-clauses.unwind.Unwind1.xml:[13] Multiple unwinds after each other
 TESTS-clauses.unwind.Unwind1.xml:[14] Unwind with merge
 TESTS-clauses.unwind.Unwind1.xml:[4] Unwinding a collected unwound expression
