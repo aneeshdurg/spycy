@@ -301,7 +301,6 @@ TESTS-clauses.return.Return6.xml:[17] Handle constants and parameters inside an 
 TESTS-clauses.return.Return6.xml:[20] Fail if not returned variables are used inside an expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[21] Fail if more complex expressions, even if returned, are used inside expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[4] Support multiple divisions in aggregate function
-TESTS-clauses.return.Return6.xml:[5] Aggregates inside normal functions
 TESTS-clauses.return.Return6.xml:[8] Handle aggregation on functions
 TESTS-clauses.return.Return6.xml:[9] Aggregates with arithmetics
 TESTS-clauses.return.Return7.xml:[1] Return all variables
@@ -371,15 +370,11 @@ TESTS-clauses.with-orderBy.WithOrderBy1.xml:[42] Sort by a date time variable pr
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[42] Sort by a date time variable projected from a node property in descending order -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[44] Sort by a variable that is only partially orderable on a non-distinct binding table, but made distinct -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[44] Sort by a variable that is only partially orderable on a non-distinct binding table, but made distinct -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: booleans -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: dates -- @1.6
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: datetimes -- @1.10
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: floats -- @1.3
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: integers -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: lists -- @1.5
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: localdatetimes -- @1.9
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: localtimes -- @1.7
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: string -- @1.4
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: times -- @1.8
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[9] Sort lists in ascending order
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[11] Sort by a date expression in ascending order -- @1.1
@@ -483,7 +478,6 @@ TESTS-expressions.graph.Graph8.xml:[5] Using `keys()` on a relationship, non-emp
 TESTS-expressions.graph.Graph8.xml:[6] Using `keys()` on a relationship, empty result
 TESTS-expressions.graph.Graph8.xml:[7] Using `keys()` on an optionally matched relationship
 TESTS-expressions.list.List11.xml:[3] Create an empty list if range direction and step direction are inconsistent
-TESTS-expressions.list.List12.xml:[2] Collect and filter using a list comprehension
 TESTS-expressions.list.List12.xml:[3] Size of list comprehension
 TESTS-expressions.list.List12.xml:[4] Returning a list comprehension
 TESTS-expressions.list.List12.xml:[5] Using a list comprehension in a WITH
@@ -497,7 +491,6 @@ TESTS-expressions.list.List2.xml:[9] List slice with null range -- @1.4
 TESTS-expressions.list.List2.xml:[9] List slice with null range -- @1.5
 TESTS-expressions.list.List3.xml:[3] Equality between different lists with null should return false
 TESTS-expressions.list.List3.xml:[6] Equality between different nested lists with null should return false
-TESTS-expressions.list.List4.xml:[2] Concatenating a list with a scalar of same type
 TESTS-expressions.list.List5.xml:[18] IN should return false when LHS contains a nested list and type mismatch on RHS - singleton version
 TESTS-expressions.list.List5.xml:[20] IN should return null if LHS and RHS are null
 TESTS-expressions.list.List5.xml:[21] IN should return null if LHS and RHS are null - list version
@@ -512,10 +505,6 @@ TESTS-expressions.list.List5.xml:[32] IN should return true with previous null m
 TESTS-expressions.list.List5.xml:[34] IN should return null if comparison with null is required, list version 2
 TESTS-expressions.list.List5.xml:[40] IN should return null if comparison with null is required for empty list
 TESTS-expressions.list.List6.xml:[10] Get node degree via size of pattern comprehension that specifies multiple relationship types
-TESTS-expressions.list.List6.xml:[1] Return list size
-TESTS-expressions.list.List6.xml:[2] Setting and returning the size of a list property
-TESTS-expressions.list.List6.xml:[3] Concatenating and returning the size of literal lists
-TESTS-expressions.list.List6.xml:[4] `size()` on null list
 TESTS-expressions.list.List6.xml:[7] Using size of pattern comprehension to test existence
 TESTS-expressions.list.List6.xml:[8] Get node degree via size of pattern comprehension
 TESTS-expressions.list.List6.xml:[9] Get node degree via size of pattern comprehension that specifies a relationship type
@@ -641,9 +630,6 @@ TESTS-expressions.precedence.Precedence2.xml:[1] Numeric multiplicative operatio
 TESTS-expressions.precedence.Precedence2.xml:[1] Numeric multiplicative operations takes precedence over numeric additive operations -- @1.8
 TESTS-expressions.precedence.Precedence2.xml:[1] Numeric multiplicative operations takes precedence over numeric additive operations -- @1.9
 TESTS-expressions.precedence.Precedence2.xml:[2] Exponentiation takes precedence over numeric multiplicative operations -- @1.2
-TESTS-expressions.precedence.Precedence3.xml:[1] List element access takes precedence over list appending
-TESTS-expressions.precedence.Precedence3.xml:[4] List appending takes precedence over list element containment
-TESTS-expressions.precedence.Precedence3.xml:[5] List concatenation takes precedence over list element containment
 TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes precedence over comparison operator -- @1.1
 TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes precedence over comparison operator -- @1.2
 TESTS-expressions.precedence.Precedence3.xml:[6] List element containment takes precedence over comparison operator -- @1.3

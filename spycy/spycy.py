@@ -211,37 +211,26 @@ class CypherExecutor:
             where_expr = where_expr.oC_Expression()
         list_expr = expr.oC_Expression()
 
-        output = []
-        old_table = self.table
-        for i, row in enumerate(column):
-            current_table_row = old_table.iloc[i].copy()
-            current_table_row = pd.DataFrame(
-                [{c: current_table_row[c] for c in current_table_row.index}]
-            )
-
-            if not isinstance(row, list):
-                raise ExecutionError(
-                    "TypeError::Cannot use list comprehension on non-list type"
-                )
-            new_row = []
-            for el in row:
-                current_table_row[id_to_bind] = [el]
-                self.table = current_table_row
-
-                if where_expr:
-                    keep = self._evaluate_expression(where_expr)
-                    assert len(keep) == 1
-                    if not keep[0]:
-                        continue
-                if list_expr:
-                    new_value = self._evaluate_expression(list_expr)
-                    assert len(new_value) == 1
-                    new_row.append(new_value[0])
-                else:
-                    new_row.append(el)
-            output.append(new_row)
+        old_table = self.table.copy()
+        self.table[id_to_bind] = column
+        self.table["!__internal_index"] = list(range(len(self.table)))
+        self.table = self.table.explode(id_to_bind, ignore_index=True)
+        if where_expr:
+            self._filter_table(where_expr)
+        if list_expr:
+            new_col = self._evaluate_expression(list_expr)
+        else:
+            new_col = self.table[id_to_bind]
+        tmp_table = pd.DataFrame()
+        tmp_table["result"] = new_col
+        tmp_table["idx"] = self.table["!__internal_index"]
+        tmp_table = tmp_table.groupby(["idx"]).agg({"result": lambda x: x.to_list()})
+        # We might have holes from keys that got completely filtered out
+        tmp_table = tmp_table.reindex(list(range(0, len(old_table))), fill_value=[])
+        output_column = tmp_table["result"]
         self.table = old_table
-        return pd.Series(output)
+
+        return output_column
 
     def _evaluate_parameter(self, expr: CypherParser.OC_ParameterContext) -> pd.Series:
         name_expr = expr.oC_SymbolicName()
@@ -360,6 +349,11 @@ class CypherExecutor:
             else:
                 raise ExecutionError("Non exhaustive case pattern")
         return pd.Series(output)
+
+    def _evaluate_quantifier(
+        self, expr: CypherParser.OC_QuantifierContext
+    ) -> pd.Series:
+        raise ExecutionError("not implemented quantifier")
 
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if literal := expr.oC_Literal():
@@ -1117,10 +1111,8 @@ class CypherExecutor:
         self._process_projection_body(body)
         self._returned = True
 
-    def _process_where(self, node: CypherParser.OC_WhereContext):
+    def _filter_table(self, filter_expr: CypherParser.OC_ExpressionContext):
         old_columns = self.table.columns
-        filter_expr = node.oC_Expression()
-        assert filter_expr
         filter_col = self._evaluate_expression(filter_expr)
         new_table = self.table[[e if e is not pd.NA else False for e in filter_col]]
         assert new_table is not None
@@ -1130,6 +1122,12 @@ class CypherExecutor:
         if len(self.table) == 0:
             for c in old_columns:
                 self.table[c] = []
+
+    def _process_where(self, node: CypherParser.OC_WhereContext):
+        old_columns = self.table.columns
+        filter_expr = node.oC_Expression()
+        assert filter_expr
+        self._filter_table(filter_expr)
 
     def _process_with(self, node: CypherParser.OC_WithContext):
         body = node.oC_ProjectionBody()
