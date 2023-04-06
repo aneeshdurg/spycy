@@ -203,6 +203,7 @@ class CypherExecutor:
         assert id_in_coll
         id_to_bind = id_in_coll.oC_Variable().getText()
         coll = id_in_coll.oC_Expression()
+
         column = self._evaluate_expression(coll)
 
         where_expr = filter_expr.oC_Where()
@@ -584,13 +585,10 @@ class CypherExecutor:
             op = "**"
         op_f = eval(f"lambda x, y: x {op} y")
 
-        def f(x, y):
-            return op_f(x, y)
-
         output = []
         for l, r in zip(lhs, rhs):
             try:
-                output.append(f(l, r))
+                output.append(op_f(l, r))
             except ZeroDivisionError:
                 output.append(math.nan)
             except Exception as e:
@@ -648,7 +646,24 @@ class CypherExecutor:
             ):
                 assert last_op
                 rhs = self._evaluate_multiply_divide_modulo(child)
-                lhs = self._evaluate_bin_op(lhs, rhs, last_op)
+                if last_op == "+":
+                    output = []
+                    for l, r in zip(lhs, rhs):
+                        if l is pd.NA or r is pd.NA:
+                            output.append(pd.NA)
+                        elif isinstance(l, list):
+                            if isinstance(r, list):
+                                output.append(l + r)
+                            else:
+                                output.append(l + [r])
+                        elif isinstance(r, list):
+                            output.append([l] + r)
+                        else:
+                            output.append(l + r)
+                    lhs = pd.Series(output)
+                else:
+                    lhs = self._evaluate_bin_op(lhs, rhs, last_op)
+
         return lhs
 
     def _evaluate_string_op(

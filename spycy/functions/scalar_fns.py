@@ -78,7 +78,22 @@ def properties(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def size(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("size unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to tail")
+
+    output = []
+    for el in params[0]:
+        if el is pd.NA:
+            output.append(pd.NA)
+            continue
+
+        if isinstance(el, str) or isinstance(el, list):
+            output.append(len(el))
+        else:
+            raise ExecutionError(
+                f"TypeError - size expects a list-like argument, got {type(el)}"
+            )
+    return pd.Series(output)
 
 
 def startNode(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:

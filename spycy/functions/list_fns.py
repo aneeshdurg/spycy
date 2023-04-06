@@ -90,11 +90,42 @@ def relationships(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def reverse(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("reverse not implemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to reverse")
+
+    output = []
+    for el in params[0]:
+        if el is pd.NA:
+            output.append(pd.NA)
+            continue
+
+        if isinstance(el, str) or isinstance(el, list):
+            output.append(list(el[::-1]))
+        else:
+            raise ExecutionError(
+                f"TypeError - reverse expects a list-like argument, got {type(el)}"
+            )
+    return pd.Series(output)
 
 
 def tail(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("tail not implemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to tail")
+
+    output = []
+    for el in params[0]:
+        if el is pd.NA:
+            output.append(pd.NA)
+            continue
+
+        if isinstance(el, str) or isinstance(el, list):
+            if len(el) == 0:
+                output.append(pd.NA)
+            else:
+                output.append(el[-1])
+        else:
+            raise ExecutionError("TypeError - tail expects a list-like argument")
+    return pd.Series(output)
 
 
 fn_map = {
