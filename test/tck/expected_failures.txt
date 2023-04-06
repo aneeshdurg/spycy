@@ -464,18 +464,7 @@ TESTS-expressions.comparison.Comparison3.xml:[7] Handling string ranges 3
 TESTS-expressions.comparison.Comparison3.xml:[8] Handling string ranges 4
 TESTS-expressions.comparison.Comparison3.xml:[9] Handling empty range
 TESTS-expressions.comparison.Comparison4.xml:[1] Handling long chains of operators
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.1
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.10
 TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.11
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.12
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.2
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.3
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.4
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.5
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.6
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.7
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.8
-TESTS-expressions.conditional.Conditional2.xml:[1] Simple cases over integers -- @1.9
 TESTS-expressions.existentialSubqueries.ExistentialSubquery1.xml:[1] Simple subquery without WHERE clause
 TESTS-expressions.existentialSubqueries.ExistentialSubquery1.xml:[2] Simple subquery with WHERE clause
 TESTS-expressions.existentialSubqueries.ExistentialSubquery1.xml:[3] Simple subquery without WHERE clause, not existing pattern

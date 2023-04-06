@@ -262,6 +262,78 @@ class CypherExecutor:
         self.table = old_table
         return pd.Series([value] * len(self.table))
 
+    def _evaluate_case_alternatives(
+        self, alt_exprs: List[CypherParser.OC_CaseAlternativeContext]
+    ) -> List[Tuple[pd.Series, pd.Series]]:
+        alternatives = []
+        for alt_expr in alt_exprs:
+            alt_sub_exprs = alt_expr.oC_Expression()
+            assert alt_sub_exprs
+            assert len(alt_sub_exprs) == 2
+            [when_expr, then_expr] = alt_sub_exprs
+            when_col = self._evaluate_expression(when_expr)
+            then_col = self._evaluate_expression(then_expr)
+            alternatives.append((when_col, then_col))
+        return alternatives
+
+    def _evaluate_case_generic(
+        self, expr: CypherParser.OC_CaseExpressionContext
+    ) -> pd.Series:
+        # This is what the openCypher docs refer to as the 'generic' form of CASE
+        pass
+
+    def _evaluate_case(self, expr: CypherParser.OC_CaseExpressionContext) -> pd.Series:
+        assert expr.children
+        test_expr = None
+        for child in expr.children:
+            if isinstance(child, CypherParser.OC_ExpressionContext):
+                test_expr = child
+            elif child.getText().lower() == "else":
+                break
+        if not test_expr:
+            return self._evaluate_case_generic(expr)
+        assert test_expr
+
+        test = self._evaluate_expression(test_expr)
+
+        else_ = None
+        exprs = expr.oC_Expression()
+        assert exprs
+        if len(exprs) == 2:
+            else_ = self._evaluate_expression(exprs[1])
+
+        alt_exprs = expr.oC_CaseAlternative()
+        assert alt_exprs
+        alternatives = self._evaluate_case_alternatives(alt_exprs)
+
+        output = []
+        for i, test_val in enumerate(test):
+            found = False
+            if test_val is pd.NA:
+                for (when_col, then_col) in alternatives:
+                    if when_col[i] is pd.NA:
+                        output.append(then_col[i])
+                        found = True
+                        break
+                if found:
+                    continue
+            else:
+                for (when_col, then_col) in alternatives:
+                    when_val = when_col[i]
+                    if when_val is pd.NA:
+                        continue
+                    if when_val == test_val:
+                        output.append(then_col[i])
+                        found = True
+                        break
+                if found:
+                    continue
+            if else_ is not None:
+                output.append(else_[i])
+            else:
+                raise ExecutionError("Non exhaustive case pattern")
+        return pd.Series(output)
+
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if literal := expr.oC_Literal():
             return self._evaluate_literal(literal)
