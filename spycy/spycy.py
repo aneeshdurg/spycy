@@ -5,7 +5,7 @@ import math
 import sys
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import networkx as nx
 import numpy as np
@@ -194,11 +194,16 @@ class CypherExecutor:
         fnctx = FunctionContext(self.table, self.graph)
         return function_registry(fnname, params, fnctx)
 
-    def _evaluate_list_comp(
-        self, expr: CypherParser.OC_ListComprehensionContext
-    ) -> pd.Series:
-        filter_expr = expr.oC_FilterExpression()
-        assert filter_expr
+    def _do_evaluate_list_comp(
+        self,
+        filter_expr: CypherParser.OC_FilterExpressionContext,
+        list_expr: Optional[CypherParser.OC_ExpressionContext],
+        fill_value=None,
+        aggregate=lambda x: x.to_list(),
+    ) -> Tuple[pd.Series, pd.Series]:
+        if fill_value is None:
+            fill_value = []
+
         id_in_coll = filter_expr.oC_IdInColl()
         assert id_in_coll
         id_to_bind = id_in_coll.oC_Variable().getText()
@@ -209,11 +214,21 @@ class CypherExecutor:
         where_expr = filter_expr.oC_Where()
         if where_expr:
             where_expr = where_expr.oC_Expression()
-        list_expr = expr.oC_Expression()
 
         old_table = self.table.copy()
         self.table[id_to_bind] = column
         self.table["!__internal_index"] = list(range(len(self.table)))
+
+        def check_for_empty_list(x):
+            if not isinstance(x, list):
+                raise ExecutionError(f"TypeError::Expected list, got {type(x)}")
+            return len(x) > 0
+
+        mask = [
+            check_for_empty_list(self.table[id_to_bind][i])
+            for i in range(len(self.table))
+        ]
+        self.table = self.table[mask]
         self.table = self.table.explode(id_to_bind, ignore_index=True)
         if where_expr:
             self._filter_table(where_expr)
@@ -224,13 +239,24 @@ class CypherExecutor:
         tmp_table = pd.DataFrame()
         tmp_table["result"] = new_col
         tmp_table["idx"] = self.table["!__internal_index"]
-        tmp_table = tmp_table.groupby(["idx"]).agg({"result": lambda x: x.to_list()})
+        tmp_table = tmp_table.groupby(["idx"]).agg({"result": aggregate})
         # We might have holes from keys that got completely filtered out
-        tmp_table = tmp_table.reindex(list(range(0, len(old_table))), fill_value=[])
+        if len(tmp_table) == 0:
+            tmp_table["result"] = pd.Series([fill_value] * len(old_table))
+        else:
+            tmp_table = tmp_table.reindex(range(len(old_table)), fill_value=fill_value)
         output_column = tmp_table["result"]
         self.table = old_table
 
-        return output_column
+        return column, output_column
+
+    def _evaluate_list_comp(
+        self, expr: CypherParser.OC_ListComprehensionContext
+    ) -> pd.Series:
+        filter_expr = expr.oC_FilterExpression()
+        assert filter_expr
+        list_expr = expr.oC_Expression()
+        return self._do_evaluate_list_comp(filter_expr, list_expr)[1]
 
     def _evaluate_parameter(self, expr: CypherParser.OC_ParameterContext) -> pd.Series:
         name_expr = expr.oC_SymbolicName()
@@ -353,7 +379,36 @@ class CypherExecutor:
     def _evaluate_quantifier(
         self, expr: CypherParser.OC_QuantifierContext
     ) -> pd.Series:
-        raise ExecutionError("not implemented quantifier")
+        filter_expr = expr.oC_FilterExpression()
+        assert filter_expr
+
+        is_all = False
+        # vacuously true
+        fill_value = True
+
+        assert expr.children
+        if expr.children[0].getText().lower() == "all":
+            aggregate = lambda x: len(x)
+            is_all = True
+        elif expr.children[0].getText().lower() == "any":
+            aggregate = lambda x: len(x) > 0
+            # vacuously false
+            fill_value = False
+        elif expr.children[0].getText().lower() == "none":
+            aggregate = lambda x: len(x) == 0
+        elif expr.children[0].getText().lower() == "single":
+            aggregate = lambda x: len(x) == 1
+            # vacuously false
+            fill_value = False
+        else:
+            raise ExecutionError("Unsupported quantifier")
+
+        column, output = self._do_evaluate_list_comp(
+            filter_expr, None, fill_value, aggregate
+        )
+        if is_all:
+            return pd.Series(len(in_) == out for in_, out in zip(column, output))
+        return output
 
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if literal := expr.oC_Literal():
@@ -1114,7 +1169,10 @@ class CypherExecutor:
     def _filter_table(self, filter_expr: CypherParser.OC_ExpressionContext):
         old_columns = self.table.columns
         filter_col = self._evaluate_expression(filter_expr)
-        new_table = self.table[[e if e is not pd.NA else False for e in filter_col]]
+        mask = filter_col.fillna(False)
+        if len(mask) and mask.dtype.kind != "b":
+            raise ExecutionError("TypeError::Expected boolean expression for WHERE")
+        new_table = self.table[mask]
         assert new_table is not None
         self.table = new_table
         self.table.reset_index(drop=True, inplace=True)

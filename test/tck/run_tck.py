@@ -16,7 +16,7 @@ def run_feature_class(args):
             "behave",
             "--quiet",
             "-i",
-            f"{feature_class}[0-9]",
+            f"{feature_class}.feature",
             "--junit",
             "--junit-directory",
             junit_dir,
@@ -33,7 +33,8 @@ def main(update: bool):
     gitroot = subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode()
     os.environ["PYTHONPATH"] = gitroot.strip()
     features = glob.glob("features/**/*.feature", recursive=True)
-    extract_name = re.compile(".*/([a-zA-Z]*)\d+")
+    print(features)
+    extract_name = re.compile(".*/([a-zA-Z]*\d+).feature")
     feature_classes = set(extract_name.match(feature).group(1) for feature in features)
     if len(feature_classes) == 0:
         raise Exception("Could not find any features")
