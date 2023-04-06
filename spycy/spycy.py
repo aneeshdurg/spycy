@@ -280,7 +280,33 @@ class CypherExecutor:
         self, expr: CypherParser.OC_CaseExpressionContext
     ) -> pd.Series:
         # This is what the openCypher docs refer to as the 'generic' form of CASE
-        pass
+        else_ = None
+        exprs = expr.oC_Expression()
+        if exprs:
+            else_ = self._evaluate_expression(exprs[0])
+
+        alt_exprs = expr.oC_CaseAlternative()
+        assert alt_exprs
+        alternatives = self._evaluate_case_alternatives(alt_exprs)
+
+        output = []
+        for i in range(len(self.table)):
+            found = False
+            for (when_col, then_col) in alternatives:
+                when_val = when_col[i]
+                if when_val is pd.NA:
+                    continue
+                if when_val == True:
+                    output.append(then_col[i])
+                    found = True
+                    break
+            if found:
+                continue
+            if else_ is not None:
+                output.append(else_[i])
+            else:
+                raise ExecutionError("Non exhaustive case pattern")
+        return pd.Series(output)
 
     def _evaluate_case(self, expr: CypherParser.OC_CaseExpressionContext) -> pd.Series:
         assert expr.children
