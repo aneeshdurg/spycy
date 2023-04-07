@@ -19,8 +19,21 @@ class MatchResult:
         default_factory=dict
     )
 
-    def contains_edge(self, edge: DataEdge) -> bool:
-        return any(edge in edges for edges in self.edge_ids_to_data_ids.values())
+    def contains_edge(self, edge: MatchedEdge) -> bool:
+        if isinstance(edge, list):
+            for e in edge:
+                if self.contains_edge(e):
+                    return True
+            return False
+        for matched_edges in self.edge_ids_to_data_ids.values():
+            for matched_edge in matched_edges:
+                if isinstance(matched_edge, list):
+                    if edge in matched_edge:
+                        return True
+                else:
+                    if matched_edge == edge:
+                        return True
+        return False
 
     def copy(self) -> "MatchResult":
         return MatchResult(
