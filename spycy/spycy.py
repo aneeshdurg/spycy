@@ -998,10 +998,13 @@ class CypherExecutor:
         skip = self._evaluate_expression(expr)
         assert len(skip) == 1
         skip = skip[0]
+        assert np.issubdtype(type(skip), np.integer)
+
+        if skip == 0:
+            self.table = old_table
+            return
         if skip < 0:
             raise ExecutionError("SyntaxError::NegativeIntegerArgument in skip")
-
-        assert np.issubdtype(type(skip), np.integer)
 
         self.table = old_table.tail(-skip)
         self.table.reset_index(drop=True, inplace=True)

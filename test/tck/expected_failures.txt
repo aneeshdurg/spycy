@@ -56,8 +56,6 @@ TESTS-clauses.create.Create3.xml:[1] MATCH-CREATE
 TESTS-clauses.create.Create3.xml:[2] WITH-CREATE
 TESTS-clauses.create.Create3.xml:[3] MATCH-CREATE-WITH-CREATE
 TESTS-clauses.create.Create3.xml:[4] MATCH-CREATE: Newly-created nodes not visible to preceding MATCH
-TESTS-clauses.create.Create6.xml:[11] Skipping zero result and limiting to all results after creating relationships does not affect the result set nor the side effects
-TESTS-clauses.create.Create6.xml:[4] Skipping zero result and limiting to all results after creating nodes does not affect the result set nor the side effects
 TESTS-clauses.delete.Delete1.xml:[8] Failing when deleting a label
 TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
@@ -67,8 +65,6 @@ TESTS-clauses.delete.Delete4.xml:[3] Create and delete in same query
 TESTS-clauses.delete.Delete5.xml:[5] Detach delete nodes from nested map/list
 TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
-TESTS-clauses.delete.Delete6.xml:[11] Skipping zero result and limiting to all results after deleting relationships does not affect the result set nor the side effects
-TESTS-clauses.delete.Delete6.xml:[4] Skipping zero results and limiting to all results after deleting nodes does not affect the result set nor the side effects
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[15] Fail on aggregation in WHERE
@@ -232,39 +228,6 @@ TESTS-clauses.merge.Merge9.xml:[1] UNWIND with one MERGE
 TESTS-clauses.merge.Merge9.xml:[2] UNWIND with multiple MERGE
 TESTS-clauses.merge.Merge9.xml:[3] Mixing MERGE with CREATE
 TESTS-clauses.merge.Merge9.xml:[4] MERGE after WITH with predicate and WITH with aggregation
-TESTS-clauses.remove.Remove1.xml:[1] Remove a single node property
-TESTS-clauses.remove.Remove1.xml:[2] Remove multiple node properties
-TESTS-clauses.remove.Remove1.xml:[3] Remove a single relationship property
-TESTS-clauses.remove.Remove1.xml:[4] Remove multiple relationship properties
-TESTS-clauses.remove.Remove1.xml:[5] Ignore null when removing property from a node
-TESTS-clauses.remove.Remove1.xml:[6] Ignore null when removing property from a relationship
-TESTS-clauses.remove.Remove1.xml:[7] Remove a missing node property
-TESTS-clauses.remove.Remove2.xml:[1] Remove a single label from a node with a single label
-TESTS-clauses.remove.Remove2.xml:[2] Remove a single label from a node with two labels
-TESTS-clauses.remove.Remove2.xml:[3] Remove two labels from a node with three labels
-TESTS-clauses.remove.Remove2.xml:[4] Remove a non-existent node label
-TESTS-clauses.remove.Remove2.xml:[5] Ignore null when removing a node label
-TESTS-clauses.remove.Remove3.xml:[10] Skipping and limiting to a few results after removing a label from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[11] Skipping zero result and limiting to all results after removing a label from nodes does not affect the result set nor the side effects
-TESTS-clauses.remove.Remove3.xml:[12] Filtering after removing a label from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[13] Aggregating in `RETURN` after removing a label from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[14] Aggregating in `WITH` after removing a label from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[15] Limiting to zero results after removing a property from relationships affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[16] Skipping all results after removing a property from relationships affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[17] Skipping and limiting to a few results after removing a property from relationships affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[18] Skipping zero result and limiting to all results after removing a property from relationships does not affect the result set nor the side effects
-TESTS-clauses.remove.Remove3.xml:[19] Filtering after removing a property from relationships affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[1] Limiting to zero results after removing a property from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[20] Aggregating in `RETURN` after removing a property from relationships affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[21] Aggregating in `WITH` after removing a property from relationships affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[2] Skipping all results after removing a property from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[3] Skipping and limiting to a few results after removing a property from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[4] Skipping zero results and limiting to all results after removing a property from nodes does not affect the result set nor the side effects
-TESTS-clauses.remove.Remove3.xml:[5] Filtering after removing a property from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[6] Aggregating in `RETURN` after removing a property from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[7] Aggregating in `WITH` after removing a property from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[8] Limiting to zero results after removing a label from nodes affects the result set but not the side effects
-TESTS-clauses.remove.Remove3.xml:[9] Skipping all results after removing a label from nodes affects the result set but not the side effects
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[10] ORDER BY DESC should order lists in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[11] ORDER BY should order distinct types in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[12] ORDER BY DESC should order distinct types in the expected order
@@ -309,14 +272,10 @@ TESTS-clauses.set.Set1.xml:[8] Ignore null when setting property
 TESTS-clauses.set.Set2.xml:[1] Setting a node property to null removes the existing property
 TESTS-clauses.set.Set2.xml:[2] Setting a node property to null removes the existing property, but not before SET
 TESTS-clauses.set.Set2.xml:[3] Setting a relationship property to null removes the existing property
-TESTS-clauses.set.Set3.xml:[8] Ignore null when setting label
 TESTS-clauses.set.Set4.xml:[3] Null values in a property map are removed with SET
 TESTS-clauses.set.Set4.xml:[5] Ignore null when setting properties using an overriding map
 TESTS-clauses.set.Set5.xml:[1] Ignore null when setting properties using an appending map
 TESTS-clauses.set.Set5.xml:[4] Explicit null values in a map remove old values
-TESTS-clauses.set.Set6.xml:[11] Skipping zero result and limiting to all results after adding a label on nodes does not affect the result set nor the side effects
-TESTS-clauses.set.Set6.xml:[18] Skipping zero result and limiting to all results after setting a property on relationships does not affect the result set nor the side effects
-TESTS-clauses.set.Set6.xml:[4] Skipping zero results and limiting to all results after setting a property on nodes does not affect the result set nor the side effects
 TESTS-clauses.union.Union1.xml:[1] Two elements, both unique, distinct
 TESTS-clauses.union.Union1.xml:[2] Three elements, two unique, distinct
 TESTS-clauses.union.Union1.xml:[3] Two single-column inputs, one with duplicates, distinct
@@ -644,17 +603,16 @@ TESTS-expressions.quantifier.Quantifier1.xml:[15] Fail none quantifier on type m
 TESTS-expressions.quantifier.Quantifier1.xml:[8] None quantifier on list containing nodes
 TESTS-expressions.quantifier.Quantifier1.xml:[9] None quantifier on list containing relationships
 TESTS-expressions.quantifier.Quantifier11.xml:[3] Any quantifier is always true if the single or the all quantifier is true -- @1.1
+TESTS-expressions.quantifier.Quantifier11.xml:[3] Any quantifier is always true if the single or the all quantifier is true -- @1.2
 TESTS-expressions.quantifier.Quantifier11.xml:[3] Any quantifier is always true if the single or the all quantifier is true -- @1.3
 TESTS-expressions.quantifier.Quantifier11.xml:[3] Any quantifier is always true if the single or the all quantifier is true -- @1.5
-TESTS-expressions.quantifier.Quantifier11.xml:[5] Any quantifier is always equal the boolean negative of the all quantifier on the boolean negative of the predicate -- @1.1
-TESTS-expressions.quantifier.Quantifier11.xml:[5] Any quantifier is always equal the boolean negative of the all quantifier on the boolean negative of the predicate -- @1.2
 TESTS-expressions.quantifier.Quantifier11.xml:[5] Any quantifier is always equal the boolean negative of the all quantifier on the boolean negative of the predicate -- @1.4
+TESTS-expressions.quantifier.Quantifier11.xml:[5] Any quantifier is always equal the boolean negative of the all quantifier on the boolean negative of the predicate -- @1.5
+TESTS-expressions.quantifier.Quantifier12.xml:[1] All quantifier is always false if the predicate is statically false and the list is not empty
 TESTS-expressions.quantifier.Quantifier12.xml:[3] All quantifier is always equal the none quantifier on the boolean negative of the predicate -- @1.2
-TESTS-expressions.quantifier.Quantifier12.xml:[3] All quantifier is always equal the none quantifier on the boolean negative of the predicate -- @1.3
 TESTS-expressions.quantifier.Quantifier12.xml:[3] All quantifier is always equal the none quantifier on the boolean negative of the predicate -- @1.4
-TESTS-expressions.quantifier.Quantifier12.xml:[4] All quantifier is always equal the boolean negative of the any quantifier on the boolean negative of the predicate -- @1.1
 TESTS-expressions.quantifier.Quantifier12.xml:[4] All quantifier is always equal the boolean negative of the any quantifier on the boolean negative of the predicate -- @1.2
-TESTS-expressions.quantifier.Quantifier12.xml:[4] All quantifier is always equal the boolean negative of the any quantifier on the boolean negative of the predicate -- @1.4
+TESTS-expressions.quantifier.Quantifier12.xml:[4] All quantifier is always equal the boolean negative of the any quantifier on the boolean negative of the predicate -- @1.3
 TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.1
 TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.2
 TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.3
@@ -710,7 +668,8 @@ TESTS-expressions.quantifier.Quantifier4.xml:[9] All quantifier on list containi
 TESTS-expressions.quantifier.Quantifier5.xml:[1] None quantifier can nest itself and other quantifiers on nested lists -- @1.7
 TESTS-expressions.quantifier.Quantifier6.xml:[1] Single quantifier can nest itself and other quantifiers on nested lists -- @1.8
 TESTS-expressions.quantifier.Quantifier7.xml:[1] Any quantifier can nest itself and other quantifiers on nested lists -- @1.8
-TESTS-expressions.quantifier.Quantifier9.xml:[4] None quantifier is always equal the all quantifier on the boolean negative of the predicate -- @1.1
+TESTS-expressions.quantifier.Quantifier9.xml:[4] None quantifier is always equal the all quantifier on the boolean negative of the predicate -- @1.3
+TESTS-expressions.quantifier.Quantifier9.xml:[4] None quantifier is always equal the all quantifier on the boolean negative of the predicate -- @1.4
 TESTS-expressions.quantifier.Quantifier9.xml:[4] None quantifier is always equal the all quantifier on the boolean negative of the predicate -- @1.5
 TESTS-expressions.string.String1.xml:[1] `substring()` with default second argument
 TESTS-expressions.string.String10.xml:[1] Finding exact matches with non-proper substring
