@@ -1464,14 +1464,23 @@ class CypherExecutor:
         else:
             raise ExecutionError(f"TypeError - called SET on a {type(src)}")
 
-    def _set_labels(self, node_col, label_exprs: CypherParser.OC_NodeLabelsContext):
+    def _modify_labels(
+        self, node_col, label_exprs: CypherParser.OC_NodeLabelsContext, is_set: bool
+    ):
         label_name_exprs = label_exprs.oC_NodeLabel()
         assert label_name_exprs
         labels = set(lexpr.oC_LabelName().getText() for lexpr in label_name_exprs)
         for n in node_col:
+            if n is pd.NA:
+                continue
             if not isinstance(n, Node):
-                raise ExecutionError("TypeError::Cannot SET label on non-node type")
-            self.graph.nodes[n.id_]["labels"].update(labels)
+                raise ExecutionError(
+                    "TypeError::Cannot SET/REMOVE label on non-node type"
+                )
+            if is_set:
+                self.graph.nodes[n.id_]["labels"].update(labels)
+            else:
+                self.graph.nodes[n.id_]["labels"].difference_update(labels)
 
     def _copy_values(self, dest_col, source_col, update: bool):
         for dst, src in zip(dest_col, source_col):
@@ -1523,12 +1532,52 @@ class CypherExecutor:
                     )
                 graph_el_col = self.table[graph_el_name]
                 if label_exprs := set_item.oC_NodeLabels():
-                    self._set_labels(graph_el_col, label_exprs)
+                    self._modify_labels(graph_el_col, label_exprs, True)
                 else:
                     new_values = self._evaluate_expression(expr)
                     assert set_item.children
                     is_update = any(c.getText() == "+=" for c in set_item.children)
                     self._copy_values(graph_el_col, new_values, is_update)
+
+    def _process_remove_item(self, node: CypherParser.OC_RemoveItemContext):
+        if var_expr := node.oC_Variable():
+            var_name = var_expr.getText()
+            if var_name not in self.table:
+                raise ExecutionError(f"SyntaxError::UndefinedVariable {var_name}")
+            node_col = self.table[var_name]
+            labels = node.oC_NodeLabels()
+            assert labels
+            self._modify_labels(node_col, labels, False)
+            return
+        prop_expr = node.oC_PropertyExpression()
+        assert prop_expr
+        node_expr = prop_expr.oC_Atom()
+        assert node_expr
+        node_col = self._evaluate_atom(node_expr)
+        props = prop_expr.oC_PropertyLookup()
+        assert props and len(props) == 1
+        prop = props[0]
+        prop_name_expr = prop.oC_PropertyKeyName()
+        prop_name = prop_name_expr.getText()
+        for el in node_col:
+            if el is pd.NA:
+                continue
+            elif isinstance(el, Node):
+                data = self.graph.nodes[el.id_]
+            elif isinstance(el, Edge):
+                data = self.graph.edges[el.id_]
+            else:
+                raise ExecutionError(
+                    f"TypeError::REMOVE expected Node/Edge, got {type(el)}"
+                )
+            if prop_name in data["properties"]:
+                del data["properties"][prop_name]
+
+    def _process_remove(self, node: CypherParser.OC_RemoveContext):
+        items = node.oC_RemoveItem()
+        assert items
+        for item in items:
+            self._process_remove_item(item)
 
     def _process_updating_clause(self, node: CypherParser.OC_UpdatingClauseContext):
         if create := node.oC_Create():
@@ -1537,6 +1586,8 @@ class CypherExecutor:
             self._process_delete(delete)
         elif set_ := node.oC_Set():
             self._process_set(set_)
+        elif remove := node.oC_Remove():
+            self._process_remove(remove)
         else:
             raise AssertionError(
                 "Unsupported query - only CREATE/DELETE updates supported"
