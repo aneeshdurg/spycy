@@ -1,20 +1,24 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import networkx as nx
 import pandas as pd
 
 import spycy.pattern_graph as pattern_graph
+from spycy.types import DataEdge
+
+# Either a single edge, or a variable length relationship
+MatchedEdge = Union[DataEdge, List[DataEdge]]
 
 
 @dataclass
 class MatchResult:
     node_ids_to_data_ids: Dict[pattern_graph.NodeID, int] = field(default_factory=dict)
-    edge_ids_to_data_ids: Dict[pattern_graph.EdgeID, Tuple[int, int, int]] = field(
+    edge_ids_to_data_ids: Dict[pattern_graph.EdgeID, MatchedEdge] = field(
         default_factory=dict
     )
 
-    def contains_edge(self, edge: Tuple[int, int, int]) -> bool:
+    def contains_edge(self, edge: DataEdge) -> bool:
         return any(edge in edges for edges in self.edge_ids_to_data_ids.values())
 
     def copy(self) -> "MatchResult":
@@ -28,9 +32,9 @@ class MatchResultSet:
     node_ids_to_data_ids: Dict[pattern_graph.NodeID, List[int]] = field(
         default_factory=dict
     )
-    edge_ids_to_data_ids: Dict[
-        pattern_graph.EdgeID, List[Tuple[int, int, int]]
-    ] = field(default_factory=dict)
+    edge_ids_to_data_ids: Dict[pattern_graph.EdgeID, List[MatchedEdge]] = field(
+        default_factory=dict
+    )
 
     def add(self, result: MatchResult):
         if len(self.node_ids_to_data_ids) == 0:
@@ -82,9 +86,7 @@ class Matcher:
                 return False
         return True
 
-    def edge_matches(
-        self, pedge: pattern_graph.Edge, data_edge: Tuple[int, int, int]
-    ) -> bool:
+    def edge_matches(self, pedge: pattern_graph.Edge, data_edge: DataEdge) -> bool:
         assert pedge.range_ is None
         if not pedge.types and not pedge.properties:
             return True
@@ -104,7 +106,7 @@ class Matcher:
 
     def find_all_edges(
         self, source: int, dst: int, pedge: pattern_graph.Edge
-    ) -> List[Tuple[int, int, int]]:
+    ) -> List[DataEdge]:
         output = []
         for edge in self.graph.out_edges(source, keys=True):
             if self.edge_matches(pedge, edge):
@@ -116,7 +118,7 @@ class Matcher:
         intermediate: MatchResult,
         nid: pattern_graph.NodeID,
         extended_edge: Optional[pattern_graph.EdgeID],
-    ) -> Optional[Dict[pattern_graph.EdgeID, List[Tuple[int, int, int]]]]:
+    ) -> Optional[Dict[pattern_graph.EdgeID, List[DataEdge]]]:
         edge_id_to_data_choices = {}
 
         candidate = intermediate.node_ids_to_data_ids[nid]
@@ -173,7 +175,7 @@ class Matcher:
         pnode: pattern_graph.Node,
         check_out: bool,
         check_in: bool,
-    ) -> List[Tuple[Tuple[int, int, int], int]]:
+    ) -> List[Tuple[DataEdge, int]]:
         results = []
         if check_out:
             # outgoing to self, in-coming from source
@@ -284,7 +286,7 @@ class Matcher:
     def _combine_edges(
         self,
         intermediate: MatchResult,
-        edges: Dict[pattern_graph.EdgeID, List[Tuple[int, int, int]]],
+        edges: Dict[pattern_graph.EdgeID, List[DataEdge]],
         cb,
     ):
         if len(edges) == 0:

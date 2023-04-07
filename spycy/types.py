@@ -4,6 +4,8 @@ from typing import Tuple
 import networkx as nx
 import pandas as pd
 
+DataEdge = Tuple[int, int, int]
+
 
 @dataclass
 class Node:
@@ -14,9 +16,12 @@ class Node:
         return self.id_ < other.id_
 
 
+DataEdge = Tuple[int, int, int]
+
+
 @dataclass
 class Edge:
-    id_: Tuple[int, int, int]
+    id_: DataEdge
 
     def __lt__(self, other: "Edge") -> bool:
         assert isinstance(other, Edge)
