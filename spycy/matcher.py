@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -87,7 +88,7 @@ class Matcher:
         return True
 
     def edge_matches(self, pedge: pattern_graph.Edge, data_edge: DataEdge) -> bool:
-        assert pedge.range_ is None
+        """Check if `data_edge` matches `pedge`, ignoring variable length attributes"""
         if not pedge.types and not pedge.properties:
             return True
 
@@ -106,7 +107,18 @@ class Matcher:
 
     def find_all_edges(
         self, source: int, dst: int, pedge: pattern_graph.Edge
-    ) -> List[DataEdge]:
+    ) -> List[MatchedEdge]:
+        """Find all edges from source to dst (directed only, doesn't handle
+        variable length undirected edges)"""
+        if pedge.range_:
+            assert not pedge.undirected
+            extension_node = pattern_graph.Node(pattern_graph.NodeID(-1), None)
+            return [
+                e[0]
+                for e in self.variable_length_relationship(
+                    source, pedge, extension_node, False, True, dst
+                )
+            ]
         output = []
         for edge in self.graph.out_edges(source, keys=True):
             if self.edge_matches(pedge, edge):
@@ -157,16 +169,79 @@ class Matcher:
                 continue
             data_id = intermediate.node_ids_to_data_ids[other_n]
             edges = []
-            if out_edges := self.find_all_edges(candidate, data_id, neighbor):
-                edges += out_edges
-            if in_edges := self.find_all_edges(data_id, candidate, neighbor):
-                edges += in_edges
+            if neighbor.range_ and neighbor.undirected:
+                extension_node = pattern_graph.Node(pattern_graph.NodeID(-1), None)
+                edges = [
+                    e[0]
+                    for e in self.variable_length_relationship(
+                        candidate, neighbor, extension_node, True, True, data_id
+                    )
+                ]
+            else:
+                if out_edges := self.find_all_edges(candidate, data_id, neighbor):
+                    edges += out_edges
+                if in_edges := self.find_all_edges(data_id, candidate, neighbor):
+                    edges += in_edges
             if len(edges):
                 edge_id_to_data_choices[neighbor_id] = list(set(edges))
             else:
                 return None
 
         return edge_id_to_data_choices
+
+    def variable_length_relationship(
+        self,
+        source: int,
+        pedge: pattern_graph.Edge,
+        pnode: pattern_graph.Node,
+        check_out: bool,
+        check_in: bool,
+        dst: Optional[int] = None,
+    ) -> List[Tuple[MatchedEdge, int]]:
+        assert pedge.range_
+
+        output = []
+        start = pedge.range_.start
+        if start is None:
+            start = 1
+        end = pedge.range_.end
+        if end is None:
+            end = math.inf
+        # pattern Node with no properties or labels to allow matching any data node
+        extension_node = pattern_graph.Node(pattern_graph.NodeID(-1), None)
+
+        def variable_length_dfs(depth: int, state: Tuple[List[DataEdge], int]):
+            if depth >= start:
+                if dst is not None:
+                    if state[1] == dst:
+                        output.append(state)
+                elif self.node_matches(pnode, state[1]):
+                    output.append(state)
+            if depth <= end:
+                # Do extension, but have no restriction on the node
+                next_edges = self.find_nodes_connected_to(
+                    state[1],
+                    pedge,
+                    extension_node,
+                    check_out,
+                    check_in,
+                    ignore_var_length=True,
+                )
+                for (next_edge, next_node) in next_edges:
+                    assert not isinstance(next_edge, list)
+                    found_conflict = False
+                    for e in state[0]:
+                        if e == next_edge:
+                            found_conflict = True
+                            break
+                    if found_conflict:
+                        continue
+                    next_state = (state[0] + [next_edge], next_node)
+                    variable_length_dfs(depth + 1, next_state)
+                pass
+
+        variable_length_dfs(0, ([], source))
+        return output
 
     def find_nodes_connected_to(
         self,
@@ -175,8 +250,13 @@ class Matcher:
         pnode: pattern_graph.Node,
         check_out: bool,
         check_in: bool,
-    ) -> List[Tuple[DataEdge, int]]:
+        ignore_var_length: bool = False,
+    ) -> List[Tuple[MatchedEdge, int]]:
         results = []
+        if pedge.range_ and not ignore_var_length:
+            return self.variable_length_relationship(
+                source, pedge, pnode, check_out, check_in
+            )
         if check_out:
             # outgoing to self, in-coming from source
             for edge in self.graph.in_edges(source, keys=True):

@@ -201,6 +201,9 @@ class CypherExecutor:
         fill_value=None,
         aggregate=lambda x: x.to_list(),
     ) -> Tuple[pd.Series, pd.Series]:
+        if len(self.table) == 0:
+            return (pd.Series([], dtype=object), pd.Series([], dtype=object))
+
         if fill_value is None:
             fill_value = []
 
@@ -1290,7 +1293,10 @@ class CypherExecutor:
                         else:
                             data = [pd.NA]
                     else:
-                        data = [Edge(d) for d in data]
+                        if pedge.range_:
+                            data = [[Edge(e) for e in d] for d in data]
+                        else:
+                            data = [Edge(d) for d in data]
                     names_to_data[edge_name].append(data)
 
         for name, data in names_to_data.items():
