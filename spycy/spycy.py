@@ -187,9 +187,13 @@ class CypherExecutor:
         if expr.children[2].getText().lower() == "distinct":
             is_distinct = True
 
+        is_agg = is_aggregation(fnname)
+
         params = []
         if param_exprs := expr.oC_Expression():
             for param_expr in param_exprs:
+                if is_agg and self._has_aggregation(param_expr):
+                    raise ExecutionError("SyntaxError::NestedAggregation")
                 params.append(self._evaluate_expression(param_expr))
         fnctx = FunctionContext(self.table, self.graph)
         return function_registry(fnname, params, fnctx)
@@ -1649,6 +1653,16 @@ class CypherExecutor:
             raise ExecutionError("Failed to parse query")
         return root
 
+    def _process_single_query(self, expr: CypherParser.OC_SingleQueryContext):
+        if multi_query := expr.oC_MultiPartQuery():
+            self._process_multi_part_query(multi_query)
+        else:
+            self._process_single_part_query(expr.oC_SinglePartQuery())
+        if not self._returned:
+            self.table = pd.DataFrame()
+        if " " in self.table:
+            del self.table[" "]
+
     def exec(self, query_str: str) -> pd.DataFrame:
         self.reset_table()
         self._returned = False
@@ -1662,25 +1676,54 @@ class CypherExecutor:
         assert not hasType(
             query, CypherParser.OC_MergeContext
         ), "Unsupported query - merge not implemented"
-        assert not hasType(
-            query, CypherParser.OC_UnionContext
-        ), "Unsupported query - union not implemented"
         assert not query.oC_StandaloneCall(), "Unsupported query - call not implemented"
 
         regular_query = query.oC_RegularQuery()
         assert regular_query
 
         single_query = regular_query.oC_SingleQuery()
-        if multi_query := single_query.oC_MultiPartQuery():
-            self._process_multi_part_query(multi_query)
-        else:
-            self._process_single_part_query(single_query.oC_SinglePartQuery())
+        self._process_single_query(single_query)
 
-        if not self._returned:
-            self.table = pd.DataFrame()
+        unions = regular_query.oC_Union()
+        if unions:
+            if not self._returned:
+                raise ExecutionError("SyntaxError::Union requires return")
+            found_is_all = False
+            found_not_is_all = False
+            for union in unions:
+                old_table = self.table
+                self.reset_table()
 
-        if " " in self.table:
-            del self.table[" "]
+                is_all = False
+                assert union.children
+                if len(union.children) >= 3:
+                    if union.children[2].getText().lower() == "all":
+                        if found_not_is_all:
+                            raise ExecutionError(
+                                "SyntaxError::InvalidClauseComposition cannot mix UNION and UNION ALL"
+                            )
+                        is_all = True
+                        found_is_all = True
+
+                if not is_all:
+                    if found_is_all:
+                        raise ExecutionError(
+                            "SyntaxError::InvalidClauseComposition cannot mix UNION and UNION ALL"
+                        )
+                    found_not_is_all = True
+
+                next_query = union.oC_SingleQuery()
+                assert next_query
+                self._process_single_query(next_query)
+                if not self._returned:
+                    raise ExecutionError("SyntaxError::Union requires return")
+                if set(self.table.columns) != set(old_table.columns):
+                    raise ExecutionError("UnionError::Column names did not match")
+
+                self.table = pd.concat([old_table, self.table], ignore_index=True)
+                if not is_all:
+                    self.table = self.table.drop_duplicates(ignore_index=True)
+
         return self.table
 
 

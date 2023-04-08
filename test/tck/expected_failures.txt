@@ -238,7 +238,6 @@ TESTS-clauses.return.Return5.xml:[5] Aggregate on list values
 TESTS-clauses.return.Return6.xml:[10] Multiple aggregates on same variable
 TESTS-clauses.return.Return6.xml:[11] Counting matches
 TESTS-clauses.return.Return6.xml:[13] Returning the minimum length of paths
-TESTS-clauses.return.Return6.xml:[14] Aggregates in aggregates
 TESTS-clauses.return.Return6.xml:[15] Using `rand()` in aggregations
 TESTS-clauses.return.Return6.xml:[16] Aggregation on complex expressions
 TESTS-clauses.return.Return6.xml:[17] Handle constants and parameters inside an expression which contains an aggregation expression
@@ -257,14 +256,6 @@ TESTS-clauses.set.Set4.xml:[3] Null values in a property map are removed with SE
 TESTS-clauses.set.Set4.xml:[5] Ignore null when setting properties using an overriding map
 TESTS-clauses.set.Set5.xml:[1] Ignore null when setting properties using an appending map
 TESTS-clauses.set.Set5.xml:[4] Explicit null values in a map remove old values
-TESTS-clauses.union.Union1.xml:[1] Two elements, both unique, distinct
-TESTS-clauses.union.Union1.xml:[2] Three elements, two unique, distinct
-TESTS-clauses.union.Union1.xml:[3] Two single-column inputs, one with duplicates, distinct
-TESTS-clauses.union.Union1.xml:[4] Should be able to create text output from union queries
-TESTS-clauses.union.Union2.xml:[1] Two elements, both unique, not distinct
-TESTS-clauses.union.Union2.xml:[2] Three elements, two unique, not distinct
-TESTS-clauses.union.Union2.xml:[3] Two single-column inputs, one with duplicates, not distinct
-TESTS-clauses.union.Union2.xml:[4] Should be able to create text output from union all queries
 TESTS-clauses.unwind.Unwind1.xml:[14] Unwind with merge
 TESTS-clauses.unwind.Unwind1.xml:[4] Unwinding a collected unwound expression
 TESTS-clauses.unwind.Unwind1.xml:[6] Creating nodes from an unwound parameter list
