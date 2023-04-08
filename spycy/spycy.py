@@ -393,6 +393,7 @@ class CypherExecutor:
         if expr.children[0].getText().lower() == "all":
             aggregate = lambda x: len(x)
             is_all = True
+            fill_value = 0
         elif expr.children[0].getText().lower() == "any":
             aggregate = lambda x: len(x) > 0
             # vacuously false

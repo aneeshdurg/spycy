@@ -584,23 +584,6 @@ TESTS-expressions.quantifier.Quantifier1.xml:[15] Fail none quantifier on type m
 TESTS-expressions.quantifier.Quantifier1.xml:[15] Fail none quantifier on type mismatch between list elements and predicate -- @1.3
 TESTS-expressions.quantifier.Quantifier1.xml:[8] None quantifier on list containing nodes
 TESTS-expressions.quantifier.Quantifier1.xml:[9] None quantifier on list containing relationships
-TESTS-expressions.quantifier.Quantifier11.xml:[3] Any quantifier is always true if the single or the all quantifier is true -- @1.1
-TESTS-expressions.quantifier.Quantifier11.xml:[3] Any quantifier is always true if the single or the all quantifier is true -- @1.3
-TESTS-expressions.quantifier.Quantifier11.xml:[3] Any quantifier is always true if the single or the all quantifier is true -- @1.5
-TESTS-expressions.quantifier.Quantifier11.xml:[5] Any quantifier is always equal the boolean negative of the all quantifier on the boolean negative of the predicate -- @1.2
-TESTS-expressions.quantifier.Quantifier11.xml:[5] Any quantifier is always equal the boolean negative of the all quantifier on the boolean negative of the predicate -- @1.4
-TESTS-expressions.quantifier.Quantifier12.xml:[3] All quantifier is always equal the none quantifier on the boolean negative of the predicate -- @1.2
-TESTS-expressions.quantifier.Quantifier12.xml:[3] All quantifier is always equal the none quantifier on the boolean negative of the predicate -- @1.3
-TESTS-expressions.quantifier.Quantifier12.xml:[3] All quantifier is always equal the none quantifier on the boolean negative of the predicate -- @1.4
-TESTS-expressions.quantifier.Quantifier12.xml:[3] All quantifier is always equal the none quantifier on the boolean negative of the predicate -- @1.5
-TESTS-expressions.quantifier.Quantifier12.xml:[4] All quantifier is always equal the boolean negative of the any quantifier on the boolean negative of the predicate -- @1.1
-TESTS-expressions.quantifier.Quantifier12.xml:[4] All quantifier is always equal the boolean negative of the any quantifier on the boolean negative of the predicate -- @1.3
-TESTS-expressions.quantifier.Quantifier12.xml:[4] All quantifier is always equal the boolean negative of the any quantifier on the boolean negative of the predicate -- @1.5
-TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.1
-TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.2
-TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.3
-TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.4
-TESTS-expressions.quantifier.Quantifier12.xml:[5] All quantifier is always equal whether the size of the list filtered with same the predicate is equal the size of the unfiltered list -- @1.5
 TESTS-expressions.quantifier.Quantifier2.xml:[10] Single quantifier on lists containing nulls -- @1.1
 TESTS-expressions.quantifier.Quantifier2.xml:[10] Single quantifier on lists containing nulls -- @1.2
 TESTS-expressions.quantifier.Quantifier2.xml:[10] Single quantifier on lists containing nulls -- @1.3
@@ -626,33 +609,11 @@ TESTS-expressions.quantifier.Quantifier4.xml:[10] All quantifier on lists contai
 TESTS-expressions.quantifier.Quantifier4.xml:[10] All quantifier on lists containing nulls -- @1.4
 TESTS-expressions.quantifier.Quantifier4.xml:[10] All quantifier on lists containing nulls -- @1.5
 TESTS-expressions.quantifier.Quantifier4.xml:[10] All quantifier on lists containing nulls -- @1.8
-TESTS-expressions.quantifier.Quantifier4.xml:[11] All quantifier with IS NULL predicate -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[11] All quantifier with IS NULL predicate -- @1.2
-TESTS-expressions.quantifier.Quantifier4.xml:[12] All quantifier with IS NOT NULL predicate -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[12] All quantifier with IS NOT NULL predicate -- @1.4
 TESTS-expressions.quantifier.Quantifier4.xml:[15] Fail all quantifier on type mismatch between list elements and predicate -- @1.1
 TESTS-expressions.quantifier.Quantifier4.xml:[15] Fail all quantifier on type mismatch between list elements and predicate -- @1.2
 TESTS-expressions.quantifier.Quantifier4.xml:[15] Fail all quantifier on type mismatch between list elements and predicate -- @1.3
-TESTS-expressions.quantifier.Quantifier4.xml:[1] All quantifier is always true on empty list
-TESTS-expressions.quantifier.Quantifier4.xml:[2] All quantifier on list literal -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[2] All quantifier on list literal -- @1.3
-TESTS-expressions.quantifier.Quantifier4.xml:[3] All quantifier on list literal containing integers -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[3] All quantifier on list literal containing integers -- @1.2
-TESTS-expressions.quantifier.Quantifier4.xml:[4] All quantifier on list literal containing floats -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[4] All quantifier on list literal containing floats -- @1.2
-TESTS-expressions.quantifier.Quantifier4.xml:[5] All quantifier on list literal containing strings -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[5] All quantifier on list literal containing strings -- @1.3
-TESTS-expressions.quantifier.Quantifier4.xml:[6] All quantifier on list literal containing lists -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[6] All quantifier on list literal containing lists -- @1.3
-TESTS-expressions.quantifier.Quantifier4.xml:[7] All quantifier on list literal containing maps -- @1.1
-TESTS-expressions.quantifier.Quantifier4.xml:[7] All quantifier on list literal containing maps -- @1.3
 TESTS-expressions.quantifier.Quantifier4.xml:[8] All quantifier on list containing nodes
 TESTS-expressions.quantifier.Quantifier4.xml:[9] All quantifier on list containing relationships
-TESTS-expressions.quantifier.Quantifier5.xml:[1] None quantifier can nest itself and other quantifiers on nested lists -- @1.7
-TESTS-expressions.quantifier.Quantifier6.xml:[1] Single quantifier can nest itself and other quantifiers on nested lists -- @1.8
-TESTS-expressions.quantifier.Quantifier7.xml:[1] Any quantifier can nest itself and other quantifiers on nested lists -- @1.8
-TESTS-expressions.quantifier.Quantifier9.xml:[4] None quantifier is always equal the all quantifier on the boolean negative of the predicate -- @1.4
-TESTS-expressions.quantifier.Quantifier9.xml:[4] None quantifier is always equal the all quantifier on the boolean negative of the predicate -- @1.5
 TESTS-expressions.string.String1.xml:[1] `substring()` with default second argument
 TESTS-expressions.string.String10.xml:[1] Finding exact matches with non-proper substring
 TESTS-expressions.string.String10.xml:[2] Finding substring of string
