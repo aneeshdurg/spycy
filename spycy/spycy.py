@@ -1037,7 +1037,6 @@ class CypherExecutor:
         self, node: CypherParser.OC_ProjectionBodyContext, is_with: bool = False
     ):
         is_distinct = node.DISTINCT()
-        assert not is_distinct, "Unsupported query - DISTINCT not implemented"
 
         proj_items = node.oC_ProjectionItems()
         assert proj_items
@@ -1170,6 +1169,8 @@ class CypherExecutor:
 
         for col in columns_to_remove:
             del self.table[col]
+        if is_distinct:
+            self.table.drop_duplicates(inplace=True, ignore_index=False)
 
     def _process_return(self, node: CypherParser.OC_ReturnContext):
         body = node.oC_ProjectionBody()

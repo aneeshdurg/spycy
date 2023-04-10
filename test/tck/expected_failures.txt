@@ -213,11 +213,8 @@ TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[10] ORDER BY DESC should order 
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[11] ORDER BY should order distinct types in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[12] ORDER BY DESC should order distinct types in the expected order
 TESTS-clauses.return-orderby.ReturnOrderBy1.xml:[9] ORDER BY should order lists in the expected order
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[10] Returned columns do not change from using ORDER BY
 TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[12] Aggregation of named paths
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[4] Support sort and distinct
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[5] Support ordering by a property after being distinct-ified
-TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[9] Using aliased DISTINCT expression in ORDER BY
+TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[13] Fail when sorting on variable removed by DISTINCT
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
@@ -231,7 +228,6 @@ TESTS-clauses.return.Return4.xml:[6] Keeping used expression 3
 TESTS-clauses.return.Return4.xml:[7] Keeping used expression 4
 TESTS-clauses.return.Return4.xml:[8] Support column renaming for aggregations
 TESTS-clauses.return.Return5.xml:[1] DISTINCT inside aggregation should work with lists in maps
-TESTS-clauses.return.Return5.xml:[2] DISTINCT on nullable values
 TESTS-clauses.return.Return5.xml:[3] DISTINCT inside aggregation should work with nested lists in maps
 TESTS-clauses.return.Return5.xml:[4] DISTINCT inside aggregation should work with nested lists of maps in maps
 TESTS-clauses.return.Return5.xml:[5] Aggregate on list values
@@ -296,8 +292,6 @@ TESTS-clauses.with-orderBy.WithOrderBy1.xml:[41] Sort by a date time variable pr
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[41] Sort by a date time variable projected from a node property in ascending order -- @1.3
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[42] Sort by a date time variable projected from a node property in descending order -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[42] Sort by a date time variable projected from a node property in descending order -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[44] Sort by a variable that is only partially orderable on a non-distinct binding table, but made distinct -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy1.xml:[44] Sort by a variable that is only partially orderable on a non-distinct binding table, but made distinct -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: dates -- @1.6
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: datetimes -- @1.10
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[45] Sort order should be consistent with comparisons where comparisons are defined #Example: lists -- @1.5
@@ -334,8 +328,6 @@ TESTS-clauses.with-orderBy.WithOrderBy2.xml:[22] Sort by an expression that is o
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[22] Sort by an expression that is only partially orderable on a non-distinct binding table, but used as a grouping key -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[23] Sort by an expression that is only partially orderable on a non-distinct binding table, but used in parts as a grouping key -- @1.1
 TESTS-clauses.with-orderBy.WithOrderBy2.xml:[23] Sort by an expression that is only partially orderable on a non-distinct binding table, but used in parts as a grouping key -- @1.2
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[24] Sort by an expression that is only partially orderable on a non-distinct binding table, but made distinct -- @1.1
-TESTS-clauses.with-orderBy.WithOrderBy2.xml:[24] Sort by an expression that is only partially orderable on a non-distinct binding table, but made distinct -- @1.2
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[11] Sort by an aggregate projection
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[16] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.with-orderBy.WithOrderBy4.xml:[17] Handle projected variables inside an order by item which contains an aggregation expression
@@ -352,8 +344,6 @@ TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before b
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
 TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
-TESTS-clauses.with.With5.xml:[1] DISTINCT on an expression
-TESTS-clauses.with.With5.xml:[2] Handling DISTINCT with lists in maps
 TESTS-clauses.with.With6.xml:[4] Implicit grouping with single path variable as grouping key and single aggregation
 TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expression which contains an aggregation expression
 TESTS-clauses.with.With6.xml:[8] Fail if not projected variables are used inside an expression which contains an aggregation expression
@@ -398,13 +388,6 @@ TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[1] Nested simp
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[2] Nested full existential subquery
 TESTS-expressions.existentialSubqueries.ExistentialSubquery3.xml:[3] Nested full existential subquery with pattern predicate
 TESTS-expressions.graph.Graph4.xml:[7] Failing when using `type()` on a node
-TESTS-expressions.graph.Graph8.xml:[1] Using `keys()` on a single node, non-empty result
-TESTS-expressions.graph.Graph8.xml:[2] Using `keys()` on multiple nodes, non-empty result
-TESTS-expressions.graph.Graph8.xml:[3] Using `keys()` on a single node, empty result
-TESTS-expressions.graph.Graph8.xml:[4] Using `keys()` on an optionally matched node
-TESTS-expressions.graph.Graph8.xml:[5] Using `keys()` on a relationship, non-empty result
-TESTS-expressions.graph.Graph8.xml:[6] Using `keys()` on a relationship, empty result
-TESTS-expressions.graph.Graph8.xml:[7] Using `keys()` on an optionally matched relationship
 TESTS-expressions.list.List11.xml:[3] Create an empty list if range direction and step direction are inconsistent
 TESTS-expressions.list.List12.xml:[3] Size of list comprehension
 TESTS-expressions.list.List12.xml:[4] Returning a list comprehension
