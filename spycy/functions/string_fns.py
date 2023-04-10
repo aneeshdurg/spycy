@@ -44,15 +44,15 @@ def toString(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 fn_map = {
     "left": left,
-    "lTrim": string_func(lambda x: x.lstrip()),
+    "ltrim": string_func(lambda x: x.lstrip()),
     "replace": replace,
     "reverse": string_func(lambda x: x[::-1]),
     "right": right,
-    "rTrim": string_func(lambda x: x.rstrip()),
+    "rtrim": string_func(lambda x: x.rstrip()),
     "split": split,
     "substring": substring,
-    "toLower": string_func(lambda x: x.lower()),
-    "toString": toString,
-    "toUpper": string_func(lambda x: x.upper()),
+    "tolower": string_func(lambda x: x.lower()),
+    "tostring": toString,
+    "toupper": string_func(lambda x: x.upper()),
     "trim": string_func(lambda x: x.strip()),
 }

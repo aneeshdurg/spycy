@@ -39,9 +39,9 @@ fn_map = {
     "count": agg_func(lambda f: np.sum(f.apply(lambda e: e is not pd.NA))),
     "max": agg_func(np.max),
     "min": agg_func(np.min),
-    "percentileCont": percentileCont,
-    "percentileDisc": percentileDisc,
-    "stDev": stDev,
-    "stDevP": stDevP,
+    "percentilecont": percentileCont,
+    "percentiledisc": percentileDisc,
+    "stdev": stDev,
+    "stdevp": stDevP,
     "sum": agg_func(np.sum),
 }

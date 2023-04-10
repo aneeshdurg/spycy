@@ -31,7 +31,7 @@ def function_registry(
     name: str, params: List[pd.Series], fnctx: FunctionContext
 ) -> pd.Series:
     for fn_map in fn_maps:
-        if fn := fn_map.get(name, None):
+        if fn := fn_map.get(name.lower(), None):
             return fn(params, fnctx)
 
     raise AssertionError(f"Function {name} not found")

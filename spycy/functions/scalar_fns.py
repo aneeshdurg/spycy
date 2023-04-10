@@ -170,7 +170,7 @@ def type_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 fn_map = {
     "coalesce": coalesce,
-    "endNode": endNode,
+    "endnode": endNode,
     "head": head,
     "id": id_,
     "last": last,
@@ -179,8 +179,8 @@ fn_map = {
     "size": size,
     "startNode": startNode,
     "timestamp": timestamp,
-    "toBoolean": toBoolean,
-    "toFloat": toFloat,
-    "toInteger": toInteger,
+    "toboolean": toBoolean,
+    "tofloat": toFloat,
+    "tointeger": toInteger,
     "type": type_,
 }
