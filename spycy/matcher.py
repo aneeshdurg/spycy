@@ -50,6 +50,11 @@ class MatchResultSet:
         default_factory=dict
     )
 
+    def __len__(self) -> int:
+        if len(self.node_ids_to_data_ids) == 0:
+            return 0
+        return len(next(self.node_ids_to_data_ids.values().__iter__()))
+
     def add(self, result: MatchResult):
         if len(self.node_ids_to_data_ids) == 0:
             for nid, data in result.node_ids_to_data_ids.items():

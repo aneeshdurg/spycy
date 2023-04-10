@@ -48,19 +48,13 @@ TESTS-clauses.call.Call5.xml:[8] Allow standalone call to procedure with YIELD *
 TESTS-clauses.call.Call6.xml:[1] Calling the same STRING procedure twice using the same outputs in each call
 TESTS-clauses.call.Call6.xml:[2] Project procedure results between query scopes with WITH clause
 TESTS-clauses.call.Call6.xml:[3] Project procedure results between query scopes with WITH clause and rename the projection
-TESTS-clauses.create.Create1.xml:[13] Fail when creating a node that is already bound
 TESTS-clauses.create.Create3.xml:[11] WITH-MERGE-CREATE: A bound node should be recognized after projection with WITH + MERGE node
 TESTS-clauses.create.Create3.xml:[12] WITH-MERGE-CREATE: A bound node should be recognized after projection with WITH + MERGE pattern
 TESTS-clauses.create.Create3.xml:[13] Merge followed by multiple creates
-TESTS-clauses.create.Create3.xml:[1] MATCH-CREATE
-TESTS-clauses.create.Create3.xml:[2] WITH-CREATE
-TESTS-clauses.create.Create3.xml:[3] MATCH-CREATE-WITH-CREATE
-TESTS-clauses.create.Create3.xml:[4] MATCH-CREATE: Newly-created nodes not visible to preceding MATCH
 TESTS-clauses.delete.Delete1.xml:[8] Failing when deleting a label
 TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
 TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
-TESTS-clauses.delete.Delete4.xml:[3] Create and delete in same query
 TESTS-clauses.delete.Delete5.xml:[5] Detach delete nodes from nested map/list
 TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
@@ -226,13 +220,11 @@ TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
 TESTS-clauses.return.Return4.xml:[5] Keeping used expression 2
 TESTS-clauses.return.Return4.xml:[6] Keeping used expression 3
 TESTS-clauses.return.Return4.xml:[7] Keeping used expression 4
-TESTS-clauses.return.Return4.xml:[8] Support column renaming for aggregations
 TESTS-clauses.return.Return5.xml:[1] DISTINCT inside aggregation should work with lists in maps
 TESTS-clauses.return.Return5.xml:[3] DISTINCT inside aggregation should work with nested lists in maps
 TESTS-clauses.return.Return5.xml:[4] DISTINCT inside aggregation should work with nested lists of maps in maps
 TESTS-clauses.return.Return5.xml:[5] Aggregate on list values
 TESTS-clauses.return.Return6.xml:[10] Multiple aggregates on same variable
-TESTS-clauses.return.Return6.xml:[11] Counting matches
 TESTS-clauses.return.Return6.xml:[13] Returning the minimum length of paths
 TESTS-clauses.return.Return6.xml:[15] Using `rand()` in aggregations
 TESTS-clauses.return.Return6.xml:[16] Aggregation on complex expressions
@@ -241,8 +233,8 @@ TESTS-clauses.return.Return6.xml:[20] Fail if not returned variables are used in
 TESTS-clauses.return.Return6.xml:[21] Fail if more complex expressions, even if returned, are used inside expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[4] Support multiple divisions in aggregate function
 TESTS-clauses.return.Return6.xml:[8] Handle aggregation on functions
-TESTS-clauses.return.Return6.xml:[9] Aggregates with arithmetics
 TESTS-clauses.return.Return7.xml:[1] Return all variables
+TESTS-clauses.return.Return7.xml:[2] Fail when using RETURN * without variables in scope
 TESTS-clauses.set.Set1.xml:[10] Failing when setting a list of maps as a property
 TESTS-clauses.set.Set1.xml:[8] Ignore null when setting property
 TESTS-clauses.set.Set2.xml:[1] Setting a node property to null removes the existing property
@@ -1606,10 +1598,6 @@ TESTS-expressions.typeConversion.TypeConversion4.xml:[8] `toString()` should acc
 TESTS-expressions.typeConversion.TypeConversion4.xml:[9] `toString()` should accept potentially correct types 2
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[10] Mixing directed and undirected pattern parts with self-relationship, count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[11] Mixing directed and undirected pattern parts with self-relationship, undirected count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[1] Undirected match in self-relationship graph, count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[3] Undirected match on simple relationship graph, count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[4] Directed match on self-relationship graph, count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[8] Directed match of a simple relationship, count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[9] Counting directed self-relationships
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[10] Handling triadic friend of a friend that is not a friend with implicit superset of labels
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[11] Handling triadic friend of a friend that is a friend

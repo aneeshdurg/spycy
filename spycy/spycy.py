@@ -1256,6 +1256,7 @@ class CypherExecutor:
         for e in pgraph.edges.values():
             if e.name:
                 names_to_data[e.name] = []
+        result_count = []
         for i in range(len(self.table)):
             m = matcher.Matcher(
                 self.graph, pgraph, i, node_ids_to_props, edge_ids_to_props
@@ -1309,6 +1310,7 @@ class CypherExecutor:
                     else:
                         data = [Node(d) for d in data]
                     names_to_data[node_name].append(data)
+            result_count.append(len(results))
 
             for eid, pedge in pgraph.edges.items():
                 if edge_name := pedge.name:
@@ -1331,7 +1333,14 @@ class CypherExecutor:
         for i in range(len(self.table)):
             filter_col.append(all(len(self.table[n][i]) > 0 for n in names_to_data))
         self.table = self.table[filter_col]
-        self.table = self.table.explode(list(names_to_data.keys()), ignore_index=True)
+        if len(names_to_data) > 0:
+            self.table = self.table.explode(
+                list(names_to_data.keys()), ignore_index=True
+            )
+        else:
+            self.table["!__replication_hack"] = [[0] * n for n in result_count]
+            self.table = self.table.explode("!__replication_hack", ignore_index=True)
+            del self.table["!__replication_hack"]
 
         # TODO some kind of pushdown could be implemented here instead
         if where := node.oC_Where():
@@ -1407,12 +1416,25 @@ class CypherExecutor:
             if e.range_ is not None:
                 raise ExecutionError("Can't create variable length edge")
 
+        for nid, n in pgraph.nodes.items():
+            if n.name and n.name in self.table:
+                if n.labels:
+                    raise ExecutionError(
+                        "SyntaxError::VariableAlreadyBound Cannot create bound node"
+                    )
+                if n.properties:
+                    raise ExecutionError(
+                        "SyntaxError::VariableAlreadyBound Cannot create bound node"
+                    )
+                if pgraph.degree(nid) == 0:
+                    raise ExecutionError(
+                        "SyntaxError::VariableAlreadyBound Cannot create bound node"
+                    )
+
         for i in range(len(self.table)):
             node_id_to_data_id = {}
             for nid, n in pgraph.nodes.items():
                 if n.name and n.name in self.table:
-                    assert not n.labels, "Cannot create bound node"
-                    assert not n.properties, "Cannot create bound node"
                     data_node = self.table[n.name][i]
                     assert data_node
                     assert isinstance(data_node, Node), "TypeError, expected node"
