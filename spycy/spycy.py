@@ -1215,6 +1215,11 @@ class CypherExecutor:
         assert alias_var
         alias = alias_var.getText()
         self.table[alias] = list_column
+        mask = []
+        for i in range(len(self.table)):
+            value = self.table[alias][i]
+            mask.append(value is not pd.NA and len(value) > 0)
+        self.table = self.table[mask]
         self.table = self.table.explode(alias, ignore_index=True)
 
     def _process_match(self, node: CypherParser.OC_MatchContext):

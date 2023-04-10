@@ -257,10 +257,7 @@ TESTS-clauses.set.Set4.xml:[5] Ignore null when setting properties using an over
 TESTS-clauses.set.Set5.xml:[1] Ignore null when setting properties using an appending map
 TESTS-clauses.set.Set5.xml:[4] Explicit null values in a map remove old values
 TESTS-clauses.unwind.Unwind1.xml:[14] Unwind with merge
-TESTS-clauses.unwind.Unwind1.xml:[4] Unwinding a collected unwound expression
 TESTS-clauses.unwind.Unwind1.xml:[6] Creating nodes from an unwound parameter list
-TESTS-clauses.unwind.Unwind1.xml:[8] Unwinding the empty list
-TESTS-clauses.unwind.Unwind1.xml:[9] Unwinding null
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[10] Sort lists in descending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[11] Sort dates in ascending order
 TESTS-clauses.with-orderBy.WithOrderBy1.xml:[12] Sort dates in descending order
