@@ -745,15 +745,27 @@ class CypherExecutor:
         rhs = self._evaluate_add_or_subtract(add_or_sub_expr)
 
         def startswith(i: int, x: str):
+            if not isinstance(x, str):
+                return pd.NA
             rhs_e: str = rhs[i]
+            if x is pd.NA or rhs_e is pd.NA:
+                return pd.NA
             return x.startswith(rhs_e)
 
         def endswith(i: int, x: str):
+            if not isinstance(x, str):
+                return pd.NA
             rhs_e: str = rhs[i]
+            if x is pd.NA or rhs_e is pd.NA:
+                return pd.NA
             return x.endswith(rhs_e)
 
         def contains(i: int, x: str):
+            if not isinstance(x, str):
+                return pd.NA
             rhs_e: str = rhs[i]
+            if x is pd.NA or rhs_e is pd.NA:
+                return pd.NA
             return rhs_e in x
 
         op = None
@@ -776,6 +788,9 @@ class CypherExecutor:
         def contains(list_, element):
             if not isinstance(list_, list):
                 raise ExecutionError("SyntaxError::InvalidArgumentType")
+            if element is pd.NA:
+                return pd.NA
+
             for item in list_:
                 if isinstance(element, list):
                     if isinstance(item, list):

@@ -10,10 +10,16 @@ def string_func(f):
     def wrapper(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
         if len(params) != 1:
             raise ExecutionError(f"Invalid number of arguments")
-        if not isinstance(params[0][0], str):
-            raise ExecutionError(f"TypeError::Expected string")
 
-        return params[0].apply(f)
+        output = []
+        for s in params[0]:
+            if s is pd.NA:
+                output.append(pd.NA)
+            elif not isinstance(s, str):
+                raise ExecutionError(f"TypeError::Expected string")
+            else:
+                output.append(f(s))
+        return pd.Series(output, dtype=str)
 
     return wrapper
 
@@ -31,11 +37,39 @@ def right(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def split(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("split is unimplemented")
+    if len(params) != 2:
+        raise ExecutionError(f"Invalid number of arguments")
+    output = []
+    for arg0, arg1 in zip(params[0], params[1]):
+        if arg0 is pd.NA or arg1 is pd.NA:
+            output.append(pd.NA)
+        else:
+            if not isinstance(arg0, str) or not isinstance(arg1, str):
+                raise ExecutionError(
+                    f"TypeError::split expected strings got types: {type(arg0)}, {type(arg1)}"
+                )
+            output.append(arg0.split(arg1))
+    return pd.Series(output)
 
 
 def substring(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("substring is unimplemented")
+    if len(params) not in [2, 3]:
+        raise ExecutionError(f"Invalid number of arguments")
+
+    param2 = params[2] if len(params) == 3 else ([None] * len(params[0]))
+    output = []
+    for arg0, arg1, end in zip(params[0], params[1], param2):
+        if end is pd.NA:
+            output.append(pd.NA)
+        elif arg0 is pd.NA or arg1 is pd.NA:
+            output.append(pd.NA)
+        else:
+            if not isinstance(arg0, str) or not isinstance(arg1, int):
+                raise ExecutionError(
+                    f"TypeError::split expected (str, int) got types: {type(arg0)}, {type(arg1)}"
+                )
+            output.append(arg0[arg1:end])
+    return pd.Series(output)
 
 
 def toString(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:

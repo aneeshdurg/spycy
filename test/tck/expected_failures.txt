@@ -403,7 +403,6 @@ TESTS-expressions.list.List2.xml:[9] List slice with null range -- @1.5
 TESTS-expressions.list.List3.xml:[3] Equality between different lists with null should return false
 TESTS-expressions.list.List3.xml:[6] Equality between different nested lists with null should return false
 TESTS-expressions.list.List5.xml:[18] IN should return false when LHS contains a nested list and type mismatch on RHS - singleton version
-TESTS-expressions.list.List5.xml:[20] IN should return null if LHS and RHS are null
 TESTS-expressions.list.List5.xml:[21] IN should return null if LHS and RHS are null - list version
 TESTS-expressions.list.List5.xml:[22] IN should return null when LHS and RHS both ultimately contain null, even if LHS and RHS are of different types (nested list and flat list)
 TESTS-expressions.list.List5.xml:[24] IN should return true if match despite nulls
@@ -432,8 +431,7 @@ TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited id
 TESTS-expressions.map.Map2.xml:[2] Dynamically access a field based on parameters when there is rhs type information
 TESTS-expressions.map.Map2.xml:[4] Dynamically access a field with null results in null
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.1
-TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.2
-TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.3
+TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.4
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.6
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.7
 TESTS-expressions.path.Path1.xml:[1] `nodes()` on null path
@@ -585,38 +583,6 @@ TESTS-expressions.quantifier.Quantifier4.xml:[15] Fail all quantifier on type mi
 TESTS-expressions.quantifier.Quantifier4.xml:[15] Fail all quantifier on type mismatch between list elements and predicate -- @1.3
 TESTS-expressions.quantifier.Quantifier4.xml:[8] All quantifier on list containing nodes
 TESTS-expressions.quantifier.Quantifier4.xml:[9] All quantifier on list containing relationships
-TESTS-expressions.string.String1.xml:[1] `substring()` with default second argument
-TESTS-expressions.string.String10.xml:[1] Finding exact matches with non-proper substring
-TESTS-expressions.string.String10.xml:[2] Finding substring of string
-TESTS-expressions.string.String10.xml:[3] Finding the empty substring
-TESTS-expressions.string.String10.xml:[4] Finding strings containing whitespace
-TESTS-expressions.string.String10.xml:[5] Finding strings containing newline
-TESTS-expressions.string.String10.xml:[6] No string contains null
-TESTS-expressions.string.String10.xml:[7] No string does not contain null
-TESTS-expressions.string.String10.xml:[8] Handling non-string operands for CONTAINS
-TESTS-expressions.string.String10.xml:[9] NOT with CONTAINS
-TESTS-expressions.string.String11.xml:[1] Combining prefix and suffix search
-TESTS-expressions.string.String11.xml:[2] Combining prefix, suffix, and substring search
-TESTS-expressions.string.String3.xml:[1] `reverse()`
-TESTS-expressions.string.String4.xml:[1] `split()`
-TESTS-expressions.string.String8.xml:[1] Finding exact matches with non-proper prefix
-TESTS-expressions.string.String8.xml:[2] Finding beginning of string
-TESTS-expressions.string.String8.xml:[3] Finding the empty prefix
-TESTS-expressions.string.String8.xml:[4] Finding strings starting with whitespace
-TESTS-expressions.string.String8.xml:[5] Finding strings starting with newline
-TESTS-expressions.string.String8.xml:[6] No string starts with null
-TESTS-expressions.string.String8.xml:[7] No string does not start with null
-TESTS-expressions.string.String8.xml:[8] Handling non-string operands for STARTS WITH
-TESTS-expressions.string.String8.xml:[9] NOT with STARTS WITH
-TESTS-expressions.string.String9.xml:[1] Finding exact matches with non-proper suffix
-TESTS-expressions.string.String9.xml:[2] Finding end of string
-TESTS-expressions.string.String9.xml:[3] Finding the empty suffix
-TESTS-expressions.string.String9.xml:[4] Finding strings ending with whitespace
-TESTS-expressions.string.String9.xml:[5] Finding strings ending with newline
-TESTS-expressions.string.String9.xml:[6] No string ends with null
-TESTS-expressions.string.String9.xml:[7] No string does not end with null
-TESTS-expressions.string.String9.xml:[8] Handling non-string operands for ENDS WITH
-TESTS-expressions.string.String9.xml:[9] NOT with ENDS WITH
 TESTS-expressions.temporal.Temporal1.xml:[10] Should construct date time with named time zone -- @1.1
 TESTS-expressions.temporal.Temporal1.xml:[10] Should construct date time with named time zone -- @1.10
 TESTS-expressions.temporal.Temporal1.xml:[10] Should construct date time with named time zone -- @1.11

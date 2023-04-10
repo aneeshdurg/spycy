@@ -99,12 +99,11 @@ def reverse(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
             output.append(pd.NA)
             continue
 
-        if isinstance(el, str) or isinstance(el, list):
-            output.append(list(el[::-1]))
-        else:
+        if not isinstance(el, str) and not isinstance(el, list):
             raise ExecutionError(
                 f"TypeError - reverse expects a list-like argument, got {type(el)}"
             )
+        output.append(el[::-1])
     return pd.Series(output)
 
 
