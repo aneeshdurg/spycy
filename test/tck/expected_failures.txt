@@ -234,7 +234,6 @@ TESTS-clauses.return.Return6.xml:[21] Fail if more complex expressions, even if 
 TESTS-clauses.return.Return6.xml:[4] Support multiple divisions in aggregate function
 TESTS-clauses.return.Return6.xml:[8] Handle aggregation on functions
 TESTS-clauses.return.Return7.xml:[1] Return all variables
-TESTS-clauses.return.Return7.xml:[2] Fail when using RETURN * without variables in scope
 TESTS-clauses.set.Set1.xml:[10] Failing when setting a list of maps as a property
 TESTS-clauses.set.Set1.xml:[8] Ignore null when setting property
 TESTS-clauses.set.Set2.xml:[1] Setting a node property to null removes the existing property

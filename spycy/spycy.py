@@ -1703,8 +1703,12 @@ class CypherExecutor:
             self._process_single_part_query(expr.oC_SinglePartQuery())
         if not self._returned:
             self.table = pd.DataFrame()
-        if " " in self.table:
-            del self.table[" "]
+        else:
+            if " " in self.table:
+                del self.table[" "]
+            no_columns = len(self.table.columns) == 0
+            if no_columns:
+                raise ExecutionError("SyntaxError::NoVariablesInScope for WITH/RETURN")
 
     def exec(self, query_str: str) -> pd.DataFrame:
         self.reset_table()
