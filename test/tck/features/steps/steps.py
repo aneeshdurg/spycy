@@ -72,49 +72,8 @@ def when_query(context):
     execute_query(context, context.text)
 
 
-def parse_type(value: str) -> Tuple[Optional[str], str]:
-    if value[0] != ":":
-        return None, value
-    remainder = value[1:]
-    type_ = ""
-    while remainder[0] not in ["{", ")", "]", ":"]:
-        type_ += remainder[0]
-        remainder = remainder[1:]
-    if len(type_) == 0:
-        raise ValueError("Could not parse type")
-    return type_, remainder
-
-
-def parse_props(value: str) -> Tuple[Any, str]:
-    if value[0] != "{":
-        return None, value
-    remainder = value[1:]
-    props_str = value[0]
-    balance = 1
-    while remainder[0] not in [")", "]", " "]:
-        props_str += remainder[0]
-        remainder = remainder[1:]
-        if remainder == "{":
-            balance += 1
-        if remainder == "}":
-            balance -= 1
-        if balance == 0:
-            break
-
-    if balance != 0:
-        raise ValueError("Could not parse props")
-
-    return hjson.parse(props_str), remainder
-
-
-def parse_tck_node(context, value: str) -> Any:
-    input_stream = InputStream(value)
-    lexer = CypherLexer(input_stream)
-    stream = CommonTokenStream(lexer)
-    parser = CypherParser(stream)
-    root = parser.oC_Pattern()
-
-    pgraph = context.executor._interpret_pattern(root)
+def parse_tck_node(context, node_expr) -> Any:
+    pgraph = context.executor._interpret_pattern(node_expr)
     assert len(pgraph.nodes) == 1
     node = list(pgraph.nodes.values())[0]
     if node.properties is None:
@@ -127,32 +86,13 @@ def parse_tck_node(context, value: str) -> Any:
     return node
 
 
-class TestErrorListener(ErrorListener):
-    def syntaxError(self, *args):
-        raise Exception("Parse error")
-
-
-def parse_tck_edge_details(context, value: str) -> Any:
-    error_listener = TestErrorListener()
-
-    input_stream = InputStream(value)
-    lexer = CypherLexer(input_stream)
-    lexer.removeErrorListeners()
-    lexer.addErrorListener(error_listener)
-    stream = CommonTokenStream(lexer)
-    parser = CypherParser(stream)
-    parser.removeErrorListeners()
-    parser.addErrorListener(error_listener)
-    root = parser.oC_RelationshipDetail()
-    if not root:
-        raise ValueError("Could not parse Edge")
-
+def parse_tck_edge_details(context, edge_expr) -> Any:
     edge = pattern_graph.Graph.build_edge(
         pattern_graph.EdgeID(0),
         True,
         pattern_graph.NodeID(0),
         pattern_graph.NodeID(0),
-        root,
+        edge_expr,
     )
     if not edge.types:
         raise ValueError("Could not parse Edge")
@@ -167,20 +107,44 @@ def parse_tck_edge_details(context, value: str) -> Any:
     return edge
 
 
+def parse_tck_value(context, tck_expr) -> Any:
+    if literal := tck_expr.tck_Literal():
+        return hjson.loads(literal.getText())
+    if pattern := tck_expr.oC_Pattern():
+        print(type(tck_expr), type(pattern))
+        return parse_tck_node(context, pattern)
+    if edge := tck_expr.oC_RelationshipDetail():
+        return parse_tck_edge_details(context, edge)
+    if list_ := tck_expr.tck_List():
+        return [parse_tck_value(context, v) for v in list_.tck_ExpectedValue()]
+    if map_ := tck_expr.tck_Map():
+        return {
+            k.getText(): parse_tck_value(context, v)
+            for k, v in zip(map_.oC_PropertyKeyName(), map_.tck_ExpectedValue())
+        }
+
+    raise Exception("Unexpected node type")
+
+
+class TestErrorListener(ErrorListener):
+    def syntaxError(self, *args):
+        raise Exception("Parse error")
+
+
 def normalize_tck_value(context, value: str) -> Any:
-    if value.startswith("("):
-        return parse_tck_node(context, value)
-    if value.startswith("["):
-        try:
-            return parse_tck_edge_details(context, value)
-        except Exception:
-            pass
-    if value.startswith("<"):
-        try:
-            return parse_tck_path(value)
-        except ValueError:
-            pass
-    return hjson.loads(value)
+    error_listener = TestErrorListener()
+
+    input_stream = InputStream(value)
+    lexer = CypherLexer(input_stream)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(error_listener)
+    stream = CommonTokenStream(lexer)
+    parser = CypherParser(stream)
+    parser.removeErrorListeners()
+    parser.addErrorListener(error_listener)
+
+    root = parser.tck_ExpectedValue()
+    return parse_tck_value(context, root)
 
 
 def tck_to_records(context, table: Table) -> List[Dict[str, Any]]:

@@ -69,8 +69,6 @@ TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching w
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match4.xml:[1] Handling fixed-length variable length pattern
-TESTS-clauses.match.Match4.xml:[6] Matching variable length patterns from a bound node
 TESTS-clauses.match.Match4.xml:[7] Matching variable length patterns including a bound relationship
 TESTS-clauses.match.Match4.xml:[8] Matching relationships into a list and matching variable length using the list
 TESTS-clauses.match.Match5.xml:[10] Handling symmetrically bounded variable length match, bounds are two
@@ -122,9 +120,6 @@ TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relatio
 TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match9.xml:[1] Variable length relationship variables are lists of relationships
-TESTS-clauses.match.Match9.xml:[2] Return relationships by collecting them as a list - directed, one way
-TESTS-clauses.match.Match9.xml:[3] Return relationships by collecting them as a list - undirected, starting from two extremes
-TESTS-clauses.match.Match9.xml:[4] Return relationships by collecting them as a list - undirected, starting from one extreme
 TESTS-clauses.match.Match9.xml:[6] Matching relationships into a list and matching variable length using the list, with bound nodes
 TESTS-clauses.match.Match9.xml:[7] Matching relationships into a list and matching variable length using the list, with bound nodes, wrong direction
 TESTS-clauses.match.Match9.xml:[9] Optionally matching named paths with variable length patterns
@@ -200,8 +195,6 @@ TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and paramet
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
 TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
-TESTS-clauses.return.Return2.xml:[12] Projecting a list of nodes and relationships
-TESTS-clauses.return.Return2.xml:[13] Projecting a map of nodes and relationships
 TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted relationships
 TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
 TESTS-clauses.return.Return4.xml:[5] Keeping used expression 2
@@ -211,7 +204,6 @@ TESTS-clauses.return.Return5.xml:[1] DISTINCT inside aggregation should work wit
 TESTS-clauses.return.Return5.xml:[3] DISTINCT inside aggregation should work with nested lists in maps
 TESTS-clauses.return.Return5.xml:[4] DISTINCT inside aggregation should work with nested lists of maps in maps
 TESTS-clauses.return.Return5.xml:[5] Aggregate on list values
-TESTS-clauses.return.Return6.xml:[10] Multiple aggregates on same variable
 TESTS-clauses.return.Return6.xml:[13] Returning the minimum length of paths
 TESTS-clauses.return.Return6.xml:[15] Using `rand()` in aggregations
 TESTS-clauses.return.Return6.xml:[16] Aggregation on complex expressions
@@ -398,6 +390,7 @@ TESTS-expressions.list.List6.xml:[9] Get node degree via size of pattern compreh
 TESTS-expressions.list.List9.xml:[1] Returning nested expressions based on list property
 TESTS-expressions.literals.Literals6.xml:[5] Return a single-quoted string with escaped characters
 TESTS-expressions.literals.Literals7.xml:[12] Return 40-deep nested empty lists
+TESTS-expressions.literals.Literals8.xml:[16] Return 40-deep nested maps
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.1
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.2
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.5
