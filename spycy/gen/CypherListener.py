@@ -923,5 +923,29 @@ class CypherListener(ParseTreeListener):
     def exitOC_Dash(self, ctx: CypherParser.OC_DashContext):
         pass
 
+    # Enter a parse tree produced by CypherParser#tck_List.
+    def enterTck_List(self, ctx: CypherParser.Tck_ListContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#tck_List.
+    def exitTck_List(self, ctx: CypherParser.Tck_ListContext):
+        pass
+
+    # Enter a parse tree produced by CypherParser#tck_Map.
+    def enterTck_Map(self, ctx: CypherParser.Tck_MapContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#tck_Map.
+    def exitTck_Map(self, ctx: CypherParser.Tck_MapContext):
+        pass
+
+    # Enter a parse tree produced by CypherParser#tck_ExpectedValue.
+    def enterTck_ExpectedValue(self, ctx: CypherParser.Tck_ExpectedValueContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#tck_ExpectedValue.
+    def exitTck_ExpectedValue(self, ctx: CypherParser.Tck_ExpectedValueContext):
+        pass
+
 
 del CypherParser

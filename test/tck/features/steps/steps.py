@@ -2,6 +2,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import hjson
 import pandas as pd
+from antlr4.error.ErrorListener import ErrorListener
 from behave import given, then, when
 from behave.model import Table
 
@@ -126,11 +127,22 @@ def parse_tck_node(context, value: str) -> Any:
     return node
 
 
+class TestErrorListener(ErrorListener):
+    def syntaxError(self, *args):
+        raise Exception("Parse error")
+
+
 def parse_tck_edge_details(context, value: str) -> Any:
+    error_listener = TestErrorListener()
+
     input_stream = InputStream(value)
     lexer = CypherLexer(input_stream)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(error_listener)
     stream = CommonTokenStream(lexer)
     parser = CypherParser(stream)
+    parser.removeErrorListeners()
+    parser.addErrorListener(error_listener)
     root = parser.oC_RelationshipDetail()
     if not root:
         raise ValueError("Could not parse Edge")
@@ -283,8 +295,10 @@ def assert_results_in_any_order(context):
     actual_rows = normalize_spycy_output(context, context.result.to_dict("records"))
     used_rows = set()
     for actual in actual_rows:
+        print("??", actual)
         found = False
         for i, expected in enumerate(expected_rows):
+            print(" ???", expected)
             if i in used_rows:
                 continue
             if expected == actual:
