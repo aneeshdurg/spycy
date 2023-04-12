@@ -25,14 +25,13 @@ class MatchResult:
                 if self.contains_edge(e):
                     return True
             return False
-        for matched_edges in self.edge_ids_to_data_ids.values():
-            for matched_edge in matched_edges:
-                if isinstance(matched_edge, list):
-                    if edge in matched_edge:
-                        return True
-                else:
-                    if matched_edge == edge:
-                        return True
+        for matched_edge in self.edge_ids_to_data_ids.values():
+            if isinstance(matched_edge, list):
+                if edge in matched_edge:
+                    return True
+            else:
+                if matched_edge == edge:
+                    return True
         return False
 
     def copy(self) -> "MatchResult":

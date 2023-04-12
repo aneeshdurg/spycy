@@ -69,8 +69,6 @@ TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching w
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match3.xml:[15] Mixing directed and undirected pattern parts with self-relationship, simple
-TESTS-clauses.match.Match3.xml:[16] Mixing directed and undirected pattern parts with self-relationship, undirected
 TESTS-clauses.match.Match3.xml:[25] Matching twice with an additional node label
 TESTS-clauses.match.Match3.xml:[26] Matching twice with a duplicate predicate
 TESTS-clauses.match.Match4.xml:[1] Handling fixed-length variable length pattern
@@ -87,7 +85,6 @@ TESTS-clauses.match.Match5.xml:[19] Handling a variable length relationship and 
 TESTS-clauses.match.Match5.xml:[20] Handling a variable length relationship and a standard relationship in chain, zero length 2
 TESTS-clauses.match.Match5.xml:[21] Handling a variable length relationship and a standard relationship in chain, single length 1
 TESTS-clauses.match.Match5.xml:[22] Handling a variable length relationship and a standard relationship in chain, single length 2
-TESTS-clauses.match.Match5.xml:[27] Handling mixed relationship patterns and directions 2
 TESTS-clauses.match.Match5.xml:[3] Handling single bounded variable length match 1
 TESTS-clauses.match.Match5.xml:[4] Handling single bounded variable length match 2
 TESTS-clauses.match.Match5.xml:[5] Handling single bounded variable length match 3
@@ -126,7 +123,6 @@ TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
 TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
-TESTS-clauses.match.Match8.xml:[3] Matching and disregarding output, then matching again
 TESTS-clauses.match.Match9.xml:[1] Variable length relationship variables are lists of relationships
 TESTS-clauses.match.Match9.xml:[2] Return relationships by collecting them as a list - directed, one way
 TESTS-clauses.match.Match9.xml:[3] Return relationships by collecting them as a list - undirected, starting from two extremes
@@ -1584,8 +1580,6 @@ TESTS-expressions.typeConversion.TypeConversion4.xml:[6] `toString()` on a list 
 TESTS-expressions.typeConversion.TypeConversion4.xml:[7] `toString()` on node property
 TESTS-expressions.typeConversion.TypeConversion4.xml:[8] `toString()` should accept potentially correct types 1
 TESTS-expressions.typeConversion.TypeConversion4.xml:[9] `toString()` should accept potentially correct types 2
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[10] Mixing directed and undirected pattern parts with self-relationship, count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[11] Mixing directed and undirected pattern parts with self-relationship, undirected count
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[10] Handling triadic friend of a friend that is not a friend with implicit superset of labels
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[11] Handling triadic friend of a friend that is a friend
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[12] Handling triadic friend of a friend that is a friend with different relationship type
