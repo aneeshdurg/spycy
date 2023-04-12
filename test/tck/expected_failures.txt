@@ -100,7 +100,6 @@ TESTS-clauses.match.Match7.xml:[20] Variable length optional relationships with 
 TESTS-clauses.match.Match7.xml:[22] MATCH after OPTIONAL MATCH
 TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
-TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match9.xml:[1] Variable length relationship variables are lists of relationships
 TESTS-clauses.match.Match9.xml:[6] Matching relationships into a list and matching variable length using the list, with bound nodes

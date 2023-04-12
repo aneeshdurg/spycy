@@ -309,11 +309,19 @@ class Matcher:
             src_pnode = pedge.start
             if not check_node(src_pnode, src):
                 return MatchResultSet()
-            initial_matched.node_ids_to_data_ids[src_pnode] = src
+            if src_pnode in initial_matched.node_ids_to_data_ids:
+                if initial_matched.node_ids_to_data_ids[src_pnode] != src:
+                    return MatchResultSet()
+            else:
+                initial_matched.node_ids_to_data_ids[src_pnode] = src
             dst_pnode = pedge.end
             if not check_node(dst_pnode, dst):
                 return MatchResultSet()
-            initial_matched.node_ids_to_data_ids[dst_pnode] = dst
+            if dst_pnode in initial_matched.node_ids_to_data_ids:
+                if initial_matched.node_ids_to_data_ids[dst_pnode] != dst:
+                    return MatchResultSet()
+            else:
+                initial_matched.node_ids_to_data_ids[dst_pnode] = dst
             if pedge.undirected:
                 raise AssertionError("Not implemented binding as undirected")
 
