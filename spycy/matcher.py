@@ -139,6 +139,8 @@ class Matcher:
             ]
         output = []
         for edge in self.graph.out_edges(source, keys=True):
+            if edge[1] != dst:
+                continue
             if self.edge_matches(pedge, edge):
                 output.append(edge)
         return output

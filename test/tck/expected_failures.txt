@@ -61,7 +61,6 @@ TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[15] Fail on aggregation in WHERE
-TESTS-clauses.match-where.MatchWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.match-where.MatchWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
 TESTS-clauses.match-where.MatchWhere6.xml:[2] Filter node with false node label predicate after OPTIONAL MATCH
@@ -70,12 +69,8 @@ TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching w
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match3.xml:[10] Matching using self-referencing pattern returns no result
 TESTS-clauses.match.Match3.xml:[15] Mixing directed and undirected pattern parts with self-relationship, simple
 TESTS-clauses.match.Match3.xml:[16] Mixing directed and undirected pattern parts with self-relationship, undirected
-TESTS-clauses.match.Match3.xml:[19] Two bound nodes pointing to the same node
-TESTS-clauses.match.Match3.xml:[20] Three bound nodes pointing to the same node
-TESTS-clauses.match.Match3.xml:[21] Three bound nodes pointing to the same node with extra connections
 TESTS-clauses.match.Match3.xml:[25] Matching twice with an additional node label
 TESTS-clauses.match.Match3.xml:[26] Matching twice with a duplicate predicate
 TESTS-clauses.match.Match4.xml:[1] Handling fixed-length variable length pattern
@@ -130,8 +125,6 @@ TESTS-clauses.match.Match7.xml:[22] MATCH after OPTIONAL MATCH
 TESTS-clauses.match.Match7.xml:[24] Optionally matching self-loops
 TESTS-clauses.match.Match7.xml:[29] Satisfies the open world assumption, relationships between same nodes
 TESTS-clauses.match.Match7.xml:[4] Optionally matching relationship with bound nodes in reverse direction
-TESTS-clauses.match.Match7.xml:[8] Longer pattern with bound nodes without matches
-TESTS-clauses.match.Match7.xml:[9] Longer pattern with bound nodes
 TESTS-clauses.match.Match8.xml:[2] Counting rows after MATCH, MERGE, OPTIONAL MATCH
 TESTS-clauses.match.Match8.xml:[3] Matching and disregarding output, then matching again
 TESTS-clauses.match.Match9.xml:[1] Variable length relationship variables are lists of relationships
@@ -328,7 +321,6 @@ TESTS-clauses.with-skip-limit.WithSkipLimit2.xml:[2] Handle dependencies across 
 TESTS-clauses.with-where.WithWhere1.xml:[2] Filter node with property predicate on a single variable with multiple distinct bindings
 TESTS-clauses.with-where.WithWhere1.xml:[3] Filter for an unbound relationship variable
 TESTS-clauses.with-where.WithWhere1.xml:[4] Filter for an unbound node variable
-TESTS-clauses.with-where.WithWhere2.xml:[1] Filter nodes with conjunctive two-part property predicate on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-part property predicates on multi variables with multiple bindings
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
@@ -1597,7 +1589,6 @@ TESTS-expressions.typeConversion.TypeConversion4.xml:[8] `toString()` should acc
 TESTS-expressions.typeConversion.TypeConversion4.xml:[9] `toString()` should accept potentially correct types 2
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[10] Mixing directed and undirected pattern parts with self-relationship, count
 TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[11] Mixing directed and undirected pattern parts with self-relationship, undirected count
-TESTS-useCases.countingSubgraphMatches.CountingSubgraphMatches1.xml:[9] Counting directed self-relationships
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[10] Handling triadic friend of a friend that is not a friend with implicit superset of labels
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[11] Handling triadic friend of a friend that is a friend
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[12] Handling triadic friend of a friend that is a friend with different relationship type
