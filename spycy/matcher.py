@@ -236,7 +236,7 @@ class Matcher:
                         output.append(state)
                 elif self.node_matches(pnode, state[1]):
                     output.append(state)
-            if depth <= end:
+            if depth < end:
                 # Do extension, but have no restriction on the node
                 next_edges = self.find_nodes_connected_to(
                     state[1],

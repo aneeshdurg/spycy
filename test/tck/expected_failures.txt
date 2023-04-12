@@ -71,12 +71,6 @@ TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of prop
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
 TESTS-clauses.match.Match4.xml:[7] Matching variable length patterns including a bound relationship
 TESTS-clauses.match.Match4.xml:[8] Matching relationships into a list and matching variable length using the list
-TESTS-clauses.match.Match5.xml:[10] Handling symmetrically bounded variable length match, bounds are two
-TESTS-clauses.match.Match5.xml:[11] Handling upper and lower bounded variable length match, empty interval 1
-TESTS-clauses.match.Match5.xml:[12] Handling upper and lower bounded variable length match, empty interval 2
-TESTS-clauses.match.Match5.xml:[13] Handling upper bounded variable length match, empty interval
-TESTS-clauses.match.Match5.xml:[14] Handling upper bounded variable length match 1
-TESTS-clauses.match.Match5.xml:[15] Handling upper bounded variable length match 2
 TESTS-clauses.match.Match5.xml:[19] Handling a variable length relationship and a standard relationship in chain, zero length 1
 TESTS-clauses.match.Match5.xml:[20] Handling a variable length relationship and a standard relationship in chain, zero length 2
 TESTS-clauses.match.Match5.xml:[21] Handling a variable length relationship and a standard relationship in chain, single length 1
@@ -84,10 +78,6 @@ TESTS-clauses.match.Match5.xml:[22] Handling a variable length relationship and 
 TESTS-clauses.match.Match5.xml:[3] Handling single bounded variable length match 1
 TESTS-clauses.match.Match5.xml:[4] Handling single bounded variable length match 2
 TESTS-clauses.match.Match5.xml:[5] Handling single bounded variable length match 3
-TESTS-clauses.match.Match5.xml:[6] Handling upper and lower bounded variable length match 1
-TESTS-clauses.match.Match5.xml:[7] Handling upper and lower bounded variable length match 2
-TESTS-clauses.match.Match5.xml:[8] Handling symmetrically bounded variable length match, bounds are zero
-TESTS-clauses.match.Match5.xml:[9] Handling symmetrically bounded variable length match, bounds are one
 TESTS-clauses.match.Match6.xml:[10] Named path with alternating directed/undirected relationships
 TESTS-clauses.match.Match6.xml:[11] Named path with multiple alternating directed/undirected relationships
 TESTS-clauses.match.Match6.xml:[12] Matching path with multiple bidirectional relationships
