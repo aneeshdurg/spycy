@@ -11,8 +11,24 @@ generate small openCypher queries, or as an alternative reference
 implementation.
 
 The long-term goals of this project include fully passing all openCypher TCK
-tests. Currently a subset of TCK tests are expected to pass. The failing tests
+tests. Currently a majority of TCK tests are expected to pass. The failing tests
 are documented.
+
+Some major **unimplemented** features are `MERGE`, path variables, existential subqueries, and `CALL`.
+
+## Installation
+
+You can either install from the pre-built wheel or build `sPyCy` yourself. To install the pre-built wheel, run:
+
+```bash
+pip install https://aneeshdurg.me/spycy/dist/spycy_aneeshdurg-0.0.1-py3-none-any.whl
+```
+
+To build it yourself, from the root of this repo, run:
+
+```bash
+python3 -m build
+```
 
 ## Usage:
 
@@ -28,5 +44,12 @@ python3 -m spycy --interactive
 0  node0  node1
 ```
 
-spycy is still mostly unimplemented so most queries will probably error or
-return incorrect results.
+`sPcY` can also be used via python:
+```python
+from spycy import spycy
+exe = spycy.CypherExecutor()
+ids = list(range(100))
+exe.exec(f"UNWIND {ids} as x CREATE ({{id: x}})")
+num_nodes_gt_10 = exe.exec("MATCH (a) WHERE a.id > 10 RETURN count(a) as output")["output"]
+print(f"There are {num_nodes_gt_10} node(s) with an id greater than 10")
+```
