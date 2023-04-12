@@ -69,8 +69,6 @@ TESTS-clauses.match-where.MatchWhere6.xml:[5] Matching and optionally matching w
 TESTS-clauses.match-where.MatchWhere6.xml:[6] Join nodes on non-equality of properties – OPTIONAL MATCH and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of properties – OPTIONAL MATCH on two relationships and WHERE
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
-TESTS-clauses.match.Match3.xml:[25] Matching twice with an additional node label
-TESTS-clauses.match.Match3.xml:[26] Matching twice with a duplicate predicate
 TESTS-clauses.match.Match4.xml:[1] Handling fixed-length variable length pattern
 TESTS-clauses.match.Match4.xml:[6] Matching variable length patterns from a bound node
 TESTS-clauses.match.Match4.xml:[7] Matching variable length patterns including a bound relationship
