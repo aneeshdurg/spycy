@@ -221,11 +221,7 @@ class Matcher:
 
         output = []
         start = pedge.range_.start
-        if start is None:
-            start = 1
         end = pedge.range_.end
-        if end is None:
-            end = math.inf
         # pattern Node with no properties or labels to allow matching any data node
         extension_node = pattern_graph.Node(pattern_graph.NodeID(-1), None)
 

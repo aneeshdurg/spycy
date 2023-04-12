@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set
 
@@ -34,8 +35,8 @@ class Node:
 
 @dataclass
 class EdgeRange:
-    start: Optional[int]
-    end: Optional[int]
+    start: float
+    end: float
 
 
 @dataclass
@@ -112,16 +113,31 @@ class Graph:
             if range_lit := details.oC_RangeLiteral():
                 assert range_lit.children
                 has_intermediate = False
-                edge_range = EdgeRange(None, None)
+                range_: List[Optional[float]] = [None, None]
                 for child in range_lit.children:
                     if isinstance(child, CypherParser.OC_IntegerLiteralContext):
                         value = eval(child.getText())
                         if has_intermediate:
-                            edge_range.end = value
+                            range_[1] = value
                         else:
-                            edge_range.start = value
+                            range_[0] = value
                     elif child.getText() == "..":
                         has_intermediate = True
+
+                if not has_intermediate:
+                    if range_[0] is None:
+                        range_[0] = 1
+                        range_[1] = math.inf
+                    else:
+                        range_[1] = range_[0]
+                else:
+                    if range_[0] is None:
+                        range_[0] = 1
+
+                    if range_[1] is None:
+                        range_[1] = math.inf
+
+                edge_range = EdgeRange(range_[0], range_[1])
 
             if props := details.oC_Properties():
                 assert not props.oC_Parameter(), "Unsupported query - parameters"
