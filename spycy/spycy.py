@@ -139,7 +139,12 @@ class CypherExecutor:
                     m[key] = value[i]
         return pd.Series(data)
 
-    def _evaluate_literal(self, expr: CypherParser.OC_LiteralContext) -> pd.Series:
+    def _evaluate_literal(
+        self, expr: CypherParser.OC_LiteralContext, negate: bool = False
+    ) -> pd.Series:
+        if negate and expr.oC_NumberLiteral() is None:
+            raise ExecutionError("SyntaxError::Cannot negate non-numeric literal")
+
         if list_literal := expr.oC_ListLiteral():
             return self._evaluate_list_literal(list_literal)
 
@@ -162,6 +167,8 @@ class CypherExecutor:
             nstr = number.getText()
             if (int_lit := number.oC_IntegerLiteral()) and "e" not in nstr:
                 dtype = "int64"
+            if negate:
+                nstr = "-" + nstr
             value = eval(nstr)
             if math.isinf(value):
                 raise ExecutionError("SyntaxError::FloatingPointOverflow")
@@ -593,6 +600,18 @@ class CypherExecutor:
 
         child = expr.oC_NonArithmeticOperatorExpression()
         assert child
+
+        if negate:
+            # We need to push the negative sign down into literal parsing to
+            # allow negative numbers that are beyond the positive int64/float64
+            # space.
+            assert child.children
+            if len(child.children) == 1:
+                atom = child.oC_Atom()
+                assert atom
+                assert atom.children
+                if literal := atom.oC_Literal():
+                    return self._evaluate_literal(literal, negate=True)
         output = self._evaluate_non_arithmetic_operator(child)
         if negate:
             return -1 * output

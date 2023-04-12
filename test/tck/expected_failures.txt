@@ -402,9 +402,6 @@ TESTS-expressions.list.List6.xml:[7] Using size of pattern comprehension to test
 TESTS-expressions.list.List6.xml:[8] Get node degree via size of pattern comprehension
 TESTS-expressions.list.List6.xml:[9] Get node degree via size of pattern comprehension that specifies a relationship type
 TESTS-expressions.list.List9.xml:[1] Returning nested expressions based on list property
-TESTS-expressions.literals.Literals2.xml:[8] Return the smallest integer
-TESTS-expressions.literals.Literals3.xml:[8] Return the smallest hexadecimal integer
-TESTS-expressions.literals.Literals4.xml:[8] Return the smallest octal integer
 TESTS-expressions.literals.Literals6.xml:[5] Return a single-quoted string with escaped characters
 TESTS-expressions.literals.Literals7.xml:[12] Return 40-deep nested empty lists
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.1
