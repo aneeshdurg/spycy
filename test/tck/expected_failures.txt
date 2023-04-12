@@ -176,7 +176,6 @@ TESTS-clauses.return-orderby.ReturnOrderBy2.xml:[13] Fail when sorting on variab
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[1] Handle constants and parameters inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases inside an order by item which contains an aggregation expression
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
-TESTS-clauses.return.Return2.xml:[10] Return count aggregation over an empty graph
 TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted relationships
 TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
 TESTS-clauses.return.Return4.xml:[5] Keeping used expression 2

@@ -46,6 +46,8 @@ class CypherExecutor:
 
     _parameters: Dict[str, str] = field(default_factory=dict)
 
+    _evaluating_aggregation: bool = False
+
     def set_params(self, parameters: Dict[str, str]):
         self._parameters = parameters
 
@@ -177,7 +179,7 @@ class CypherExecutor:
             dtype = str
 
         assert value is not None, "Unsupported literal type"
-        data = [value] * rows
+        data = [value] * (rows if not self._evaluating_aggregation else 1)
         if dtype:
             return pd.Series(data, dtype=dtype)
         return pd.Series(data)
@@ -201,7 +203,13 @@ class CypherExecutor:
             for param_expr in param_exprs:
                 if is_agg and self._has_aggregation(param_expr):
                     raise ExecutionError("SyntaxError::NestedAggregation")
+                # Temporarily forget if we're evaluating an aggregation while we
+                # evaluate the parameters. This is to allow expressions like:
+                # sum(x + 1) to find the right length for `1`
+                tmp = self._evaluating_aggregation
+                self._evaluating_aggregation = False
                 params.append(self._evaluate_expression(param_expr))
+                self._evaluating_aggregation = tmp
         fnctx = FunctionContext(self.table, self.graph)
         return function_registry(fnname, params, fnctx)
 
@@ -1115,11 +1123,14 @@ class CypherExecutor:
         output_table = pd.DataFrame()
 
         if len(aggregations) == 0 or len(group_by_keys) == 0:
+            if len(aggregations) > 0:
+                self._evaluating_aggregation = True
             for proj in proj_items.oC_ProjectionItem():
                 expr = proj.oC_Expression()
                 expr_column = self._evaluate_expression(expr)
                 alias = get_alias(proj)
                 output_table[alias] = expr_column
+            self._evaluating_aggregation = False
         else:
             group_by_columns = OrderedDict()
             for alias, proj in group_by_keys.items():
@@ -1361,7 +1372,9 @@ class CypherExecutor:
             self.table = self.table.explode("!__replication_hack", ignore_index=True)
             del self.table["!__replication_hack"]
 
-        # TODO some kind of pushdown could be implemented here instead
+        # TODO some kind of pushdown needs to be implemented here instead -
+        # optional matches where all rows are filtered out should append nulls
+        # instead.
         if where := node.oC_Where():
             self._process_where(where)
 
