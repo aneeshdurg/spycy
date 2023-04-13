@@ -9,5 +9,8 @@ tck_Literal
               | oC_Literal
               ;
 
+tck_Path
+          : '<' SP? oC_AnonymousPatternPart SP? '>';
+
 tck_ExpectedValue
-          : ( tck_Map | tck_List | tck_Literal | oC_Pattern | oC_RelationshipDetail ) ;
+          : ( tck_Map | tck_List | tck_Literal | tck_Path | oC_Pattern | oC_RelationshipDetail ) ;

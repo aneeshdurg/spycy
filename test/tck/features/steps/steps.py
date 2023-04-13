@@ -11,7 +11,7 @@ from spycy import pattern_graph
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
 from spycy.spycy import CypherExecutor
-from spycy.types import Edge, Node
+from spycy.types import Edge, Node, Path
 
 with open("openCypher/tck/graphs/binary-tree-1/binary-tree-1.cypher", "r") as f:
     BINARY_TREE1 = f.read()
@@ -73,9 +73,9 @@ def when_query(context):
 
 
 def parse_tck_node(context, node_expr) -> Any:
-    pgraph = context.executor._interpret_pattern(node_expr)
-    assert len(pgraph.nodes) == 1
-    node = list(pgraph.nodes.values())[0]
+    pgraph = pattern_graph.Graph()
+    node_id = pgraph.add_node(node_expr)
+    node = pgraph.nodes[node_id]
     if node.properties is None:
         node.properties = {}
     else:
@@ -110,8 +110,7 @@ def parse_tck_edge_details(context, edge_expr) -> Any:
 def parse_tck_value(context, tck_expr) -> Any:
     if literal := tck_expr.tck_Literal():
         return hjson.loads(literal.getText())
-    if pattern := tck_expr.oC_Pattern():
-        print(type(tck_expr), type(pattern))
+    if pattern := tck_expr.oC_NodePattern():
         return parse_tck_node(context, pattern)
     if edge := tck_expr.oC_RelationshipDetail():
         return parse_tck_edge_details(context, edge)
@@ -122,6 +121,20 @@ def parse_tck_value(context, tck_expr) -> Any:
             k.getText(): parse_tck_value(context, v)
             for k, v in zip(map_.oC_PropertyKeyName(), map_.tck_ExpectedValue())
         }
+    if path := tck_expr.tck_Path():
+        path = path.oC_AnonymousPatternPart().oC_PatternElement()
+        assert not path.oC_PatternElement()
+
+        nodes = []
+        edges = []
+
+        first_node = path.oC_NodePattern()
+        nodes.append(parse_tck_node(context, first_node))
+        for chain in path.oC_PatternElementChain():
+            edge = chain.oC_RelationshipPattern().oC_RelationshipDetail()
+            edges.append(parse_tck_edge_details(context, edge))
+            nodes.append(parse_tck_node(context, chain.oC_NodePattern()))
+        return nodes, edges
 
     raise Exception("Unexpected node type")
 
@@ -183,6 +196,11 @@ def normalize_spycy_value(context, value: Any) -> Any:
         id_ = pattern_graph.NodeID(0)
         return pattern_graph.Node(
             id_, None, data_node["labels"], data_node["properties"]
+        )
+    elif isinstance(value, Path):
+        return (
+            [normalize_spycy_value(context, Node(n)) for n in value.nodes],
+            [normalize_spycy_value(context, Edge(e)) for e in value.edges],
         )
     return value
 
@@ -259,10 +277,8 @@ def assert_results_in_any_order(context):
     actual_rows = normalize_spycy_output(context, context.result.to_dict("records"))
     used_rows = set()
     for actual in actual_rows:
-        print("??", actual)
         found = False
         for i, expected in enumerate(expected_rows):
-            print(" ???", expected)
             if i in used_rows:
                 continue
             if expected == actual:

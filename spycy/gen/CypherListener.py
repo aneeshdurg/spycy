@@ -947,6 +947,14 @@ class CypherListener(ParseTreeListener):
     def exitTck_Literal(self, ctx: CypherParser.Tck_LiteralContext):
         pass
 
+    # Enter a parse tree produced by CypherParser#tck_Path.
+    def enterTck_Path(self, ctx: CypherParser.Tck_PathContext):
+        pass
+
+    # Exit a parse tree produced by CypherParser#tck_Path.
+    def exitTck_Path(self, ctx: CypherParser.Tck_PathContext):
+        pass
+
     # Enter a parse tree produced by CypherParser#tck_ExpectedValue.
     def enterTck_ExpectedValue(self, ctx: CypherParser.Tck_ExpectedValueContext):
         pass

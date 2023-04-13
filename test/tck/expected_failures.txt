@@ -70,24 +70,12 @@ TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of prop
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
 TESTS-clauses.match.Match4.xml:[7] Matching variable length patterns including a bound relationship
 TESTS-clauses.match.Match4.xml:[8] Matching relationships into a list and matching variable length using the list
-TESTS-clauses.match.Match6.xml:[10] Named path with alternating directed/undirected relationships
-TESTS-clauses.match.Match6.xml:[11] Named path with multiple alternating directed/undirected relationships
-TESTS-clauses.match.Match6.xml:[12] Matching path with multiple bidirectional relationships
-TESTS-clauses.match.Match6.xml:[13] Matching path with both directions should respect other directions
 TESTS-clauses.match.Match6.xml:[14] Named path with undirected fixed variable length pattern
 TESTS-clauses.match.Match6.xml:[15] Variable-length named path
 TESTS-clauses.match.Match6.xml:[16] Return a var length path
 TESTS-clauses.match.Match6.xml:[17] Return a named var length path of length zero
-TESTS-clauses.match.Match6.xml:[18] Undirected named path
 TESTS-clauses.match.Match6.xml:[19] Variable length relationship without lower bound
-TESTS-clauses.match.Match6.xml:[1] Zero-length named path
 TESTS-clauses.match.Match6.xml:[20] Variable length relationship without bounds
-TESTS-clauses.match.Match6.xml:[2] Return a simple path
-TESTS-clauses.match.Match6.xml:[3] Return a three node path
-TESTS-clauses.match.Match6.xml:[5] Path query should return results in written order
-TESTS-clauses.match.Match6.xml:[6] Handling direction of named paths
-TESTS-clauses.match.Match6.xml:[7] Respecting direction when matching existing path
-TESTS-clauses.match.Match6.xml:[9] Longer path query should return results in written order
 TESTS-clauses.match.Match7.xml:[11] Return two subgraphs with bound undirected relationship and optional relationship
 TESTS-clauses.match.Match7.xml:[16] Optionally matching named paths - null result
 TESTS-clauses.match.Match7.xml:[17] Optionally matching named paths - existing result
@@ -188,7 +176,6 @@ TESTS-clauses.return.Return6.xml:[20] Fail if not returned variables are used in
 TESTS-clauses.return.Return6.xml:[21] Fail if more complex expressions, even if returned, are used inside expression which contains an aggregation expression
 TESTS-clauses.return.Return6.xml:[4] Support multiple divisions in aggregate function
 TESTS-clauses.return.Return6.xml:[8] Handle aggregation on functions
-TESTS-clauses.return.Return7.xml:[1] Return all variables
 TESTS-clauses.set.Set1.xml:[10] Failing when setting a list of maps as a property
 TESTS-clauses.set.Set1.xml:[8] Ignore null when setting property
 TESTS-clauses.set.Set2.xml:[1] Setting a node property to null removes the existing property
@@ -287,7 +274,6 @@ TESTS-clauses.with-where.WithWhere2.xml:[2] Filter node with conjunctive multi-p
 TESTS-clauses.with-where.WithWhere4.xml:[2] Join with disjunctive multi-part predicates including patterns
 TESTS-clauses.with-where.WithWhere7.xml:[1] WHERE sees a variable bound before but not after WITH
 TESTS-clauses.with-where.WithWhere7.xml:[3] WHERE sees both, variable bound before but not after WITH and variable bound after but not before WITH
-TESTS-clauses.with.With1.xml:[4] Forwarding a path variable
 TESTS-clauses.with.With2.xml:[1] Forwarding a property to express a join
 TESTS-clauses.with.With6.xml:[4] Implicit grouping with single path variable as grouping key and single aggregation
 TESTS-clauses.with.With6.xml:[5] Handle constants and parameters inside an expression which contains an aggregation expression
