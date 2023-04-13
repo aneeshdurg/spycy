@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Optional, Tuple
 
-import hjson
 import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 from behave import given, then, when
@@ -10,7 +9,6 @@ from antlr4 import *
 from spycy import pattern_graph
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
-from spycy.spycy import CypherExecutor
 from spycy.types import Edge, Node, Path
 
 with open("openCypher/tck/graphs/binary-tree-1/binary-tree-1.cypher", "r") as f:
@@ -125,7 +123,10 @@ def parse_tck_path(context, tck_expr) -> Any:
 
 def parse_tck_value(context, tck_expr) -> Any:
     if literal := tck_expr.tck_Literal():
-        return hjson.loads(literal.getText())
+        true = True
+        false = False
+        null = None
+        return eval(literal.getText())
     if pattern := tck_expr.oC_NodePattern():
         return parse_tck_node(context, pattern)
     if edge := tck_expr.oC_RelationshipDetail():
