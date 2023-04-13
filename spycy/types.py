@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Tuple
+from typing import List, Tuple, Union
 
 import networkx as nx
 import pandas as pd
@@ -26,6 +26,22 @@ class Edge:
     def __lt__(self, other: "Edge") -> bool:
         assert isinstance(other, Edge)
         return self.id_ < other.id_
+
+
+@dataclass
+class Path:
+    nodes: List[int]
+    edges: List[Union[DataEdge, List[DataEdge]]]
+
+    def __lt__(self, other: "Path") -> bool:
+        assert isinstance(other, Edge)
+        if self.nodes < other.nodes:
+            return True
+
+        if self.nodes > other.nodes:
+            return True
+
+        return self.edges < other.edges
 
 
 @dataclass

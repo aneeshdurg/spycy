@@ -18,7 +18,7 @@ from spycy.errors import ExecutionError
 from spycy.functions import function_registry, is_aggregation
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
-from spycy.types import Edge, FunctionContext, Node
+from spycy.types import Edge, FunctionContext, Node, Path
 from spycy.visitor import hasType, visitor
 
 
@@ -1286,6 +1286,9 @@ class CypherExecutor:
         for e in pgraph.edges.values():
             if e.name:
                 names_to_data[e.name] = []
+        for p in pgraph.paths:
+            names_to_data[p] = []
+
         result_count = []
         for i in range(len(self.table)):
             m = matcher.Matcher(
@@ -1329,6 +1332,8 @@ class CypherExecutor:
                 results = matcher.MatchResultSet()
             else:
                 results = m.match_dfs(initial_state)
+
+            result_count.append(len(results))
             for nid, pnode in pgraph.nodes.items():
                 if node_name := pnode.name:
                     data = results.node_ids_to_data_ids.get(nid, [])
@@ -1340,7 +1345,6 @@ class CypherExecutor:
                     else:
                         data = [Node(d) for d in data]
                     names_to_data[node_name].append(data)
-            result_count.append(len(results))
 
             for eid, pedge in pgraph.edges.items():
                 if edge_name := pedge.name:
@@ -1356,6 +1360,20 @@ class CypherExecutor:
                         else:
                             data = [Edge(d) for d in data]
                     names_to_data[edge_name].append(data)
+
+            for path_name, path in pgraph.paths.items():
+                paths = []
+                for _ in range(len(results)):
+                    paths.append(Path([], []))
+                for nid in path.nodes:
+                    data = results.node_ids_to_data_ids.get(nid, [])
+                    for i, d in enumerate(data):
+                        paths[i].nodes.append(d)
+                for eid in path.edges:
+                    data = results.edge_ids_to_data_ids.get(eid, [])
+                    for i, e in enumerate(data):
+                        paths[i].edges.append(e)
+                names_to_data[path_name].append(paths)
 
         for name, data in names_to_data.items():
             self.table[name] = data
@@ -1400,12 +1418,12 @@ class CypherExecutor:
         assert pattern_part
 
         for part in pattern_part:
-            assert (
-                not part.oC_Variable()
-            ), "Unsupported query - named paths not supported"
+            path_name = None
+            if path_name_expr := part.oC_Variable():
+                path_name = path_name_expr.getText()
             anon_part = part.oC_AnonymousPatternPart()
             assert anon_part
-            pgraph.add_fragment(anon_part)
+            pgraph.add_fragment(anon_part, path_name)
         return pgraph
 
     def _evaluate_pattern_graph_properties(

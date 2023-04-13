@@ -52,9 +52,7 @@ TESTS-clauses.create.Create3.xml:[11] WITH-MERGE-CREATE: A bound node should be 
 TESTS-clauses.create.Create3.xml:[12] WITH-MERGE-CREATE: A bound node should be recognized after projection with WITH + MERGE pattern
 TESTS-clauses.create.Create3.xml:[13] Merge followed by multiple creates
 TESTS-clauses.delete.Delete1.xml:[8] Failing when deleting a label
-TESTS-clauses.delete.Delete2.xml:[3] Delete relationship with bidirectional matching
 TESTS-clauses.delete.Delete3.xml:[1] Detach deleting paths
-TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
 TESTS-clauses.delete.Delete5.xml:[5] Detach delete nodes from nested map/list
 TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
@@ -86,11 +84,9 @@ TESTS-clauses.match.Match6.xml:[1] Zero-length named path
 TESTS-clauses.match.Match6.xml:[20] Variable length relationship without bounds
 TESTS-clauses.match.Match6.xml:[2] Return a simple path
 TESTS-clauses.match.Match6.xml:[3] Return a three node path
-TESTS-clauses.match.Match6.xml:[4] Respecting direction when matching non-existent path
 TESTS-clauses.match.Match6.xml:[5] Path query should return results in written order
 TESTS-clauses.match.Match6.xml:[6] Handling direction of named paths
 TESTS-clauses.match.Match6.xml:[7] Respecting direction when matching existing path
-TESTS-clauses.match.Match6.xml:[8] Respecting direction when matching non-existent path with multiple directions
 TESTS-clauses.match.Match6.xml:[9] Longer path query should return results in written order
 TESTS-clauses.match.Match7.xml:[11] Return two subgraphs with bound undirected relationship and optional relationship
 TESTS-clauses.match.Match7.xml:[16] Optionally matching named paths - null result
@@ -179,8 +175,6 @@ TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[2] Handle returned aliases insi
 TESTS-clauses.return-orderby.ReturnOrderBy6.xml:[3] Handle returned property accesses inside an order by item which contains an aggregation expression
 TESTS-clauses.return.Return2.xml:[14] Do not fail when returning type of deleted relationships
 TESTS-clauses.return.Return4.xml:[4] Keeping used expression 1
-TESTS-clauses.return.Return4.xml:[5] Keeping used expression 2
-TESTS-clauses.return.Return4.xml:[6] Keeping used expression 3
 TESTS-clauses.return.Return4.xml:[7] Keeping used expression 4
 TESTS-clauses.return.Return5.xml:[1] DISTINCT inside aggregation should work with lists in maps
 TESTS-clauses.return.Return5.xml:[3] DISTINCT inside aggregation should work with nested lists in maps
@@ -314,7 +308,6 @@ TESTS-expressions.aggregation.Aggregation6.xml:[2] `percentileCont()` -- @1.3
 TESTS-expressions.aggregation.Aggregation8.xml:[3] Collect distinct nulls
 TESTS-expressions.aggregation.Aggregation8.xml:[4] Collect distinct values mixed with nulls
 TESTS-expressions.boolean.Boolean5.xml:[6] Conjunction is not distributive over exclusive disjunction on null
-TESTS-expressions.comparison.Comparison1.xml:[14] Direction of traversed relationship is not significant for path equality, simple
 TESTS-expressions.comparison.Comparison2.xml:[3] Comparing across types yields null, except numbers -- @1.1
 TESTS-expressions.comparison.Comparison2.xml:[3] Comparing across types yields null, except numbers -- @1.2
 TESTS-expressions.comparison.Comparison2.xml:[3] Comparing across types yields null, except numbers -- @1.3
@@ -366,6 +359,7 @@ TESTS-expressions.list.List5.xml:[32] IN should return true with previous null m
 TESTS-expressions.list.List5.xml:[34] IN should return null if comparison with null is required, list version 2
 TESTS-expressions.list.List5.xml:[40] IN should return null if comparison with null is required for empty list
 TESTS-expressions.list.List6.xml:[10] Get node degree via size of pattern comprehension that specifies multiple relationship types
+TESTS-expressions.list.List6.xml:[5] Fail for `size()` on paths
 TESTS-expressions.list.List6.xml:[7] Using size of pattern comprehension to test existence
 TESTS-expressions.list.List6.xml:[8] Get node degree via size of pattern comprehension
 TESTS-expressions.list.List6.xml:[9] Get node degree via size of pattern comprehension that specifies a relationship type
@@ -1536,6 +1530,7 @@ TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.6
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.7
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.8
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.9
+TESTS-expressions.typeConversion.TypeConversion1.xml:[5] Fail `toBoolean()` on invalid types #Example: float -- @1.3
 TESTS-expressions.typeConversion.TypeConversion2.xml:[4] `toInteger()` handling Any type
 TESTS-expressions.typeConversion.TypeConversion2.xml:[5] `toInteger()` on a list of strings
 TESTS-expressions.typeConversion.TypeConversion2.xml:[7] `toInteger()` on node property

@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
-from spycy.types import Edge, FunctionContext, Node
+from spycy.types import Edge, FunctionContext, Node, Path
 
 
 def keys(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
@@ -48,7 +48,34 @@ def labels(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def nodes(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("nodes not implemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to nodes")
+
+    output = []
+    for path in params[0]:
+        if path is pd.NA:
+            output.append(pd.NA)
+            continue
+
+        if not isinstance(path, Path):
+            raise ExecutionError("TypeError - nodes expects a Path argument")
+
+        num_edges = len(path.edges)
+        path_nodes = []
+
+        if len(path.nodes):
+            src = path.nodes[0]
+            path_nodes.append(Node(src))
+            for i in range(num_edges):
+                edges = path.edges[i]
+                if not isinstance(edges, list):
+                    edges = [edges]
+                for edge in edges:
+                    dst = edge[1] if edge[0] == src else edge[0]
+                    path_nodes.append(Node(dst))
+                    src = dst
+        output.append(path_nodes)
+    return pd.Series(output)
 
 
 def range_(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:

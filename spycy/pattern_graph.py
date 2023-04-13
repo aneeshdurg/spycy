@@ -55,9 +55,16 @@ class Edge:
 
 
 @dataclass
+class Path:
+    nodes: List[NodeID]
+    edges: List[EdgeID]
+
+
+@dataclass
 class Graph:
     nodes: Dict[NodeID, Node] = field(default_factory=dict)
     edges: Dict[EdgeID, Edge] = field(default_factory=dict)
+    paths: Dict[str, Path] = field(default_factory=dict)
 
     _node_name_to_id: Dict[str, NodeID] = field(default_factory=dict)
     _edge_name_to_id: Dict[str, EdgeID] = field(default_factory=dict)
@@ -151,7 +158,7 @@ class Graph:
         rel_el: CypherParser.OC_RelationshipPatternContext,
         start: NodeID,
         end: NodeID,
-    ):
+    ) -> EdgeID:
         incoming = bool(rel_el.oC_LeftArrowHead())
         outgoing = bool(rel_el.oC_RightArrowHead())
         undirected = (incoming and outgoing) or not (incoming or outgoing)
@@ -185,6 +192,7 @@ class Graph:
             if end not in self._node_in_incident_edges:
                 self._node_in_incident_edges[end] = []
             self._node_in_incident_edges[end].append(edgeid)
+        return edgeid
 
     def add_node(self, node_el: CypherParser.OC_NodePatternContext) -> NodeID:
         name_var = node_el.oC_Variable()
@@ -224,7 +232,14 @@ class Graph:
 
         return nodeid
 
-    def add_fragment(self, fragment: CypherParser.OC_AnonymousPatternPartContext):
+    def add_fragment(
+        self,
+        fragment: CypherParser.OC_AnonymousPatternPartContext,
+        path_name: Optional[str],
+    ):
+        created_nodes = []
+        created_edges = []
+
         element = fragment.oC_PatternElement()
         assert element
         while inner_el := element.oC_PatternElement():
@@ -234,9 +249,12 @@ class Graph:
         assert node_el
         start_node = self.add_node(node_el)
 
+        created_nodes.append(start_node)
+
         chain = element.oC_PatternElementChain()
-        if not chain:
-            return
+        if chain is None:
+            chain = []
+
         for chain_el in chain:
             rel_el = chain_el.oC_RelationshipPattern()
             assert rel_el
@@ -244,5 +262,12 @@ class Graph:
             assert endpt_el
 
             end_node = self.add_node(endpt_el)
-            self.add_relationship(rel_el, start_node, end_node)
+            created_nodes.append(end_node)
+
+            edge = self.add_relationship(rel_el, start_node, end_node)
             start_node = end_node
+
+            created_edges.append(edge)
+
+        if path_name:
+            self.paths[path_name] = Path(created_nodes, created_edges)
