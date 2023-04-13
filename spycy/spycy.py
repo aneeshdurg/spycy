@@ -1370,6 +1370,11 @@ class CypherExecutor:
         else:
             self.table["!__replication_hack"] = [[0] * n for n in result_count]
             self.table = self.table.explode("!__replication_hack", ignore_index=True)
+            mask = [
+                not np.isnan(self.table["!__replication_hack"][i])
+                for i in range(len(self.table))
+            ]
+            self.table = self.table[mask]
             del self.table["!__replication_hack"]
 
         # TODO some kind of pushdown needs to be implemented here instead -

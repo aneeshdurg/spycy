@@ -58,6 +58,7 @@ TESTS-clauses.delete.Delete3.xml:[2] Delete on null path
 TESTS-clauses.delete.Delete5.xml:[5] Detach delete nodes from nested map/list
 TESTS-clauses.delete.Delete5.xml:[6] Delete relationships from nested map/list
 TESTS-clauses.delete.Delete5.xml:[7] Delete paths from nested map/list
+TESTS-clauses.delete.Delete5.xml:[9] Failing when deleting an integer expression
 TESTS-clauses.match-where.MatchWhere1.xml:[12] Filter path with path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[13] Filter path with false path length predicate on multi variables with one binding
 TESTS-clauses.match-where.MatchWhere1.xml:[15] Fail on aggregation in WHERE
