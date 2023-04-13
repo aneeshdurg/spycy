@@ -107,6 +107,22 @@ def parse_tck_edge_details(context, edge_expr) -> Any:
     return edge
 
 
+def parse_tck_path(context, tck_expr) -> Any:
+    path = tck_expr.oC_AnonymousPatternPart().oC_PatternElement()
+    assert not path.oC_PatternElement()
+
+    nodes = []
+    edges = []
+
+    first_node = path.oC_NodePattern()
+    nodes.append(parse_tck_node(context, first_node))
+    for chain in path.oC_PatternElementChain():
+        edge = chain.oC_RelationshipPattern().oC_RelationshipDetail()
+        edges.append(parse_tck_edge_details(context, edge))
+        nodes.append(parse_tck_node(context, chain.oC_NodePattern()))
+    return nodes, edges
+
+
 def parse_tck_value(context, tck_expr) -> Any:
     if literal := tck_expr.tck_Literal():
         return hjson.loads(literal.getText())
@@ -122,19 +138,7 @@ def parse_tck_value(context, tck_expr) -> Any:
             for k, v in zip(map_.oC_PropertyKeyName(), map_.tck_ExpectedValue())
         }
     if path := tck_expr.tck_Path():
-        path = path.oC_AnonymousPatternPart().oC_PatternElement()
-        assert not path.oC_PatternElement()
-
-        nodes = []
-        edges = []
-
-        first_node = path.oC_NodePattern()
-        nodes.append(parse_tck_node(context, first_node))
-        for chain in path.oC_PatternElementChain():
-            edge = chain.oC_RelationshipPattern().oC_RelationshipDetail()
-            edges.append(parse_tck_edge_details(context, edge))
-            nodes.append(parse_tck_node(context, chain.oC_NodePattern()))
-        return nodes, edges
+        return parse_tck_path(context, path)
 
     raise Exception("Unexpected node type")
 
@@ -198,10 +202,20 @@ def normalize_spycy_value(context, value: Any) -> Any:
             id_, None, data_node["labels"], data_node["properties"]
         )
     elif isinstance(value, Path):
-        return (
-            [normalize_spycy_value(context, Node(n)) for n in value.nodes],
-            [normalize_spycy_value(context, Edge(e)) for e in value.edges],
-        )
+        nodes = []
+        edges = []
+        if len(value.nodes) > 0:
+            src = value.nodes[0]
+            nodes.append(normalize_spycy_value(context, Node(src)))
+            for edge, dst in zip(value.edges, value.nodes[1:]):
+                if not isinstance(edge, list):
+                    edge = [edge]
+                for e in edge:
+                    edges.append(normalize_spycy_value(context, Edge(e)))
+                    dst = e[1] if e[0] == src else e[0]
+                    nodes.append(normalize_spycy_value(context, Node(dst)))
+                    src = dst
+        return (nodes, edges)
     return value
 
 

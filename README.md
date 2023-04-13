@@ -14,7 +14,8 @@ The long-term goals of this project include fully passing all openCypher TCK
 tests. Currently a majority of TCK tests are expected to pass. The failing tests
 are documented.
 
-Some major **unimplemented** features are `MERGE`, path variables, existential subqueries, and `CALL`.
+Some major **unimplemented** features are `MERGE`, temporal values, `WHERE`
+predicates involving patterns, existential subqueries, and `CALL`.
 
 ## Installation
 

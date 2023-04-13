@@ -70,12 +70,6 @@ TESTS-clauses.match-where.MatchWhere6.xml:[7] Join nodes on non-equality of prop
 TESTS-clauses.match-where.MatchWhere6.xml:[8] Join nodes on non-equality of properties – Two OPTIONAL MATCH clauses and WHERE
 TESTS-clauses.match.Match4.xml:[7] Matching variable length patterns including a bound relationship
 TESTS-clauses.match.Match4.xml:[8] Matching relationships into a list and matching variable length using the list
-TESTS-clauses.match.Match6.xml:[14] Named path with undirected fixed variable length pattern
-TESTS-clauses.match.Match6.xml:[15] Variable-length named path
-TESTS-clauses.match.Match6.xml:[16] Return a var length path
-TESTS-clauses.match.Match6.xml:[17] Return a named var length path of length zero
-TESTS-clauses.match.Match6.xml:[19] Variable length relationship without lower bound
-TESTS-clauses.match.Match6.xml:[20] Variable length relationship without bounds
 TESTS-clauses.match.Match7.xml:[11] Return two subgraphs with bound undirected relationship and optional relationship
 TESTS-clauses.match.Match7.xml:[16] Optionally matching named paths - null result
 TESTS-clauses.match.Match7.xml:[17] Optionally matching named paths - existing result
