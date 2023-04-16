@@ -15,12 +15,13 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Topic :: Database :: Database Engines/Servers",
 ]
 dependencies = [
-  "antlr4-python3-runtime==4.12.0",
-  "networkx==2.8.8",
-  "pandas==1.5.3",
-  "numpy==1.24.2",
+  "antlr4-python3-runtime>=4.12.0",
+  "networkx>=2.8.8",
+  "pandas>=1.5.3",
+  "numpy>=1.24.2",
 ]
 
 [project.urls]
