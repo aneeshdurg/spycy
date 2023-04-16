@@ -19,10 +19,10 @@ predicates involving patterns, existential subqueries, and `CALL`.
 
 ## Installation
 
-You can either install from the pre-built wheel or build `sPyCy` yourself. To install the pre-built wheel, run:
+You can either install from [PyPI](https://pypi.org/project/spycy-aneeshdurg/) or build `sPyCy` yourself. To install the pre-built wheel, run:
 
 ```bash
-pip install https://aneeshdurg.me/spycy/dist/spycy_aneeshdurg-0.0.1-py3-none-any.whl
+pip install spycy_aneeshdurg
 ```
 
 To build it yourself, from the root of this repo, run:
