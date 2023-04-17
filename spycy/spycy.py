@@ -535,7 +535,7 @@ class CypherExecutor:
         self, lhs: pd.Series, expr: CypherParser.OC_PropertyLookupContext
     ) -> pd.Series:
         if len(lhs) == 0:
-            return pd.Series([])
+            return pd.Series([], dtype=object)
 
         el = list(lhs)[0]
         output = []

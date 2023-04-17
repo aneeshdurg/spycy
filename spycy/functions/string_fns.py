@@ -1,5 +1,6 @@
 from typing import List
 
+import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
@@ -73,7 +74,28 @@ def substring(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def toString(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("toString is unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to toFloat")
+    arg = params[0]
+    output = []
+    for i in range(len(arg)):
+        val = arg[i]
+        if val is pd.NA:
+            output.append(pd.NA)
+        elif np.issubdtype(type(val), np.float_) or np.issubdtype(
+            type(val), np.integer
+        ):
+            output.append(str(val))
+        elif np.issubdtype(type(val), np.bool_):
+            if val:
+                output.append("true")
+            else:
+                output.append("false")
+        elif isinstance(val, str):
+            output.append(val)
+        else:
+            raise ExecutionError("TypeError::toInteger got unexpected type")
+    return pd.Series(output)
 
 
 fn_map = {

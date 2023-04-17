@@ -112,9 +112,9 @@ def toBoolean(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
     for i in range(len(arg)):
         if arg[i] is pd.NA:
             output.append(pd.NA)
-        elif arg[i] == True or arg[i] == False:
+        elif np.issubdtype(type(arg[i]), np.bool_):
             # could be numpy.bool_ or bool
-            output.append(bool(arg[i]))
+            output.append(arg[i])
         elif isinstance(arg[i], str):
             if arg[i] == "true":
                 output.append(True)
@@ -128,7 +128,26 @@ def toBoolean(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def toFloat(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("toFloat unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to toFloat")
+    arg = params[0]
+    output = []
+    for i in range(len(arg)):
+        val = arg[i]
+        if val is pd.NA:
+            output.append(pd.NA)
+        elif np.issubdtype(type(val), np.float_):
+            output.append(val)
+        elif np.issubdtype(type(val), np.integer):
+            output.append(float(val))
+        elif isinstance(val, str):
+            try:
+                output.append(float(val))
+            except ValueError:
+                output.append(pd.NA)
+        else:
+            raise ExecutionError("TypeError::toInteger got unexpected type")
+    return pd.Series(output)
 
 
 def toInteger(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
@@ -145,7 +164,10 @@ def toInteger(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
         elif np.issubdtype(type(val), np.float_):
             output.append(int(val))
         elif isinstance(val, str):
-            output.append(pd.NA)
+            try:
+                output.append(int(float(val)))
+            except ValueError:
+                output.append(pd.NA)
         else:
             raise ExecutionError("TypeError::toInteger got unexpected type")
     return pd.Series(output)

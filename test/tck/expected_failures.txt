@@ -351,7 +351,6 @@ TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited id
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.2
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.5
 TESTS-expressions.map.Map1.xml:[5] Statically access a field with a delimited identifier -- @1.6
-TESTS-expressions.map.Map2.xml:[2] Dynamically access a field based on parameters when there is rhs type information
 TESTS-expressions.map.Map2.xml:[4] Dynamically access a field with null results in null
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.1
 TESTS-expressions.null.Null3.xml:[4] Using null in IN -- @1.4
@@ -1510,24 +1509,6 @@ TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.6
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.7
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.8
 TESTS-expressions.temporal.Temporal9.xml:[5] Should truncate time -- @1.9
-TESTS-expressions.typeConversion.TypeConversion1.xml:[5] Fail `toBoolean()` on invalid types #Example: float -- @1.3
-TESTS-expressions.typeConversion.TypeConversion2.xml:[4] `toInteger()` handling Any type
-TESTS-expressions.typeConversion.TypeConversion2.xml:[5] `toInteger()` on a list of strings
-TESTS-expressions.typeConversion.TypeConversion2.xml:[7] `toInteger()` on node property
-TESTS-expressions.typeConversion.TypeConversion3.xml:[1] `toFloat()` on mixed number types
-TESTS-expressions.typeConversion.TypeConversion3.xml:[2] `toFloat()` returning null on non-numerical string
-TESTS-expressions.typeConversion.TypeConversion3.xml:[3] `toFloat()` handling Any type
-TESTS-expressions.typeConversion.TypeConversion3.xml:[4] `toFloat()` on a list of strings
-TESTS-expressions.typeConversion.TypeConversion3.xml:[5] `toFloat()` on node property
-TESTS-expressions.typeConversion.TypeConversion4.xml:[1] `toString()` handling integer literal
-TESTS-expressions.typeConversion.TypeConversion4.xml:[2] `toString()` handling boolean literal
-TESTS-expressions.typeConversion.TypeConversion4.xml:[3] `toString()` handling inlined boolean
-TESTS-expressions.typeConversion.TypeConversion4.xml:[4] `toString()` handling boolean properties
-TESTS-expressions.typeConversion.TypeConversion4.xml:[5] `toString()` should work on Any type
-TESTS-expressions.typeConversion.TypeConversion4.xml:[6] `toString()` on a list of integers
-TESTS-expressions.typeConversion.TypeConversion4.xml:[7] `toString()` on node property
-TESTS-expressions.typeConversion.TypeConversion4.xml:[8] `toString()` should accept potentially correct types 1
-TESTS-expressions.typeConversion.TypeConversion4.xml:[9] `toString()` should accept potentially correct types 2
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[10] Handling triadic friend of a friend that is not a friend with implicit superset of labels
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[11] Handling triadic friend of a friend that is a friend
 TESTS-useCases.triadicSelection.TriadicSelection1.xml:[12] Handling triadic friend of a friend that is a friend with different relationship type
