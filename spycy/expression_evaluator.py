@@ -15,6 +15,9 @@ from spycy.visitor import visitor
 
 
 class ExpressionEvaluator(metaclass=ABCMeta):
+    def __init__(self, table: pd.DataFrame, graph: Graph, parameters: Dict[str, Any]):
+        pass
+
     @classmethod
     @abstractmethod
     def has_aggregation(cls, ctx) -> bool:

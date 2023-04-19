@@ -12,12 +12,13 @@ import pandas as pd
 from antlr4.error.ErrorListener import ErrorListener
 
 from antlr4 import *
-from spycy import matcher, pattern_graph
+from spycy import pattern_graph
 from spycy.errors import ExecutionError
 from spycy.expression_evaluator import ConcreteExpressionEvaluator, ExpressionEvaluator
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
 from spycy.graph import Graph, NetworkxGraph
+from spycy.matcher import DFSMatcher, Matcher, MatchResult, MatchResultSet
 from spycy.types import Edge, Node, Path
 from spycy.visitor import hasType, visitor
 
@@ -37,14 +38,13 @@ class GeneratorErrorListener(ErrorListener):
 class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{" ": 0}]))
     graph: Graph = field(default_factory=NetworkxGraph)
-    expr_eval: Any = ConcreteExpressionEvaluator
+
+    expr_eval: type[ExpressionEvaluator] = ConcreteExpressionEvaluator
+    matcher: type[Matcher] = DFSMatcher
 
     _returned: bool = False
 
     _parameters: Dict[str, Any] = field(default_factory=dict)
-
-    def __post_init__(self):
-        assert issubclass(self.expr_eval, ExpressionEvaluator)
 
     def _default_table(self) -> pd.DataFrame:
         return pd.DataFrame([{" ": 0}])
@@ -399,10 +399,7 @@ class CypherExecutor:
 
         result_count = []
         for i in range(len(self.table)):
-            m = matcher.Matcher(
-                self.graph, pgraph, i, node_ids_to_props, edge_ids_to_props
-            )
-            initial_state = matcher.MatchResult()
+            initial_state = MatchResult()
             skip_row = False
             for name in names_to_data:
                 if name not in self.table:
@@ -437,9 +434,16 @@ class CypherExecutor:
                     initial_state.edge_ids_to_data_ids[edge.id_] = value
                 assert found
             if skip_row:
-                results = matcher.MatchResultSet()
+                results = MatchResultSet()
             else:
-                results = m.match_dfs(initial_state)
+                results = self.matcher.match(
+                    self.graph,
+                    pgraph,
+                    i,
+                    node_ids_to_props,
+                    edge_ids_to_props,
+                    initial_state,
+                )
 
             result_count.append(len(results))
             for nid, pnode in pgraph.nodes.items():

@@ -1,3 +1,4 @@
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -65,8 +66,23 @@ class MatchResultSet:
                 self.edge_ids_to_data_ids[eid].append(result.edge_ids_to_data_ids[eid])
 
 
+class Matcher(metaclass=ABCMeta):
+    @classmethod
+    @abstractmethod
+    def match(
+        cls,
+        graph: Graph,
+        pgraph: pattern_graph.Graph,
+        row_id: int,
+        node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series],
+        edge_ids_to_props: Dict[pattern_graph.EdgeID, pd.Series],
+        initial_matched: MatchResult,
+    ) -> MatchResultSet:
+        pass
+
+
 @dataclass
-class Matcher:
+class DFSMatcher(Matcher):
     graph: Graph
     pgraph: pattern_graph.Graph
     row_id: int
@@ -475,3 +491,18 @@ class Matcher:
                         matched_edges,
                         lambda x: self._match_dfs(iteration_order[1:], x),
                     )
+
+    @classmethod
+    def match(
+        cls,
+        graph: Graph,
+        pgraph: pattern_graph.Graph,
+        row_id: int,
+        node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series],
+        edge_ids_to_props: Dict[pattern_graph.EdgeID, pd.Series],
+        initial_matched: MatchResult,
+    ) -> MatchResultSet:
+        matcher = DFSMatcher(
+            graph, pgraph, row_id, node_ids_to_props, edge_ids_to_props
+        )
+        return matcher.match_dfs(initial_matched)
