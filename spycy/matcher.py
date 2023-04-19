@@ -1,12 +1,10 @@
-import math
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import networkx as nx
 import pandas as pd
 
 import spycy.pattern_graph as pattern_graph
-from spycy.types import DataEdge
+from spycy.graph import DataEdge, Graph
 
 # Either a single edge, or a variable length relationship
 MatchedEdge = Union[DataEdge, List[DataEdge]]
@@ -69,7 +67,7 @@ class MatchResultSet:
 
 @dataclass
 class Matcher:
-    graph: nx.MultiDiGraph
+    graph: Graph
     pgraph: pattern_graph.Graph
     row_id: int
     node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series]
@@ -137,7 +135,7 @@ class Matcher:
                 )
             ]
         output = []
-        for edge in self.graph.out_edges(source, keys=True):
+        for edge in self.graph.out_edges(source):
             if edge[1] != dst:
                 continue
             if self.edge_matches(pedge, edge):
@@ -274,12 +272,12 @@ class Matcher:
             )
         if check_out:
             # outgoing to self, in-coming from source
-            for edge in self.graph.in_edges(source, keys=True):
+            for edge in self.graph.in_edges(source):
                 if self.edge_matches(pedge, edge) and self.node_matches(pnode, edge[0]):
                     results.append((edge, edge[0]))
         if check_in:
             # incoming to self, out-going from source
-            for edge in self.graph.out_edges(source, keys=True):
+            for edge in self.graph.out_edges(source):
                 if check_out and edge[1] == source:
                     # self-loop is already matched as outgoing to self
                     continue

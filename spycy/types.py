@@ -1,22 +1,18 @@
 from dataclasses import dataclass
 from typing import List, Tuple, Union
 
-import networkx as nx
 import pandas as pd
 
-DataEdge = Tuple[int, int, int]
+from spycy.graph import DataEdge, DataNode, Graph
 
 
 @dataclass
 class Node:
-    id_: int
+    id_: DataNode
 
     def __lt__(self, other: "Node") -> bool:
         assert isinstance(other, Node)
         return self.id_ < other.id_
-
-
-DataEdge = Tuple[int, int, int]
 
 
 @dataclass
@@ -47,4 +43,4 @@ class Path:
 @dataclass
 class FunctionContext:
     table: pd.DataFrame
-    graph: nx.MultiDiGraph
+    graph: Graph

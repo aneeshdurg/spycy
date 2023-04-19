@@ -18,6 +18,7 @@ from spycy.errors import ExecutionError
 from spycy.functions import function_registry, is_aggregation
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
+from spycy.graph import Graph, NetworkxGraph
 from spycy.types import Edge, FunctionContext, Node, Path
 from spycy.visitor import hasType, visitor
 
@@ -36,7 +37,7 @@ class GeneratorErrorListener(ErrorListener):
 @dataclass
 class CypherExecutor:
     table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{" ": 0}]))
-    graph: nx.MultiDiGraph = field(default_factory=nx.MultiDiGraph)
+    graph: Graph = field(default_factory=NetworkxGraph)
 
     # TODO use _table_accesses to speed up CREATE/MATCH
     _table_accesses: int = 0
@@ -73,11 +74,6 @@ class CypherExecutor:
 
         visitor(ctx, is_aggregation_visitor)
         return found_aggregation
-
-    def _vend_node_id(self) -> int:
-        if len(self._deleted_ids):
-            return self._deleted_ids.pop()
-        return len(self.graph.nodes)
 
     def reset_table(self):
         self.table = pd.DataFrame([{" ": 0}])
@@ -1496,14 +1492,13 @@ class CypherExecutor:
                     assert isinstance(data_node, Node), "TypeError, expected node"
                     node_id_to_data_id[nid] = data_node.id_
                 else:
-                    data_id = self._vend_node_id()
-                    node_id_to_data_id[nid] = data_id
                     props = node_ids_to_props.get(nid)
                     data = {
                         "labels": n.labels,
                         "properties": props[i] if props is not None else {},
                     }
-                    self.graph.add_node(data_id, **data)
+                    data_id = self.graph.add_node(data)
+                    node_id_to_data_id[nid] = data_id
                     data_node = Node(data_id)
 
                 if n.name:
@@ -1520,10 +1515,10 @@ class CypherExecutor:
                 }
                 start = node_id_to_data_id[e.start]
                 end = node_id_to_data_id[e.end]
-                key = self.graph.add_edge(start, end, **data)
+                eid = self.graph.add_edge(start, end, data)
                 if e.name:
                     if (data := entities_to_data.get(e.name)) is not None:
-                        data.append(Edge((start, end, key)))
+                        data.append(Edge(eid))
 
         for name, data in entities_to_data.items():
             self.table[name] = data
@@ -1551,18 +1546,17 @@ class CypherExecutor:
 
         if not is_detach:
             for node in nodes_to_delete:
-                for edge in self.graph.out_edges(node, keys=True):
+                for edge in self.graph.out_edges(node):
                     if edge not in edges_to_delete:
                         raise ExecutionError("DeleteError::DeleteAttachedNode")
-                for edge in self.graph.in_edges(node, keys=True):
+                for edge in self.graph.in_edges(node):
                     if edge not in edges_to_delete:
                         raise ExecutionError("DeleteError::DeleteAttachedNode")
 
         for edge in edges_to_delete:
-            self.graph.remove_edge(*edge)
+            self.graph.remove_edge(edge)
         for node_ in nodes_to_delete:
             self.graph.remove_node(node_)
-            self._deleted_ids.add(node_)
 
     def _set_prop(self, src: Any, path: List[str], value: Any):
         if isinstance(src, Node):
