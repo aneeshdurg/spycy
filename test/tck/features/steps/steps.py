@@ -79,7 +79,7 @@ def parse_tck_node(context, node_expr) -> Any:
     else:
         table = context.executor.table
         context.executor.reset_table()
-        node.properties = context.executor._evaluate_map_literal(node.properties)[0]
+        node.properties = context.executor.evaluate_expr(node.properties)[0]
         context.executor.table = table
     return node
 
@@ -100,7 +100,7 @@ def parse_tck_edge_details(context, edge_expr) -> Any:
     else:
         table = context.executor.table
         context.executor.reset_table()
-        edge.properties = context.executor._evaluate_map_literal(edge.properties)[0]
+        edge.properties = context.executor.evaluate_expr(edge.properties)[0]
         context.executor.table = table
     return edge
 
