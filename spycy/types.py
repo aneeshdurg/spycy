@@ -1,14 +1,14 @@
 from dataclasses import dataclass
-from typing import List, Tuple, Union
+from typing import Generic, List, Union
 
 import pandas as pd
 
-from spycy.graph import DataEdge, DataNode, Graph
+from spycy.graph import EdgeType, Graph, NodeType
 
 
 @dataclass
-class Node:
-    id_: DataNode
+class Node(Generic[NodeType]):
+    id_: NodeType
 
     def __lt__(self, other: "Node") -> bool:
         assert isinstance(other, Node)
@@ -16,8 +16,8 @@ class Node:
 
 
 @dataclass
-class Edge:
-    id_: DataEdge
+class Edge(Generic[EdgeType]):
+    id_: EdgeType
 
     def __lt__(self, other: "Edge") -> bool:
         assert isinstance(other, Edge)
@@ -25,9 +25,9 @@ class Edge:
 
 
 @dataclass
-class Path:
-    nodes: List[int]
-    edges: List[Union[DataEdge, List[DataEdge]]]
+class Path(Generic[NodeType, EdgeType]):
+    nodes: List[NodeType]
+    edges: List[Union[EdgeType, List[EdgeType]]]
 
     def __lt__(self, other: "Path") -> bool:
         assert isinstance(other, Edge)

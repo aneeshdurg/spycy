@@ -5,7 +5,7 @@ import math
 import sys
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, Generic, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -17,7 +17,14 @@ from spycy.errors import ExecutionError
 from spycy.expression_evaluator import ConcreteExpressionEvaluator, ExpressionEvaluator
 from spycy.gen.CypherLexer import CypherLexer
 from spycy.gen.CypherParser import CypherParser
-from spycy.graph import Graph, NetworkxGraph
+from spycy.graph import (
+    EdgeType,
+    Graph,
+    NetworkXEdge,
+    NetworkXGraph,
+    NetworkXNode,
+    NodeType,
+)
 from spycy.matcher import DFSMatcher, Matcher, MatchResult, MatchResultSet
 from spycy.types import Edge, Node, Path
 from spycy.visitor import hasType, visitor
@@ -35,18 +42,21 @@ class GeneratorErrorListener(ErrorListener):
 
 
 @dataclass
-class CypherExecutor:
-    table: pd.DataFrame = field(default_factory=lambda: pd.DataFrame([{" ": 0}]))
-    graph: Graph = field(default_factory=NetworkxGraph)
+class CypherExecutorBase(Generic[NodeType, EdgeType]):
+    graph: Graph[NodeType, EdgeType]
+    table: pd.DataFrame = field(
+        default_factory=lambda: CypherExecutorBase._default_table()
+    )
 
     expr_eval: type[ExpressionEvaluator] = ConcreteExpressionEvaluator
-    matcher: type[Matcher] = DFSMatcher
+    matcher: type[Matcher[NodeType, EdgeType]] = DFSMatcher[NodeType, EdgeType]
 
     _returned: bool = False
 
     _parameters: Dict[str, Any] = field(default_factory=dict)
 
-    def _default_table(self) -> pd.DataFrame:
+    @classmethod
+    def _default_table(cls) -> pd.DataFrame:
         return pd.DataFrame([{" ": 0}])
 
     def evaluate_expr(
@@ -71,7 +81,7 @@ class CypherExecutor:
             ast = self._getAST(src, get_root=lambda parser: parser.oC_Expression())
             assert ast
             col = self.expr_eval.evaluate(
-                self._default_table(), self.graph, evaluated_params, ast
+                CypherExecutorBase._default_table(), self.graph, evaluated_params, ast
             )
             assert len(col) == 1
             evaluated_params[name] = col[0]
@@ -80,7 +90,7 @@ class CypherExecutor:
         self._parameters = evaluated_params
 
     def reset_table(self):
-        self.table = self._default_table()
+        self.table = CypherExecutorBase._default_table()
 
     def table_to_json(self):
         def make_serializable(x):
@@ -375,6 +385,35 @@ class CypherExecutor:
             mask.append(value is not pd.NA and len(value) > 0)
         self.table = self.table[mask]
         self.table = self.table.explode(alias, ignore_index=True)
+
+    def _build_intial_match_result_for_row(
+        self, row: int, pgraph: pattern_graph.Graph
+    ) -> Optional[MatchResult]:
+        initial_state = MatchResult()
+        for _, node_ in pgraph.nodes.items():
+            if node_.name in self.table:
+                continue
+            value = self.table[node_.name][row]
+            if value is pd.NA:
+                return None
+            else:
+                if not isinstance(value, Node):
+                    raise ExecutionError("TypeError cannot rebind as node")
+                value = value.id_
+            initial_state.node_ids_to_data_ids[node_.id_] = value
+
+        for _, edge in pgraph.edges.items():
+            if edge.name not in self.table:
+                continue
+            value = self.table[edge.name][row]
+            if value is pd.NA:
+                return None
+            else:
+                if not isinstance(value, Edge):
+                    raise ExecutionError("TypeError cannot rebind as edge")
+                value = value.id_
+            initial_state.edge_ids_to_data_ids[edge.id_] = value
+        return initial_state
 
     def _process_match(self, node: CypherParser.OC_MatchContext):
         assert node.children
@@ -940,6 +979,11 @@ class CypherExecutor:
         return self.table
 
 
+@dataclass
+class CypherExecutor(CypherExecutorBase[NetworkXNode, NetworkXEdge]):
+    graph: Graph[NetworkXNode, NetworkXEdge] = field(default_factory=NetworkXGraph)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--query", action="store")
@@ -959,7 +1003,6 @@ def main():
                     print(table)
             except ExecutionError as e:
                 print(e, file=sys.stderr)
-                print(e.traceback, file=sys.stderr)
 
     assert args.query or args.file, "One of --query and --file is required!"
 

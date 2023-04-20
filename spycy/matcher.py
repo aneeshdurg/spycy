@@ -1,20 +1,22 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, Generic, List, Optional, Tuple, Union
 
 import pandas as pd
 
 import spycy.pattern_graph as pattern_graph
-from spycy.graph import DataEdge, Graph
+from spycy.graph import EdgeType, Graph, NodeType
 
 # Either a single edge, or a variable length relationship
-MatchedEdge = Union[DataEdge, List[DataEdge]]
+MatchedEdge = Union[EdgeType, List[EdgeType]]
 
 
 @dataclass
-class MatchResult:
-    node_ids_to_data_ids: Dict[pattern_graph.NodeID, int] = field(default_factory=dict)
-    edge_ids_to_data_ids: Dict[pattern_graph.EdgeID, MatchedEdge] = field(
+class MatchResult(Generic[NodeType, EdgeType]):
+    node_ids_to_data_ids: Dict[pattern_graph.NodeID, NodeType] = field(
+        default_factory=dict
+    )
+    edge_ids_to_data_ids: Dict[pattern_graph.EdgeID, MatchedEdge[EdgeType]] = field(
         default_factory=dict
     )
 
@@ -40,8 +42,8 @@ class MatchResult:
 
 
 @dataclass
-class MatchResultSet:
-    node_ids_to_data_ids: Dict[pattern_graph.NodeID, List[int]] = field(
+class MatchResultSet(Generic[NodeType, EdgeType]):
+    node_ids_to_data_ids: Dict[pattern_graph.NodeID, List[NodeType]] = field(
         default_factory=dict
     )
     edge_ids_to_data_ids: Dict[pattern_graph.EdgeID, List[MatchedEdge]] = field(
@@ -66,30 +68,30 @@ class MatchResultSet:
                 self.edge_ids_to_data_ids[eid].append(result.edge_ids_to_data_ids[eid])
 
 
-class Matcher(metaclass=ABCMeta):
+class Matcher(Generic[NodeType, EdgeType], metaclass=ABCMeta):
     @classmethod
     @abstractmethod
     def match(
         cls,
-        graph: Graph,
+        graph: Graph[NodeType, EdgeType],
         pgraph: pattern_graph.Graph,
         row_id: int,
         node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series],
         edge_ids_to_props: Dict[pattern_graph.EdgeID, pd.Series],
-        initial_matched: MatchResult,
-    ) -> MatchResultSet:
+        initial_matched: MatchResult[NodeType, EdgeType],
+    ) -> MatchResultSet[NodeType, EdgeType]:
         pass
 
 
 @dataclass
-class DFSMatcher(Matcher):
-    graph: Graph
+class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
+    graph: Graph[NodeType, EdgeType]
     pgraph: pattern_graph.Graph
     row_id: int
     node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series]
     edge_ids_to_props: Dict[pattern_graph.EdgeID, pd.Series]
 
-    results: MatchResultSet = field(default_factory=MatchResultSet)
+    results: MatchResultSet[NodeType, EdgeType] = field(default_factory=MatchResultSet)
 
     def properties_match(
         self, match_props: Dict[str, Any], data_props: Dict[str, Any]
@@ -101,7 +103,7 @@ class DFSMatcher(Matcher):
                 return False
         return True
 
-    def node_matches(self, pnode: pattern_graph.Node, data_node: int) -> bool:
+    def node_matches(self, pnode: pattern_graph.Node, data_node: NodeType) -> bool:
         if not pnode.labels and not pnode.properties:
             return True
 
@@ -118,7 +120,7 @@ class DFSMatcher(Matcher):
                 return False
         return True
 
-    def edge_matches(self, pedge: pattern_graph.Edge, data_edge: DataEdge) -> bool:
+    def edge_matches(self, pedge: pattern_graph.Edge, data_edge: EdgeType) -> bool:
         """Check if `data_edge` matches `pedge`, ignoring variable length attributes"""
         if not pedge.types and not pedge.properties:
             return True
@@ -137,7 +139,7 @@ class DFSMatcher(Matcher):
         return True
 
     def find_all_edges(
-        self, source: int, dst: int, pedge: pattern_graph.Edge
+        self, source: NodeType, dst: NodeType, pedge: pattern_graph.Edge
     ) -> List[MatchedEdge]:
         """Find all edges from source to dst (directed only, doesn't handle
         variable length undirected edges)"""
@@ -152,7 +154,7 @@ class DFSMatcher(Matcher):
             ]
         output = []
         for edge in self.graph.out_edges(source):
-            if edge[1] != dst:
+            if self.graph.dst(edge) != dst:
                 continue
             if self.edge_matches(pedge, edge):
                 output.append(edge)
@@ -163,7 +165,7 @@ class DFSMatcher(Matcher):
         intermediate: MatchResult,
         nid: pattern_graph.NodeID,
         extended_edge: Optional[pattern_graph.EdgeID],
-    ) -> Optional[Dict[pattern_graph.EdgeID, List[DataEdge]]]:
+    ) -> Optional[Dict[pattern_graph.EdgeID, List[EdgeType]]]:
         edge_id_to_data_choices = {}
 
         candidate = intermediate.node_ids_to_data_ids[nid]
@@ -224,13 +226,13 @@ class DFSMatcher(Matcher):
 
     def variable_length_relationship(
         self,
-        source: int,
+        source: NodeType,
         pedge: pattern_graph.Edge,
         pnode: pattern_graph.Node,
         check_out: bool,
         check_in: bool,
-        dst: Optional[int] = None,
-    ) -> List[Tuple[MatchedEdge, int]]:
+        dst: Optional[NodeType] = None,
+    ) -> List[Tuple[MatchedEdge, NodeType]]:
         assert pedge.range_
 
         output = []
@@ -239,7 +241,7 @@ class DFSMatcher(Matcher):
         # pattern Node with no properties or labels to allow matching any data node
         extension_node = pattern_graph.Node(pattern_graph.NodeID(-1), None)
 
-        def variable_length_dfs(depth: int, state: Tuple[List[DataEdge], int]):
+        def variable_length_dfs(depth: int, state: Tuple[List[EdgeType], NodeType]):
             if depth >= start:
                 if dst is not None:
                     if state[1] == dst:
@@ -274,13 +276,13 @@ class DFSMatcher(Matcher):
 
     def find_nodes_connected_to(
         self,
-        source: int,
+        source: NodeType,
         pedge: pattern_graph.Edge,
         pnode: pattern_graph.Node,
         check_out: bool,
         check_in: bool,
         ignore_var_length: bool = False,
-    ) -> List[Tuple[MatchedEdge, int]]:
+    ) -> List[Tuple[MatchedEdge, NodeType]]:
         results = []
         if pedge.range_ and not ignore_var_length:
             return self.variable_length_relationship(
@@ -289,28 +291,35 @@ class DFSMatcher(Matcher):
         if check_out:
             # outgoing to self, in-coming from source
             for edge in self.graph.in_edges(source):
-                if self.edge_matches(pedge, edge) and self.node_matches(pnode, edge[0]):
-                    results.append((edge, edge[0]))
+                if self.edge_matches(pedge, edge) and self.node_matches(
+                    pnode, self.graph.src(edge)
+                ):
+                    results.append((edge, self.graph.src(edge)))
         if check_in:
             # incoming to self, out-going from source
             for edge in self.graph.out_edges(source):
-                if check_out and edge[1] == source:
+                if check_out and self.graph.dst(edge) == source:
                     # self-loop is already matched as outgoing to self
                     continue
-                if self.edge_matches(pedge, edge) and self.node_matches(pnode, edge[1]):
-                    results.append((edge, edge[1]))
+                if self.edge_matches(pedge, edge) and self.node_matches(
+                    pnode, self.graph.dst(edge)
+                ):
+                    results.append((edge, self.graph.dst(edge)))
         return results
 
-    def match_dfs(self, initial_matched: MatchResult) -> MatchResultSet:
+    def match_dfs(
+        self, initial_matched: MatchResult[NodeType, EdgeType]
+    ) -> MatchResultSet[NodeType, EdgeType]:
         for node_id, data_id in initial_matched.node_ids_to_data_ids.items():
             if not self.node_matches(self.pgraph.nodes[node_id], data_id):
                 return MatchResultSet()
         for edge_id, data_id in initial_matched.edge_ids_to_data_ids.items():
             pedge = self.pgraph.edges[edge_id]
-            if not self.edge_matches(pedge, data_id):
-                return MatchResultSet()
+            if not isinstance(data_id, list):
+                if not self.edge_matches(pedge, data_id):
+                    return MatchResultSet()
 
-            def check_node(pnode: pattern_graph.NodeID, dnode: int) -> bool:
+            def check_node(pnode: pattern_graph.NodeID, dnode: NodeType) -> bool:
                 if init_n := initial_matched.node_ids_to_data_ids.get(pnode):
                     if init_n != dnode:
                         return False
@@ -319,7 +328,10 @@ class DFSMatcher(Matcher):
                         return False
                 return True
 
-            src, dst, _ = data_id
+            assert not isinstance(data_id, list)
+            src = self.graph.src(data_id)
+            dst = self.graph.dst(data_id)
+
             src_pnode = pedge.start
             if not check_node(src_pnode, src):
                 return MatchResultSet()
@@ -402,8 +414,8 @@ class DFSMatcher(Matcher):
 
     def _combine_edges(
         self,
-        intermediate: MatchResult,
-        edges: Dict[pattern_graph.EdgeID, List[DataEdge]],
+        intermediate: MatchResult[NodeType, EdgeType],
+        edges: Dict[pattern_graph.EdgeID, List[EdgeType]],
         cb,
     ):
         if len(edges) == 0:
@@ -495,13 +507,13 @@ class DFSMatcher(Matcher):
     @classmethod
     def match(
         cls,
-        graph: Graph,
+        graph: Graph[NodeType, EdgeType],
         pgraph: pattern_graph.Graph,
         row_id: int,
         node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series],
         edge_ids_to_props: Dict[pattern_graph.EdgeID, pd.Series],
         initial_matched: MatchResult,
-    ) -> MatchResultSet:
+    ) -> MatchResultSet[NodeType, EdgeType]:
         matcher = DFSMatcher(
             graph, pgraph, row_id, node_ids_to_props, edge_ids_to_props
         )
