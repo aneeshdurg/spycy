@@ -289,8 +289,14 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
                 output_keys[alias] = []
             output_keys_row_count = 0
 
+            # Split each table up into subtables where every subtable has a
+            # unique key.
+
+            # Collect the row indicies corresponding to each key and store it in
+            # keys_to_mask. Store the row index that will correspond to this key
+            # in the output table in keys_to_row
             keys_to_row = {}
-            keys_to_subtable = {}
+            keys_to_mask = {}
             for i in range(len(self.table)):
                 key = get_key(i)
                 if key not in keys_to_row:
@@ -298,14 +304,17 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
                         output_keys[alias].append(group_by_columns[alias][i])
                     keys_to_row[key] = output_keys_row_count
                     output_keys_row_count += 1
-                    keys_to_subtable[key] = pd.DataFrame(
-                        [{k: self.table[k][i] for k in self.table}]
-                    )
+                    keys_to_mask[key] = [i]
                 else:
-                    keys_to_subtable[key].loc[
-                        len(keys_to_subtable[key])
-                    ] = self.table.iloc[i]
+                    keys_to_mask[key].append(i)
 
+            # Using the masks, extract the rows corresponding to each key in the
+            # input tables into one table per key.
+            keys_to_subtable = {}
+            for key, mask in keys_to_mask.items():
+                keys_to_subtable[key] = self.table.loc[self.table.index[mask]]
+
+            # For each table in keys_to_subtable, run all aggregations
             old_table = self.table
             aggregated_columns = {}
             for alias in aggregations:
