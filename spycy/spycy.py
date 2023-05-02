@@ -432,7 +432,7 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         assert pattern
         pgraph = self._interpret_pattern(pattern)
         node_ids_to_props, edge_ids_to_props = self._evaluate_pattern_graph_properties(
-            pgraph, True
+            pgraph
         )
 
         names_to_data = {}
@@ -587,16 +587,12 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         return pgraph
 
     def _evaluate_pattern_graph_properties(
-        self, pgraph: pattern_graph.Graph, allow_redef: bool
+        self, pgraph: pattern_graph.Graph
     ) -> Tuple[
         Dict[pattern_graph.NodeID, pd.Series], Dict[pattern_graph.EdgeID, pd.Series]
     ]:
         node_ids_to_props = {}
         for nid, n in pgraph.nodes.items():
-            if not allow_redef:
-                if n.name and n.name in self.table:
-                    if n.properties or n.labels:
-                        raise ExecutionError("SyntaxError::VariableAlreadyBound")
             if n.properties:
                 node_ids_to_props[nid] = self.evaluate_expr(n.properties)
         edge_ids_to_props = {}
@@ -610,8 +606,13 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         pattern = node.oC_Pattern()
         assert pattern
         pgraph = self._interpret_pattern(pattern)
+        for nid, n in pgraph.nodes.items():
+            if n.name and n.name in self.table:
+                if n.properties or n.labels:
+                    raise ExecutionError("SyntaxError::VariableAlreadyBound")
+
         node_ids_to_props, edge_ids_to_props = self._evaluate_pattern_graph_properties(
-            pgraph, False
+            pgraph
         )
 
         entities_to_data = {}
