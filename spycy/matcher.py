@@ -5,7 +5,10 @@ from typing import Any, Dict, Generic, List, Optional, Tuple, Union
 import pandas as pd
 
 import spycy.pattern_graph as pattern_graph
+from spycy.expression_evaluator import ConcreteExpressionEvaluator, ExpressionEvaluator
+from spycy.gen.CypherParser import CypherParser
 from spycy.graph import EdgeType, Graph, NodeType
+from spycy.types import Edge, Node
 
 # Either a single edge, or a variable length relationship
 MatchedEdge = Union[EdgeType, List[EdgeType]]
@@ -74,6 +77,9 @@ class Matcher(Generic[NodeType, EdgeType], metaclass=ABCMeta):
     def match(
         cls,
         graph: Graph[NodeType, EdgeType],
+        variables: Dict[str, Any],
+        parameters: Dict[str, Any],
+        filter_: Optional[CypherParser.OC_WhereContext],
         pgraph: pattern_graph.Graph,
         row_id: int,
         node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series],
@@ -92,6 +98,8 @@ class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
     edge_ids_to_props: Dict[pattern_graph.EdgeID, pd.Series]
 
     results: MatchResultSet[NodeType, EdgeType] = field(default_factory=MatchResultSet)
+
+    expr_eval: type[ExpressionEvaluator] = ConcreteExpressionEvaluator
 
     def properties_match(
         self, match_props: Dict[str, Any], data_props: Dict[str, Any]
@@ -258,7 +266,7 @@ class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
                     check_in,
                     ignore_var_length=True,
                 )
-                for (next_edge, next_node) in next_edges:
+                for next_edge, next_node in next_edges:
                     assert not isinstance(next_edge, list)
                     found_conflict = False
                     for e in state[0]:
@@ -508,6 +516,9 @@ class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
     def match(
         cls,
         graph: Graph[NodeType, EdgeType],
+        variables: Dict[str, Any],
+        parameters: Dict[str, Any],
+        filter_: Optional[CypherParser.OC_WhereContext],
         pgraph: pattern_graph.Graph,
         row_id: int,
         node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series],
@@ -517,4 +528,32 @@ class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
         matcher = DFSMatcher(
             graph, pgraph, row_id, node_ids_to_props, edge_ids_to_props
         )
-        return matcher.match_dfs(initial_matched)
+        results = matcher.match_dfs(initial_matched)
+        if filter_:
+            new_results = MatchResultSet()
+            for i in range(len(results)):
+                tmp_vars = variables.copy()
+                current_row = MatchResult()
+                for nodeid, node in pgraph.nodes.items():
+                    datanode = results.node_ids_to_data_ids[nodeid][i]
+                    current_row.node_ids_to_data_ids[nodeid] = datanode
+                    if node.name is not None:
+                        tmp_vars[node.name] = Node[NodeType](datanode)
+                for edgeid, edge in pgraph.edges.items():
+                    dataedge = results.edge_ids_to_data_ids[edgeid][i]
+                    current_row.edge_ids_to_data_ids[edgeid] = dataedge
+                    if edge.name is not None:
+                        if isinstance(dataedge, list):
+                            wrapped_edge = [Edge[EdgeType](e) for e in dataedge]
+                        else:
+                            wrapped_edge = Edge[EdgeType](dataedge)
+                        tmp_vars[edge.name] = wrapped_edge
+                # TODO - bind in path names
+                filter_passed = matcher.expr_eval.evaluate(
+                    pd.DataFrame([tmp_vars]), graph, parameters, filter_.oC_Expression()
+                )
+                assert len(filter_passed) == 1
+                if filter_passed[0] is not pd.NA and bool(filter_passed[0]):
+                    new_results.add(current_row)
+            results = new_results
+        return results

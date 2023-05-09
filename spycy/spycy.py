@@ -435,6 +435,8 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             pgraph
         )
 
+        filter_ = node.oC_Where()
+
         names_to_data = {}
         for n in pgraph.nodes.values():
             if n.name:
@@ -486,6 +488,9 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             else:
                 results = self.matcher.match(
                     self.graph,
+                    self.table.loc[i].to_dict(),
+                    self._parameters,
+                    filter_,
                     pgraph,
                     i,
                     node_ids_to_props,
@@ -554,12 +559,6 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             ]
             self.table = self.table[mask]
             del self.table["!__replication_hack"]
-
-        # TODO some kind of pushdown needs to be implemented here instead -
-        # optional matches where all rows are filtered out should append nulls
-        # instead.
-        if where := node.oC_Where():
-            self._process_where(where)
 
     def _process_reading_clause(self, node: CypherParser.OC_ReadingClauseContext):
         assert not node.oC_InQueryCall(), "Unsupported query - CALL not implemented"
