@@ -15702,7 +15702,6 @@ def serializedATN():
 
 
 class CypherParser(Parser):
-
     grammarFileName = "Cypher.g4"
 
     atn = ATNDeserializer().deserialize(serializedATN())
@@ -16340,7 +16339,6 @@ class CypherParser(Parser):
                 listener.exitOC_Cypher(self)
 
     def oC_Cypher(self):
-
         localctx = CypherParser.OC_CypherContext(self, self._ctx, self.state)
         self.enterRule(localctx, 0, self.RULE_oC_Cypher)
         self._la = 0  # Token type
@@ -16410,7 +16408,6 @@ class CypherParser(Parser):
                 listener.exitOC_Statement(self)
 
     def oC_Statement(self):
-
         localctx = CypherParser.OC_StatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_oC_Statement)
         try:
@@ -16452,7 +16449,6 @@ class CypherParser(Parser):
                 listener.exitOC_Query(self)
 
     def oC_Query(self):
-
         localctx = CypherParser.OC_QueryContext(self, self._ctx, self.state)
         self.enterRule(localctx, 4, self.RULE_oC_Query)
         try:
@@ -16515,7 +16511,6 @@ class CypherParser(Parser):
                 listener.exitOC_RegularQuery(self)
 
     def oC_RegularQuery(self):
-
         localctx = CypherParser.OC_RegularQueryContext(self, self._ctx, self.state)
         self.enterRule(localctx, 6, self.RULE_oC_RegularQuery)
         self._la = 0  # Token type
@@ -16585,7 +16580,6 @@ class CypherParser(Parser):
                 listener.exitOC_Union(self)
 
     def oC_Union(self):
-
         localctx = CypherParser.OC_UnionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 8, self.RULE_oC_Union)
         self._la = 0  # Token type
@@ -16662,7 +16656,6 @@ class CypherParser(Parser):
                 listener.exitOC_SingleQuery(self)
 
     def oC_SingleQuery(self):
-
         localctx = CypherParser.OC_SingleQueryContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_oC_SingleQuery)
         try:
@@ -16733,7 +16726,6 @@ class CypherParser(Parser):
                 listener.exitOC_SinglePartQuery(self)
 
     def oC_SinglePartQuery(self):
-
         localctx = CypherParser.OC_SinglePartQueryContext(self, self._ctx, self.state)
         self.enterRule(localctx, 12, self.RULE_oC_SinglePartQuery)
         self._la = 0  # Token type
@@ -16877,7 +16869,6 @@ class CypherParser(Parser):
                 listener.exitOC_MultiPartQuery(self)
 
     def oC_MultiPartQuery(self):
-
         localctx = CypherParser.OC_MultiPartQueryContext(self, self._ctx, self.state)
         self.enterRule(localctx, 14, self.RULE_oC_MultiPartQuery)
         self._la = 0  # Token type
@@ -16987,7 +16978,6 @@ class CypherParser(Parser):
                 listener.exitOC_UpdatingClause(self)
 
     def oC_UpdatingClause(self):
-
         localctx = CypherParser.OC_UpdatingClauseContext(self, self._ctx, self.state)
         self.enterRule(localctx, 16, self.RULE_oC_UpdatingClause)
         try:
@@ -17060,7 +17050,6 @@ class CypherParser(Parser):
                 listener.exitOC_ReadingClause(self)
 
     def oC_ReadingClause(self):
-
         localctx = CypherParser.OC_ReadingClauseContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_oC_ReadingClause)
         try:
@@ -17132,7 +17121,6 @@ class CypherParser(Parser):
                 listener.exitOC_Match(self)
 
     def oC_Match(self):
-
         localctx = CypherParser.OC_MatchContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_oC_Match)
         self._la = 0  # Token type
@@ -17219,7 +17207,6 @@ class CypherParser(Parser):
                 listener.exitOC_Unwind(self)
 
     def oC_Unwind(self):
-
         localctx = CypherParser.OC_UnwindContext(self, self._ctx, self.state)
         self.enterRule(localctx, 22, self.RULE_oC_Unwind)
         self._la = 0  # Token type
@@ -17291,7 +17278,6 @@ class CypherParser(Parser):
                 listener.exitOC_Merge(self)
 
     def oC_Merge(self):
-
         localctx = CypherParser.OC_MergeContext(self, self._ctx, self.state)
         self.enterRule(localctx, 24, self.RULE_oC_Merge)
         self._la = 0  # Token type
@@ -17368,7 +17354,6 @@ class CypherParser(Parser):
                 listener.exitOC_MergeAction(self)
 
     def oC_MergeAction(self):
-
         localctx = CypherParser.OC_MergeActionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 26, self.RULE_oC_MergeAction)
         try:
@@ -17441,7 +17426,6 @@ class CypherParser(Parser):
                 listener.exitOC_Create(self)
 
     def oC_Create(self):
-
         localctx = CypherParser.OC_CreateContext(self, self._ctx, self.state)
         self.enterRule(localctx, 28, self.RULE_oC_Create)
         self._la = 0  # Token type
@@ -17502,7 +17486,6 @@ class CypherParser(Parser):
                 listener.exitOC_Set(self)
 
     def oC_Set(self):
-
         localctx = CypherParser.OC_SetContext(self, self._ctx, self.state)
         self.enterRule(localctx, 30, self.RULE_oC_Set)
         self._la = 0  # Token type
@@ -17595,7 +17578,6 @@ class CypherParser(Parser):
                 listener.exitOC_SetItem(self)
 
     def oC_SetItem(self):
-
         localctx = CypherParser.OC_SetItemContext(self, self._ctx, self.state)
         self.enterRule(localctx, 32, self.RULE_oC_SetItem)
         self._la = 0  # Token type
@@ -17737,7 +17719,6 @@ class CypherParser(Parser):
                 listener.exitOC_Delete(self)
 
     def oC_Delete(self):
-
         localctx = CypherParser.OC_DeleteContext(self, self._ctx, self.state)
         self.enterRule(localctx, 34, self.RULE_oC_Delete)
         self._la = 0  # Token type
@@ -17834,7 +17815,6 @@ class CypherParser(Parser):
                 listener.exitOC_Remove(self)
 
     def oC_Remove(self):
-
         localctx = CypherParser.OC_RemoveContext(self, self._ctx, self.state)
         self.enterRule(localctx, 36, self.RULE_oC_Remove)
         self._la = 0  # Token type
@@ -17913,7 +17893,6 @@ class CypherParser(Parser):
                 listener.exitOC_RemoveItem(self)
 
     def oC_RemoveItem(self):
-
         localctx = CypherParser.OC_RemoveItemContext(self, self._ctx, self.state)
         self.enterRule(localctx, 38, self.RULE_oC_RemoveItem)
         try:
@@ -17983,7 +17962,6 @@ class CypherParser(Parser):
                 listener.exitOC_InQueryCall(self)
 
     def oC_InQueryCall(self):
-
         localctx = CypherParser.OC_InQueryCallContext(self, self._ctx, self.state)
         self.enterRule(localctx, 40, self.RULE_oC_InQueryCall)
         self._la = 0  # Token type
@@ -18067,7 +18045,6 @@ class CypherParser(Parser):
                 listener.exitOC_StandaloneCall(self)
 
     def oC_StandaloneCall(self):
-
         localctx = CypherParser.OC_StandaloneCallContext(self, self._ctx, self.state)
         self.enterRule(localctx, 42, self.RULE_oC_StandaloneCall)
         self._la = 0  # Token type
@@ -18163,7 +18140,6 @@ class CypherParser(Parser):
                 listener.exitOC_YieldItems(self)
 
     def oC_YieldItems(self):
-
         localctx = CypherParser.OC_YieldItemsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 44, self.RULE_oC_YieldItems)
         self._la = 0  # Token type
@@ -18258,7 +18234,6 @@ class CypherParser(Parser):
                 listener.exitOC_YieldItem(self)
 
     def oC_YieldItem(self):
-
         localctx = CypherParser.OC_YieldItemContext(self, self._ctx, self.state)
         self.enterRule(localctx, 46, self.RULE_oC_YieldItem)
         try:
@@ -18319,7 +18294,6 @@ class CypherParser(Parser):
                 listener.exitOC_With(self)
 
     def oC_With(self):
-
         localctx = CypherParser.OC_WithContext(self, self._ctx, self.state)
         self.enterRule(localctx, 48, self.RULE_oC_With)
         self._la = 0  # Token type
@@ -18378,7 +18352,6 @@ class CypherParser(Parser):
                 listener.exitOC_Return(self)
 
     def oC_Return(self):
-
         localctx = CypherParser.OC_ReturnContext(self, self._ctx, self.state)
         self.enterRule(localctx, 50, self.RULE_oC_Return)
         try:
@@ -18437,7 +18410,6 @@ class CypherParser(Parser):
                 listener.exitOC_ProjectionBody(self)
 
     def oC_ProjectionBody(self):
-
         localctx = CypherParser.OC_ProjectionBodyContext(self, self._ctx, self.state)
         self.enterRule(localctx, 52, self.RULE_oC_ProjectionBody)
         self._la = 0  # Token type
@@ -18531,7 +18503,6 @@ class CypherParser(Parser):
                 listener.exitOC_ProjectionItems(self)
 
     def oC_ProjectionItems(self):
-
         localctx = CypherParser.OC_ProjectionItemsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 54, self.RULE_oC_ProjectionItems)
         self._la = 0  # Token type
@@ -18679,7 +18650,6 @@ class CypherParser(Parser):
                 listener.exitOC_ProjectionItem(self)
 
     def oC_ProjectionItem(self):
-
         localctx = CypherParser.OC_ProjectionItemContext(self, self._ctx, self.state)
         self.enterRule(localctx, 56, self.RULE_oC_ProjectionItem)
         try:
@@ -18753,7 +18723,6 @@ class CypherParser(Parser):
                 listener.exitOC_Order(self)
 
     def oC_Order(self):
-
         localctx = CypherParser.OC_OrderContext(self, self._ctx, self.state)
         self.enterRule(localctx, 58, self.RULE_oC_Order)
         self._la = 0  # Token type
@@ -18826,7 +18795,6 @@ class CypherParser(Parser):
                 listener.exitOC_Skip(self)
 
     def oC_Skip(self):
-
         localctx = CypherParser.OC_SkipContext(self, self._ctx, self.state)
         self.enterRule(localctx, 60, self.RULE_oC_Skip)
         try:
@@ -18875,7 +18843,6 @@ class CypherParser(Parser):
                 listener.exitOC_Limit(self)
 
     def oC_Limit(self):
-
         localctx = CypherParser.OC_LimitContext(self, self._ctx, self.state)
         self.enterRule(localctx, 62, self.RULE_oC_Limit)
         try:
@@ -18933,7 +18900,6 @@ class CypherParser(Parser):
                 listener.exitOC_SortItem(self)
 
     def oC_SortItem(self):
-
         localctx = CypherParser.OC_SortItemContext(self, self._ctx, self.state)
         self.enterRule(localctx, 64, self.RULE_oC_SortItem)
         self._la = 0  # Token type
@@ -19000,7 +18966,6 @@ class CypherParser(Parser):
                 listener.exitOC_Where(self)
 
     def oC_Where(self):
-
         localctx = CypherParser.OC_WhereContext(self, self._ctx, self.state)
         self.enterRule(localctx, 66, self.RULE_oC_Where)
         try:
@@ -19052,7 +19017,6 @@ class CypherParser(Parser):
                 listener.exitOC_Pattern(self)
 
     def oC_Pattern(self):
-
         localctx = CypherParser.OC_PatternContext(self, self._ctx, self.state)
         self.enterRule(localctx, 68, self.RULE_oC_Pattern)
         self._la = 0  # Token type
@@ -19130,7 +19094,6 @@ class CypherParser(Parser):
                 listener.exitOC_PatternPart(self)
 
     def oC_PatternPart(self):
-
         localctx = CypherParser.OC_PatternPartContext(self, self._ctx, self.state)
         self.enterRule(localctx, 70, self.RULE_oC_PatternPart)
         self._la = 0  # Token type
@@ -19201,7 +19164,6 @@ class CypherParser(Parser):
                 listener.exitOC_AnonymousPatternPart(self)
 
     def oC_AnonymousPatternPart(self):
-
         localctx = CypherParser.OC_AnonymousPatternPartContext(
             self, self._ctx, self.state
         )
@@ -19261,7 +19223,6 @@ class CypherParser(Parser):
                 listener.exitOC_PatternElement(self)
 
     def oC_PatternElement(self):
-
         localctx = CypherParser.OC_PatternElementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 74, self.RULE_oC_PatternElement)
         self._la = 0  # Token type
@@ -19351,7 +19312,6 @@ class CypherParser(Parser):
                 listener.exitOC_RelationshipsPattern(self)
 
     def oC_RelationshipsPattern(self):
-
         localctx = CypherParser.OC_RelationshipsPatternContext(
             self, self._ctx, self.state
         )
@@ -19426,7 +19386,6 @@ class CypherParser(Parser):
                 listener.exitOC_NodePattern(self)
 
     def oC_NodePattern(self):
-
         localctx = CypherParser.OC_NodePatternContext(self, self._ctx, self.state)
         self.enterRule(localctx, 78, self.RULE_oC_NodePattern)
         self._la = 0  # Token type
@@ -19522,7 +19481,6 @@ class CypherParser(Parser):
                 listener.exitOC_PatternElementChain(self)
 
     def oC_PatternElementChain(self):
-
         localctx = CypherParser.OC_PatternElementChainContext(
             self, self._ctx, self.state
         )
@@ -19593,7 +19551,6 @@ class CypherParser(Parser):
                 listener.exitOC_RelationshipPattern(self)
 
     def oC_RelationshipPattern(self):
-
         localctx = CypherParser.OC_RelationshipPatternContext(
             self, self._ctx, self.state
         )
@@ -19802,7 +19759,6 @@ class CypherParser(Parser):
                 listener.exitOC_RelationshipDetail(self)
 
     def oC_RelationshipDetail(self):
-
         localctx = CypherParser.OC_RelationshipDetailContext(
             self, self._ctx, self.state
         )
@@ -19902,7 +19858,6 @@ class CypherParser(Parser):
                 listener.exitOC_Properties(self)
 
     def oC_Properties(self):
-
         localctx = CypherParser.OC_PropertiesContext(self, self._ctx, self.state)
         self.enterRule(localctx, 86, self.RULE_oC_Properties)
         try:
@@ -19963,7 +19918,6 @@ class CypherParser(Parser):
                 listener.exitOC_RelationshipTypes(self)
 
     def oC_RelationshipTypes(self):
-
         localctx = CypherParser.OC_RelationshipTypesContext(self, self._ctx, self.state)
         self.enterRule(localctx, 88, self.RULE_oC_RelationshipTypes)
         self._la = 0  # Token type
@@ -20055,7 +20009,6 @@ class CypherParser(Parser):
                 listener.exitOC_NodeLabels(self)
 
     def oC_NodeLabels(self):
-
         localctx = CypherParser.OC_NodeLabelsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 90, self.RULE_oC_NodeLabels)
         self._la = 0  # Token type
@@ -20116,7 +20069,6 @@ class CypherParser(Parser):
                 listener.exitOC_NodeLabel(self)
 
     def oC_NodeLabel(self):
-
         localctx = CypherParser.OC_NodeLabelContext(self, self._ctx, self.state)
         self.enterRule(localctx, 92, self.RULE_oC_NodeLabel)
         self._la = 0  # Token type
@@ -20176,7 +20128,6 @@ class CypherParser(Parser):
                 listener.exitOC_RangeLiteral(self)
 
     def oC_RangeLiteral(self):
-
         localctx = CypherParser.OC_RangeLiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 94, self.RULE_oC_RangeLiteral)
         self._la = 0  # Token type
@@ -20262,7 +20213,6 @@ class CypherParser(Parser):
                 listener.exitOC_LabelName(self)
 
     def oC_LabelName(self):
-
         localctx = CypherParser.OC_LabelNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 96, self.RULE_oC_LabelName)
         try:
@@ -20301,7 +20251,6 @@ class CypherParser(Parser):
                 listener.exitOC_RelTypeName(self)
 
     def oC_RelTypeName(self):
-
         localctx = CypherParser.OC_RelTypeNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 98, self.RULE_oC_RelTypeName)
         try:
@@ -20354,7 +20303,6 @@ class CypherParser(Parser):
                 listener.exitOC_PropertyExpression(self)
 
     def oC_PropertyExpression(self):
-
         localctx = CypherParser.OC_PropertyExpressionContext(
             self, self._ctx, self.state
         )
@@ -20417,7 +20365,6 @@ class CypherParser(Parser):
                 listener.exitOC_Expression(self)
 
     def oC_Expression(self):
-
         localctx = CypherParser.OC_ExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 102, self.RULE_oC_Expression)
         try:
@@ -20471,7 +20418,6 @@ class CypherParser(Parser):
                 listener.exitOC_OrExpression(self)
 
     def oC_OrExpression(self):
-
         localctx = CypherParser.OC_OrExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 104, self.RULE_oC_OrExpression)
         try:
@@ -20542,7 +20488,6 @@ class CypherParser(Parser):
                 listener.exitOC_XorExpression(self)
 
     def oC_XorExpression(self):
-
         localctx = CypherParser.OC_XorExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 106, self.RULE_oC_XorExpression)
         try:
@@ -20613,7 +20558,6 @@ class CypherParser(Parser):
                 listener.exitOC_AndExpression(self)
 
     def oC_AndExpression(self):
-
         localctx = CypherParser.OC_AndExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 108, self.RULE_oC_AndExpression)
         try:
@@ -20683,7 +20627,6 @@ class CypherParser(Parser):
                 listener.exitOC_NotExpression(self)
 
     def oC_NotExpression(self):
-
         localctx = CypherParser.OC_NotExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 110, self.RULE_oC_NotExpression)
         self._la = 0  # Token type
@@ -20758,7 +20701,6 @@ class CypherParser(Parser):
                 listener.exitOC_ComparisonExpression(self)
 
     def oC_ComparisonExpression(self):
-
         localctx = CypherParser.OC_ComparisonExpressionContext(
             self, self._ctx, self.state
         )
@@ -20823,7 +20765,6 @@ class CypherParser(Parser):
                 listener.exitOC_PartialComparisonExpression(self)
 
     def oC_PartialComparisonExpression(self):
-
         localctx = CypherParser.OC_PartialComparisonExpressionContext(
             self, self._ctx, self.state
         )
@@ -20984,7 +20925,6 @@ class CypherParser(Parser):
                 listener.exitOC_StringListNullPredicateExpression(self)
 
     def oC_StringListNullPredicateExpression(self):
-
         localctx = CypherParser.OC_StringListNullPredicateExpressionContext(
             self, self._ctx, self.state
         )
@@ -21072,7 +21012,6 @@ class CypherParser(Parser):
                 listener.exitOC_StringPredicateExpression(self)
 
     def oC_StringPredicateExpression(self):
-
         localctx = CypherParser.OC_StringPredicateExpressionContext(
             self, self._ctx, self.state
         )
@@ -21164,7 +21103,6 @@ class CypherParser(Parser):
                 listener.exitOC_ListPredicateExpression(self)
 
     def oC_ListPredicateExpression(self):
-
         localctx = CypherParser.OC_ListPredicateExpressionContext(
             self, self._ctx, self.state
         )
@@ -21229,7 +21167,6 @@ class CypherParser(Parser):
                 listener.exitOC_NullPredicateExpression(self)
 
     def oC_NullPredicateExpression(self):
-
         localctx = CypherParser.OC_NullPredicateExpressionContext(
             self, self._ctx, self.state
         )
@@ -21311,7 +21248,6 @@ class CypherParser(Parser):
                 listener.exitOC_AddOrSubtractExpression(self)
 
     def oC_AddOrSubtractExpression(self):
-
         localctx = CypherParser.OC_AddOrSubtractExpressionContext(
             self, self._ctx, self.state
         )
@@ -21420,7 +21356,6 @@ class CypherParser(Parser):
                 listener.exitOC_MultiplyDivideModuloExpression(self)
 
     def oC_MultiplyDivideModuloExpression(self):
-
         localctx = CypherParser.OC_MultiplyDivideModuloExpressionContext(
             self, self._ctx, self.state
         )
@@ -21550,7 +21485,6 @@ class CypherParser(Parser):
                 listener.exitOC_PowerOfExpression(self)
 
     def oC_PowerOfExpression(self):
-
         localctx = CypherParser.OC_PowerOfExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 128, self.RULE_oC_PowerOfExpression)
         self._la = 0  # Token type
@@ -21622,7 +21556,6 @@ class CypherParser(Parser):
                 listener.exitOC_UnaryAddOrSubtractExpression(self)
 
     def oC_UnaryAddOrSubtractExpression(self):
-
         localctx = CypherParser.OC_UnaryAddOrSubtractExpressionContext(
             self, self._ctx, self.state
         )
@@ -21744,7 +21677,6 @@ class CypherParser(Parser):
                 listener.exitOC_NonArithmeticOperatorExpression(self)
 
     def oC_NonArithmeticOperatorExpression(self):
-
         localctx = CypherParser.OC_NonArithmeticOperatorExpressionContext(
             self, self._ctx, self.state
         )
@@ -21839,7 +21771,6 @@ class CypherParser(Parser):
                 listener.exitOC_ListOperatorExpression(self)
 
     def oC_ListOperatorExpression(self):
-
         localctx = CypherParser.OC_ListOperatorExpressionContext(
             self, self._ctx, self.state
         )
@@ -21924,7 +21855,6 @@ class CypherParser(Parser):
                 listener.exitOC_PropertyLookup(self)
 
     def oC_PropertyLookup(self):
-
         localctx = CypherParser.OC_PropertyLookupContext(self, self._ctx, self.state)
         self.enterRule(localctx, 136, self.RULE_oC_PropertyLookup)
         self._la = 0  # Token type
@@ -22020,7 +21950,6 @@ class CypherParser(Parser):
                 listener.exitOC_Atom(self)
 
     def oC_Atom(self):
-
         localctx = CypherParser.OC_AtomContext(self, self._ctx, self.state)
         self.enterRule(localctx, 138, self.RULE_oC_Atom)
         self._la = 0  # Token type
@@ -22185,7 +22114,6 @@ class CypherParser(Parser):
                 listener.exitOC_CaseExpression(self)
 
     def oC_CaseExpression(self):
-
         localctx = CypherParser.OC_CaseExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 140, self.RULE_oC_CaseExpression)
         self._la = 0  # Token type
@@ -22334,7 +22262,6 @@ class CypherParser(Parser):
                 listener.exitOC_CaseAlternative(self)
 
     def oC_CaseAlternative(self):
-
         localctx = CypherParser.OC_CaseAlternativeContext(self, self._ctx, self.state)
         self.enterRule(localctx, 142, self.RULE_oC_CaseAlternative)
         self._la = 0  # Token type
@@ -22410,7 +22337,6 @@ class CypherParser(Parser):
                 listener.exitOC_ListComprehension(self)
 
     def oC_ListComprehension(self):
-
         localctx = CypherParser.OC_ListComprehensionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 144, self.RULE_oC_ListComprehension)
         self._la = 0  # Token type
@@ -22508,7 +22434,6 @@ class CypherParser(Parser):
                 listener.exitOC_PatternComprehension(self)
 
     def oC_PatternComprehension(self):
-
         localctx = CypherParser.OC_PatternComprehensionContext(
             self, self._ctx, self.state
         )
@@ -22639,7 +22564,6 @@ class CypherParser(Parser):
                 listener.exitOC_Quantifier(self)
 
     def oC_Quantifier(self):
-
         localctx = CypherParser.OC_QuantifierContext(self, self._ctx, self.state)
         self.enterRule(localctx, 148, self.RULE_oC_Quantifier)
         self._la = 0  # Token type
@@ -22816,7 +22740,6 @@ class CypherParser(Parser):
                 listener.exitOC_FilterExpression(self)
 
     def oC_FilterExpression(self):
-
         localctx = CypherParser.OC_FilterExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 150, self.RULE_oC_FilterExpression)
         self._la = 0  # Token type
@@ -22872,7 +22795,6 @@ class CypherParser(Parser):
                 listener.exitOC_PatternPredicate(self)
 
     def oC_PatternPredicate(self):
-
         localctx = CypherParser.OC_PatternPredicateContext(self, self._ctx, self.state)
         self.enterRule(localctx, 152, self.RULE_oC_PatternPredicate)
         try:
@@ -22917,7 +22839,6 @@ class CypherParser(Parser):
                 listener.exitOC_ParenthesizedExpression(self)
 
     def oC_ParenthesizedExpression(self):
-
         localctx = CypherParser.OC_ParenthesizedExpressionContext(
             self, self._ctx, self.state
         )
@@ -22989,7 +22910,6 @@ class CypherParser(Parser):
                 listener.exitOC_IdInColl(self)
 
     def oC_IdInColl(self):
-
         localctx = CypherParser.OC_IdInCollContext(self, self._ctx, self.state)
         self.enterRule(localctx, 156, self.RULE_oC_IdInColl)
         try:
@@ -23051,7 +22971,6 @@ class CypherParser(Parser):
                 listener.exitOC_FunctionInvocation(self)
 
     def oC_FunctionInvocation(self):
-
         localctx = CypherParser.OC_FunctionInvocationContext(
             self, self._ctx, self.state
         )
@@ -23169,7 +23088,6 @@ class CypherParser(Parser):
                 listener.exitOC_FunctionName(self)
 
     def oC_FunctionName(self):
-
         localctx = CypherParser.OC_FunctionNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 160, self.RULE_oC_FunctionName)
         try:
@@ -23225,7 +23143,6 @@ class CypherParser(Parser):
                 listener.exitOC_ExistentialSubquery(self)
 
     def oC_ExistentialSubquery(self):
-
         localctx = CypherParser.OC_ExistentialSubqueryContext(
             self, self._ctx, self.state
         )
@@ -23332,7 +23249,6 @@ class CypherParser(Parser):
                 listener.exitOC_ExplicitProcedureInvocation(self)
 
     def oC_ExplicitProcedureInvocation(self):
-
         localctx = CypherParser.OC_ExplicitProcedureInvocationContext(
             self, self._ctx, self.state
         )
@@ -23434,7 +23350,6 @@ class CypherParser(Parser):
                 listener.exitOC_ImplicitProcedureInvocation(self)
 
     def oC_ImplicitProcedureInvocation(self):
-
         localctx = CypherParser.OC_ImplicitProcedureInvocationContext(
             self, self._ctx, self.state
         )
@@ -23475,7 +23390,6 @@ class CypherParser(Parser):
                 listener.exitOC_ProcedureResultField(self)
 
     def oC_ProcedureResultField(self):
-
         localctx = CypherParser.OC_ProcedureResultFieldContext(
             self, self._ctx, self.state
         )
@@ -23519,7 +23433,6 @@ class CypherParser(Parser):
                 listener.exitOC_ProcedureName(self)
 
     def oC_ProcedureName(self):
-
         localctx = CypherParser.OC_ProcedureNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 170, self.RULE_oC_ProcedureName)
         try:
@@ -23563,7 +23476,6 @@ class CypherParser(Parser):
                 listener.exitOC_Namespace(self)
 
     def oC_Namespace(self):
-
         localctx = CypherParser.OC_NamespaceContext(self, self._ctx, self.state)
         self.enterRule(localctx, 172, self.RULE_oC_Namespace)
         try:
@@ -23613,7 +23525,6 @@ class CypherParser(Parser):
                 listener.exitOC_Variable(self)
 
     def oC_Variable(self):
-
         localctx = CypherParser.OC_VariableContext(self, self._ctx, self.state)
         self.enterRule(localctx, 174, self.RULE_oC_Variable)
         try:
@@ -23667,7 +23578,6 @@ class CypherParser(Parser):
                 listener.exitOC_Literal(self)
 
     def oC_Literal(self):
-
         localctx = CypherParser.OC_LiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 176, self.RULE_oC_Literal)
         try:
@@ -23742,7 +23652,6 @@ class CypherParser(Parser):
                 listener.exitOC_BooleanLiteral(self)
 
     def oC_BooleanLiteral(self):
-
         localctx = CypherParser.OC_BooleanLiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 178, self.RULE_oC_BooleanLiteral)
         self._la = 0  # Token type
@@ -23790,7 +23699,6 @@ class CypherParser(Parser):
                 listener.exitOC_NumberLiteral(self)
 
     def oC_NumberLiteral(self):
-
         localctx = CypherParser.OC_NumberLiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 180, self.RULE_oC_NumberLiteral)
         try:
@@ -23848,7 +23756,6 @@ class CypherParser(Parser):
                 listener.exitOC_IntegerLiteral(self)
 
     def oC_IntegerLiteral(self):
-
         localctx = CypherParser.OC_IntegerLiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 182, self.RULE_oC_IntegerLiteral)
         self._la = 0  # Token type
@@ -23896,7 +23803,6 @@ class CypherParser(Parser):
                 listener.exitOC_DoubleLiteral(self)
 
     def oC_DoubleLiteral(self):
-
         localctx = CypherParser.OC_DoubleLiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 184, self.RULE_oC_DoubleLiteral)
         self._la = 0  # Token type
@@ -23950,7 +23856,6 @@ class CypherParser(Parser):
                 listener.exitOC_ListLiteral(self)
 
     def oC_ListLiteral(self):
-
         localctx = CypherParser.OC_ListLiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 186, self.RULE_oC_ListLiteral)
         self._la = 0  # Token type
@@ -24058,7 +23963,6 @@ class CypherParser(Parser):
                 listener.exitOC_MapLiteral(self)
 
     def oC_MapLiteral(self):
-
         localctx = CypherParser.OC_MapLiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 188, self.RULE_oC_MapLiteral)
         self._la = 0  # Token type
@@ -24185,7 +24089,6 @@ class CypherParser(Parser):
                 listener.exitOC_PropertyKeyName(self)
 
     def oC_PropertyKeyName(self):
-
         localctx = CypherParser.OC_PropertyKeyNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 190, self.RULE_oC_PropertyKeyName)
         try:
@@ -24227,7 +24130,6 @@ class CypherParser(Parser):
                 listener.exitOC_Parameter(self)
 
     def oC_Parameter(self):
-
         localctx = CypherParser.OC_ParameterContext(self, self._ctx, self.state)
         self.enterRule(localctx, 192, self.RULE_oC_Parameter)
         try:
@@ -24283,7 +24185,6 @@ class CypherParser(Parser):
                 listener.exitOC_SchemaName(self)
 
     def oC_SchemaName(self):
-
         localctx = CypherParser.OC_SchemaNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 194, self.RULE_oC_SchemaName)
         try:
@@ -24545,7 +24446,6 @@ class CypherParser(Parser):
                 listener.exitOC_ReservedWord(self)
 
     def oC_ReservedWord(self):
-
         localctx = CypherParser.OC_ReservedWordContext(self, self._ctx, self.state)
         self.enterRule(localctx, 196, self.RULE_oC_ReservedWord)
         self._la = 0  # Token type
@@ -24620,7 +24520,6 @@ class CypherParser(Parser):
                 listener.exitOC_SymbolicName(self)
 
     def oC_SymbolicName(self):
-
         localctx = CypherParser.OC_SymbolicNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 198, self.RULE_oC_SymbolicName)
         self._la = 0  # Token type
@@ -24667,7 +24566,6 @@ class CypherParser(Parser):
                 listener.exitOC_LeftArrowHead(self)
 
     def oC_LeftArrowHead(self):
-
         localctx = CypherParser.OC_LeftArrowHeadContext(self, self._ctx, self.state)
         self.enterRule(localctx, 200, self.RULE_oC_LeftArrowHead)
         self._la = 0  # Token type
@@ -24709,7 +24607,6 @@ class CypherParser(Parser):
                 listener.exitOC_RightArrowHead(self)
 
     def oC_RightArrowHead(self):
-
         localctx = CypherParser.OC_RightArrowHeadContext(self, self._ctx, self.state)
         self.enterRule(localctx, 202, self.RULE_oC_RightArrowHead)
         self._la = 0  # Token type
@@ -24751,7 +24648,6 @@ class CypherParser(Parser):
                 listener.exitOC_Dash(self)
 
     def oC_Dash(self):
-
         localctx = CypherParser.OC_DashContext(self, self._ctx, self.state)
         self.enterRule(localctx, 204, self.RULE_oC_Dash)
         self._la = 0  # Token type
@@ -24807,7 +24703,6 @@ class CypherParser(Parser):
                 listener.exitTck_List(self)
 
     def tck_List(self):
-
         localctx = CypherParser.Tck_ListContext(self, self._ctx, self.state)
         self.enterRule(localctx, 206, self.RULE_tck_List)
         self._la = 0  # Token type
@@ -24916,7 +24811,6 @@ class CypherParser(Parser):
                 listener.exitTck_Map(self)
 
     def tck_Map(self):
-
         localctx = CypherParser.Tck_MapContext(self, self._ctx, self.state)
         self.enterRule(localctx, 208, self.RULE_tck_Map)
         self._la = 0  # Token type
@@ -25049,7 +24943,6 @@ class CypherParser(Parser):
                 listener.exitTck_Literal(self)
 
     def tck_Literal(self):
-
         localctx = CypherParser.Tck_LiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 210, self.RULE_tck_Literal)
         self._la = 0  # Token type
@@ -25119,7 +25012,6 @@ class CypherParser(Parser):
                 listener.exitTck_Path(self)
 
     def tck_Path(self):
-
         localctx = CypherParser.Tck_PathContext(self, self._ctx, self.state)
         self.enterRule(localctx, 212, self.RULE_tck_Path)
         self._la = 0  # Token type
@@ -25194,7 +25086,6 @@ class CypherParser(Parser):
                 listener.exitTck_ExpectedValue(self)
 
     def tck_ExpectedValue(self):
-
         localctx = CypherParser.Tck_ExpectedValueContext(self, self._ctx, self.state)
         self.enterRule(localctx, 214, self.RULE_tck_ExpectedValue)
         try:

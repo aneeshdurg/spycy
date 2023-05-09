@@ -326,7 +326,7 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
         output = []
         for i in range(len(self.table)):
             found = False
-            for (when_col, then_col) in alternatives:
+            for when_col, then_col in alternatives:
                 when_val = when_col[i]
                 if when_val is pd.NA:
                     continue
@@ -370,7 +370,7 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
         for i, test_val in enumerate(test):
             found = False
             if test_val is pd.NA:
-                for (when_col, then_col) in alternatives:
+                for when_col, then_col in alternatives:
                     if when_col[i] is pd.NA:
                         output.append(then_col[i])
                         found = True
@@ -378,7 +378,7 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
                 if found:
                     continue
             else:
-                for (when_col, then_col) in alternatives:
+                for when_col, then_col in alternatives:
                     when_val = when_col[i]
                     if when_val is pd.NA:
                         continue
@@ -807,6 +807,7 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
         add_or_sub_expr = expr.oC_AddOrSubtractExpression()
         assert add_or_sub_expr
         rhs = self._evaluate_add_or_subtract(add_or_sub_expr)
+
         # This is an IN expression
         def contains(list_, element):
             if not isinstance(list_, list):
@@ -828,7 +829,6 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
     def _evaluate_null_predicate(
         self, lhs: pd.Series, expr: CypherParser.OC_NullPredicateExpressionContext
     ) -> pd.Series:
-
         result = lhs.apply(lambda x: x is pd.NA)
         if any(x.getText().lower() == "not" for x in expr.children):
             result = ~result

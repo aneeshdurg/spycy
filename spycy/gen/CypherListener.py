@@ -6,9 +6,9 @@ if __name__ is not None and "." in __name__:
 else:
     from CypherParser import CypherParser
 
+
 # This class defines a complete listener for a parse tree produced by CypherParser.
 class CypherListener(ParseTreeListener):
-
     # Enter a parse tree produced by CypherParser#oC_Cypher.
     def enterOC_Cypher(self, ctx: CypherParser.OC_CypherContext):
         pass
