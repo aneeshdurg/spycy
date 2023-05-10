@@ -5,10 +5,11 @@
 sPyCy is a python implementation of [openCypher](https://github.com/opencypher/openCypher/).
 Try it out in your browser here: [https://aneeshdurg.me/spycy](https://aneeshdurg.me/spycy)
 
-The goal of `sPyCy` is to have a simple in-memory graph database engine that is
-not concerned with performance. The ideal use-case is for testing programs that
-generate small openCypher queries, or as an alternative reference
-implementation.
+The goal of `sPyCy` is to enable using openCypher as a frontend, or to embed
+openCypher in other projects. To this end, `sPyCy` is quite modular and several
+components such as the underlying graph implementation, the subgraph pattern
+matcher, and the expression evaluator can all be substituted with a custom
+implementation. See `examples/` for some sample usage.
 
 The long-term goals of this project include fully passing all openCypher TCK
 tests. Currently a majority of TCK tests are expected to pass. The failing tests
