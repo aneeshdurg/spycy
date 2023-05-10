@@ -1,21 +1,38 @@
 import math
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Generic, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 
+from spycy import pattern_graph
 from spycy.errors import ExecutionError
 from spycy.functions import function_registry, is_aggregation
 from spycy.gen.CypherParser import CypherParser
-from spycy.graph import Graph
+from spycy.graph import EdgeType, Graph, NodeType
+from spycy.matcher import Matcher, MatchResult
 from spycy.types import Edge, FunctionContext, Node
 from spycy.visitor import visitor
 
 
-class ExpressionEvaluator(metaclass=ABCMeta):
-    def __init__(self, table: pd.DataFrame, graph: Graph, parameters: Dict[str, Any]):
+class ExpressionEvaluator(Generic[NodeType, EdgeType], metaclass=ABCMeta):
+    @abstractmethod
+    def __init__(
+        self,
+        table: pd.DataFrame,
+        graph: Graph[NodeType, EdgeType],
+        parameters: Dict[str, Any],
+        matcher: type[Matcher[NodeType, EdgeType]],
+        evaluating_aggregation: bool = False,
+    ):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def interpret_pattern(
+        cls, pattern: CypherParser.OC_PatternContext
+    ) -> pattern_graph.Graph:
         pass
 
     @classmethod
@@ -48,8 +65,9 @@ class ExpressionEvaluator(metaclass=ABCMeta):
     def evaluate(
         cls,
         table: pd.DataFrame,
-        graph: Graph,
+        graph: Graph[NodeType, EdgeType],
         parameters: Dict[str, Any],
+        matcher: type[Matcher[NodeType, EdgeType]],
         expr: Any,
         evaluating_aggregation: bool = False,
     ) -> pd.Series:
@@ -62,12 +80,21 @@ class ExpressionEvaluator(metaclass=ABCMeta):
     ) -> pd.DataFrame:
         pass
 
+    @abstractmethod
+    def evaluate_pattern_graph_properties(
+        self, pgraph: pattern_graph.Graph
+    ) -> Tuple[
+        Dict[pattern_graph.NodeID, pd.Series], Dict[pattern_graph.EdgeID, pd.Series]
+    ]:
+        pass
+
 
 @dataclass
-class ConcreteExpressionEvaluator(ExpressionEvaluator):
+class ConcreteExpressionEvaluator(ExpressionEvaluator, Generic[NodeType, EdgeType]):
     table: pd.DataFrame
-    graph: Graph
+    graph: Graph[NodeType, EdgeType]
     parameters: Dict[str, Any]
+    matcher: type[Matcher[NodeType, EdgeType]]
 
     # TODO use _table_accesses to speed up CREATE/MATCH
     _table_accesses: int = 0
@@ -429,6 +456,105 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
             return pd.Series(len(in_) == out for in_, out in zip(column, output))
         return output
 
+    @classmethod
+    def interpret_pattern(
+        cls, pattern: CypherParser.OC_PatternContext
+    ) -> pattern_graph.Graph:
+        pgraph = pattern_graph.Graph()
+
+        pattern_part = pattern.oC_PatternPart()
+        assert pattern_part
+
+        for part in pattern_part:
+            path_name = None
+            if path_name_expr := part.oC_Variable():
+                path_name = path_name_expr.getText()
+            anon_part = part.oC_AnonymousPatternPart()
+            assert anon_part
+            element = anon_part.oC_PatternElement()
+            assert element
+            while inner_el := element.oC_PatternElement():
+                element = inner_el
+            pgraph.add_fragment(element, path_name)
+        return pgraph
+
+    def _evaluate_pattern_predicate(
+        self, expr: CypherParser.OC_PatternPredicateContext
+    ) -> pd.Series:
+        relationships = expr.oC_RelationshipsPattern()
+        assert relationships
+        pgraph = pattern_graph.Graph()
+        pgraph.add_fragment(relationships, None)
+        output = []
+
+        node_ids_to_props, edge_ids_to_props = self.evaluate_pattern_graph_properties(
+            pgraph
+        )
+
+        for i in range(len(self.table)):
+            initial_state = MatchResult()
+            names_to_data = {}
+            for n in pgraph.nodes.values():
+                if n.name:
+                    names_to_data[n.name] = []
+            for e in pgraph.edges.values():
+                if e.name:
+                    names_to_data[e.name] = []
+            for p in pgraph.paths:
+                names_to_data[p] = []
+
+            skip_row = False
+
+            for name in names_to_data:
+                if name not in self.table:
+                    continue
+                found = False
+                for _, node_ in pgraph.nodes.items():
+                    if node_.name != name:
+                        continue
+                    found = True
+                    value = self.table[name][i]
+                    if value is pd.NA:
+                        skip_row = True
+                    else:
+                        if not isinstance(value, Node):
+                            raise ExecutionError("TypeError cannot rebind as node")
+                        value = value.id_
+                    initial_state.node_ids_to_data_ids[node_.id_] = value
+                if found:
+                    continue
+
+                for _, edge in pgraph.edges.items():
+                    if edge.name != name:
+                        continue
+                    found = True
+                    value = self.table[name][i]
+                    if value is pd.NA:
+                        skip_row = True
+                    else:
+                        if not isinstance(value, Edge):
+                            raise ExecutionError("TypeError cannot rebind as edge")
+                        value = value.id_
+                    initial_state.edge_ids_to_data_ids[edge.id_] = value
+                assert found
+            if skip_row:
+                output.append(False)
+            else:
+                results = self.matcher.match(
+                    self.graph,
+                    self.table.loc[i].to_dict(),
+                    self.parameters,
+                    None,
+                    pgraph,
+                    i,
+                    node_ids_to_props,
+                    edge_ids_to_props,
+                    initial_state,
+                )
+                output.append(bool(len(results)))
+
+        return pd.Series(output, dtype=bool)
+
     def _evaluate_atom(self, expr: CypherParser.OC_AtomContext) -> pd.Series:
         if literal := expr.oC_Literal():
             return self._evaluate_literal(literal)
@@ -442,6 +568,8 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
             return self._evaluate_pattern_comp(pattern_comp)
         if rels := expr.oC_Quantifier():
             return self._evaluate_quantifier(rels)
+        if pattern_pred := expr.oC_PatternPredicate():
+            return self._evaluate_pattern_predicate(pattern_pred)
         if par_expr := expr.oC_ParenthesizedExpression():
             return self._evaluate_expression(par_expr.oC_Expression())
         if func_call := expr.oC_FunctionInvocation():
@@ -984,17 +1112,38 @@ class ConcreteExpressionEvaluator(ExpressionEvaluator):
         assert or_expr
         return self._evaluate_or(or_expr)
 
+    def evaluate_pattern_graph_properties(
+        self, pgraph: pattern_graph.Graph
+    ) -> Tuple[
+        Dict[pattern_graph.NodeID, pd.Series], Dict[pattern_graph.EdgeID, pd.Series]
+    ]:
+        node_ids_to_props = {}
+        for nid, n in pgraph.nodes.items():
+            if n.properties:
+                node_ids_to_props[nid] = self._evaluate_map_literal(n.properties)
+        edge_ids_to_props = {}
+        for eid, e in pgraph.edges.items():
+            if e.properties:
+                edge_ids_to_props[eid] = self._evaluate_map_literal(e.properties)
+
+        return node_ids_to_props, edge_ids_to_props
+
     @classmethod
     def evaluate(
         cls,
         table: pd.DataFrame,
         graph: Graph,
         parameters: Dict[str, Any],
+        matcher: type[Matcher[NodeType, EdgeType]],
         expr: Any,
         evaluating_aggregation: bool = False,
     ) -> pd.Series:
         evaluator = ConcreteExpressionEvaluator(
-            table, graph, parameters, _evaluating_aggregation=evaluating_aggregation
+            table,
+            graph,
+            parameters,
+            matcher,
+            _evaluating_aggregation=evaluating_aggregation,
         )
         if isinstance(expr, CypherParser.OC_ExpressionContext):
             return evaluator._evaluate_expression(expr)

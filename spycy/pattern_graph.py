@@ -1,6 +1,6 @@
 import math
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Union
 
 from spycy.gen.CypherParser import CypherParser
 
@@ -234,16 +234,14 @@ class Graph:
 
     def add_fragment(
         self,
-        fragment: CypherParser.OC_AnonymousPatternPartContext,
+        element: Union[
+            CypherParser.OC_PatternElementContext,
+            CypherParser.OC_RelationshipsPatternContext,
+        ],
         path_name: Optional[str],
     ):
         created_nodes = []
         created_edges = []
-
-        element = fragment.oC_PatternElement()
-        assert element
-        while inner_el := element.oC_PatternElement():
-            element = inner_el
 
         node_el = element.oC_NodePattern()
         assert node_el

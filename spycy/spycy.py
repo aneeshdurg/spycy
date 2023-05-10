@@ -13,6 +13,7 @@ from antlr4.error.ErrorListener import ErrorListener
 
 from antlr4 import *
 from spycy import pattern_graph
+from spycy.dfsmatcher import DFSMatcher
 from spycy.errors import ExecutionError
 from spycy.expression_evaluator import ConcreteExpressionEvaluator, ExpressionEvaluator
 from spycy.gen.CypherLexer import CypherLexer
@@ -25,7 +26,7 @@ from spycy.graph import (
     NetworkXNode,
     NodeType,
 )
-from spycy.matcher import DFSMatcher, Matcher, MatchResult, MatchResultSet
+from spycy.matcher import Matcher, MatchResult, MatchResultSet
 from spycy.types import Edge, Node, Path
 from spycy.visitor import hasType, visitor
 
@@ -48,7 +49,9 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         default_factory=lambda: CypherExecutorBase._default_table()
     )
 
-    expr_eval: type[ExpressionEvaluator] = ConcreteExpressionEvaluator
+    expr_eval: type[
+        ExpressionEvaluator[NodeType, EdgeType]
+    ] = ConcreteExpressionEvaluator[NodeType, EdgeType]
     matcher: type[Matcher[NodeType, EdgeType]] = DFSMatcher[NodeType, EdgeType]
 
     _returned: bool = False
@@ -68,6 +71,7 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             self.table,
             self.graph,
             self._parameters,
+            self.matcher,
             expr,
             evaluating_aggregation=evaluating_aggregation,
         )
@@ -81,7 +85,11 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             ast = self._getAST(src, get_root=lambda parser: parser.oC_Expression())
             assert ast
             col = self.expr_eval.evaluate(
-                CypherExecutorBase._default_table(), self.graph, evaluated_params, ast
+                CypherExecutorBase._default_table(),
+                self.graph,
+                evaluated_params,
+                self.matcher,
+                ast,
             )
             assert len(col) == 1
             evaluated_params[name] = col[0]
@@ -363,7 +371,9 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         self._returned = True
 
     def _filter_table(self, filter_expr: CypherParser.OC_ExpressionContext):
-        evaluator = self.expr_eval(self.table, self.graph, self._parameters)
+        evaluator = self.expr_eval(
+            self.table, self.graph, self._parameters, self.matcher
+        )
         self.table = evaluator.filter_table(filter_expr)
 
     def _process_where(self, node: CypherParser.OC_WhereContext):
@@ -430,7 +440,7 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
 
         pattern = node.oC_Pattern()
         assert pattern
-        pgraph = self._interpret_pattern(pattern)
+        pgraph = self.expr_eval.interpret_pattern(pattern)
         node_ids_to_props, edge_ids_to_props = self._evaluate_pattern_graph_properties(
             pgraph
         )
@@ -568,43 +578,20 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         elif unwind := node.oC_Unwind():
             self._process_unwind(unwind)
 
-    def _interpret_pattern(
-        self, pattern: CypherParser.OC_PatternContext
-    ) -> pattern_graph.Graph:
-        pgraph = pattern_graph.Graph()
-
-        pattern_part = pattern.oC_PatternPart()
-        assert pattern_part
-
-        for part in pattern_part:
-            path_name = None
-            if path_name_expr := part.oC_Variable():
-                path_name = path_name_expr.getText()
-            anon_part = part.oC_AnonymousPatternPart()
-            assert anon_part
-            pgraph.add_fragment(anon_part, path_name)
-        return pgraph
-
     def _evaluate_pattern_graph_properties(
         self, pgraph: pattern_graph.Graph
     ) -> Tuple[
         Dict[pattern_graph.NodeID, pd.Series], Dict[pattern_graph.EdgeID, pd.Series]
     ]:
-        node_ids_to_props = {}
-        for nid, n in pgraph.nodes.items():
-            if n.properties:
-                node_ids_to_props[nid] = self.evaluate_expr(n.properties)
-        edge_ids_to_props = {}
-        for eid, e in pgraph.edges.items():
-            if e.properties:
-                edge_ids_to_props[eid] = self.evaluate_expr(e.properties)
-
-        return node_ids_to_props, edge_ids_to_props
+        evaluator = self.expr_eval(
+            self.table, self.graph, self._parameters, self.matcher
+        )
+        return evaluator.evaluate_pattern_graph_properties(pgraph)
 
     def _process_create(self, node: CypherParser.OC_CreateContext):
         pattern = node.oC_Pattern()
         assert pattern
-        pgraph = self._interpret_pattern(pattern)
+        pgraph = self.expr_eval.interpret_pattern(pattern)
         for nid, n in pgraph.nodes.items():
             if n.name and n.name in self.table:
                 if n.properties or n.labels:
