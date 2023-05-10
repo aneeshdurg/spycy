@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <title>sPyCy browser demo</title>
+  <head>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js"></script>
+    <script src="./static/script.js"></script>
+    <script type="text/javascript">
+      window.addEventListener("DOMContentLoaded", (event) => {
+        main();
+      });
+    </script>
+    <link rel="stylesheet" type="text/css" href="./static/style.css">
+  </head>
+  <body>
+    <h1> sPyCy browser demo </h1>
+    <p> Input openCypher queries and use `ctrl + enter` to execute them! </p>
+    <p> This project is <a href="https://github.com/aneeshdurg/spycy">open source</a>! </p>
+    <div class="content">
+      <div id="preload" class="preload">
+        <code id="progress"></code>
+      </div>
+      <div id="loaded" style="display: none;">
+        <div id="notebook"></div>
+      </div>
+    </div>
+  </body>
+</html>
+
