@@ -274,7 +274,6 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             for alias, proj in group_by_keys.items():
                 expr = proj.oC_Expression()
                 group_by_columns[alias] = self.evaluate_expr(expr)
-
             def get_key(row):
                 def get_tuple(value):
                     if isinstance(value, Node):
@@ -404,6 +403,14 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             mask.append(value is not pd.NA and len(value) > 0)
         self.table = self.table[mask]
         self.table = self.table.explode(alias, ignore_index=True)
+        try:
+            new_col = self.table[alias]
+            types = {type(x) for x in new_col}
+            if len(types) == 1:
+                casted_col = new_col.astype(list(types)[0])
+                self.table[alias] = casted_col
+        except (TypeError, ValueError):
+            pass
 
     def _build_intial_match_result_for_row(
         self, row: int, pgraph: pattern_graph.Graph
