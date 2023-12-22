@@ -992,13 +992,16 @@ def main():
     if args.interactive:
         import readline
 
-        while query := input("> "):
-            try:
-                table = exe.exec(query)
-                if len(table):
-                    print(table)
-            except ExecutionError as e:
-                print(e, file=sys.stderr)
+        try:
+            while query := input("> "):
+                try:
+                    table = exe.exec(query)
+                    if len(table):
+                        print(table)
+                except ExecutionError as e:
+                    print(e, file=sys.stderr)
+        except EOFError:
+            exit()
 
     assert args.query or args.file, "One of --query and --file is required!"
 
