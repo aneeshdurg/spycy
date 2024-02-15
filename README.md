@@ -29,9 +29,10 @@ pip install spycy_aneeshdurg
 To build it yourself, from the root of this repo, run:
 
 ```bash
-python3 -m build
-cd dist/
-pip install *.whl
+# Optional - create and enter a venv
+# python3 -m venv venv
+# source ./venv/bin/activate # this command varies from shell to shell
+pip install .
 ```
 
 ## Usage:

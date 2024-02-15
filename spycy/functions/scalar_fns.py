@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from spycy.errors import ExecutionError
-from spycy.types import Edge, FunctionContext, Node
+from spycy.types import Edge, FunctionContext, Node, Path
 
 
 def coalesce(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
@@ -51,7 +51,26 @@ def last(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
 
 
 def length(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
-    raise AssertionError("length unimplemented")
+    if len(params) > 1:
+        raise ExecutionError("Invalid number of arguments to length")
+
+    output = []
+    for el in params[0]:
+        if el is pd.NA:
+            output.append(pd.NA)
+        elif isinstance(el, list):
+            output.append(len(el))
+        elif isinstance(el, Path):
+            length_ = 0
+            for edge in el.edges:
+                if isinstance(edge, list):
+                    length_ += len(edge)
+                else:
+                    length_ += 1
+            output.append(length_)
+        else:
+            raise ExecutionError(f"TypeError::length expected list, got {type(el)}")
+    return pd.Series(output, dtype="Int64")
 
 
 def properties(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:

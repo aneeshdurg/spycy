@@ -9,7 +9,7 @@ from spycy.expression_evaluator import ConcreteExpressionEvaluator, ExpressionEv
 from spycy.gen.CypherParser import CypherParser
 from spycy.graph import EdgeType, Graph, NodeType
 from spycy.matcher import MatchedEdge, Matcher, MatchResult, MatchResultSet
-from spycy.types import Edge, Node
+from spycy.types import Edge, Node, Path
 
 
 @dataclass
@@ -458,6 +458,7 @@ class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
             for i in range(len(results)):
                 tmp_vars = variables.copy()
                 current_row = MatchResult()
+                # TODO - only bind names that are actually needed for the filter
                 for nodeid, node in pgraph.nodes.items():
                     datanode = results.node_ids_to_data_ids[nodeid][i]
                     current_row.node_ids_to_data_ids[nodeid] = datanode
@@ -472,7 +473,16 @@ class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
                         else:
                             wrapped_edge = Edge[EdgeType](dataedge)
                         tmp_vars[edge.name] = wrapped_edge
-                # TODO - bind in path names
+                for path_name, path in pgraph.paths.items():
+                    p = Path[NodeType, EdgeType]([], [])
+                    for nodeid in path.nodes:
+                        node = current_row.node_ids_to_data_ids[nodeid]
+                        p.nodes.append(node)
+                    for edgeid in path.edges:
+                        edge = current_row.edge_ids_to_data_ids[edgeid]
+                        p.edges.append(edge)
+                    tmp_vars[path_name] = p
+
                 filter_passed = matcher.expr_eval.evaluate(
                     pd.DataFrame([tmp_vars]),
                     graph,
