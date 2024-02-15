@@ -154,7 +154,7 @@ async function main(){
       global exe
       progress.innerHTML += "Initializing python environment<br>"
       progress.innerHTML += "Installing spycy (may take a few minutes)<br>"
-      await micropip.install("./dist/spycy_aneeshdurg-0.0.2-py3-none-any.whl", deps=True)
+      await micropip.install("./dist/spycy_aneeshdurg-0.0.3-py3-none-any.whl", deps=True)
       progress.innerHTML += "Installed spycy<br>"
       progress.innerHTML += "READY!<br>"
       import spycy
