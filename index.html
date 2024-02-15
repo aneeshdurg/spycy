@@ -15,6 +15,38 @@
     <h1> sPyCy browser demo </h1>
     <p> Input openCypher queries and use `ctrl + enter` to execute them! </p>
     <p> This project is <a href="https://github.com/aneeshdurg/spycy">open source</a>! </p>
+    <details>
+      <summary> Sample Queries </summary>
+      <code>
+        <ul>
+          <li> Create nodes with ids 1 to 5:
+            <ul>
+              <li> UNWIND range(1, 5) AS id CREATE (n:Node {id: id}) </li>
+            </ul>
+          </li>
+          <li> Return all nodes:
+            <ul>
+              <li> MATCH (n:Node) RETURN n, properties(n) </li>
+            </ul>
+          </li>
+          <li> Return nodes with id > 3:
+            <ul>
+              <li> MATCH (n:Node) WHERE n.id > 3 RETURN n, properties(n) </li>
+            </ul>
+          </li>
+          <li> Create a relationship between nodes with even and odd ids:
+            <ul>
+              <li> MATCH (n: Node) WHERE n.id % 2 = 0 CREATE (n)-[:EVEN]->(m:Node {id: n.id + 1}) </li>
+            </ul>
+          </li>
+          <li> Return all relationships:
+            <ul>
+              <li> MATCH (n:Node)-[r]->(m) RETURN n.id, r, m.id </li>
+            </ul>
+          </li>
+        </ul>
+      </code>
+    </details>
     <div class="content">
       <div id="preload" class="preload">
         <code id="progress"></code>

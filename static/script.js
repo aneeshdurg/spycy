@@ -135,6 +135,11 @@ async function main(){
     window.stderr.push(x);
   };
 
+  const originalConsoleLog = console.log;
+  console.log = (s) => {
+    progress.innerText += "<pyodide>: " + s + "\n";
+  };
+
   await pyodide.runPython(`
     import sys
 
@@ -148,7 +153,7 @@ async function main(){
     async def main():
       global exe
       progress.innerHTML += "Initializing python environment<br>"
-      progress.innerHTML += "Installing spycy<br>"
+      progress.innerHTML += "Installing spycy (may take a few minutes)<br>"
       await micropip.install("./dist/spycy_aneeshdurg-0.0.2-py3-none-any.whl", deps=True)
       progress.innerHTML += "Installed spycy<br>"
       progress.innerHTML += "READY!<br>"
@@ -160,6 +165,8 @@ async function main(){
       loaded_env.style.display = ""
     main()
   `);
+
+  console.log = originalConsoleLog;
 
   window.pyodide = pyodide;
 
