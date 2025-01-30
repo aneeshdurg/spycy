@@ -204,9 +204,9 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         self.reset_table()
         expr = node.oC_Expression()
         assert expr
-        limit = self.evaluate_expr(expr)
-        assert len(limit) == 1
-        limit = limit[0]
+        limit_v = self.evaluate_expr(expr)
+        assert len(limit_v) == 1
+        limit: int = limit_v[0]
 
         assert np.issubdtype(type(limit), np.integer)
         if limit < 0:
