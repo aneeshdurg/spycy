@@ -52,7 +52,6 @@ class LLVMGraphNodes(Mapping[NodeType, Any]):
                     yield self.make_basic_block_node(bb)
                     for inst in bb.iter_instructions():
                         yield self.make_inst_node(inst)
-
         return iterator()
 
     def __getitem__(self, n: LLVMNode):
@@ -79,8 +78,12 @@ class LLVMGraphEdges(Mapping[EdgeType, Any]):
             assert e[1].obj_type == LLVMType.BasicBlock
             type_ = "has_block"
         elif e[0].obj_type == LLVMType.BasicBlock:
-            assert e[1].obj_type == LLVMType.Instruction
-            type_ = "first"
+            if e[1].obj_type == LLVMType.BasicBlock:
+                type_ = "controlflow"
+            elif e[1].obj_type == LLVMType.Instruction:
+                type_ = "first"
+            else:
+                raise AssertionError("Unexpected dst type for BasicBlock edge")
         elif e[0].obj_type == LLVMType.Instruction:
             assert e[1].obj_type == LLVMType.Instruction
             type_ = "next"
@@ -113,8 +116,14 @@ class LLVMGraph(Graph[NodeType, EdgeType]):
             return [(node, LLVMNode(bb, LLVMType.BasicBlock)) for bb in
                     node.obj.iter_basic_blocks()]
         elif node.obj_type == LLVMType.BasicBlock:
-            return [(node, LLVMNode(inst, LLVMType.Instruction)) for inst in
-                    node.obj.iter_instructions()]
+            bb = node.obj
+            terminator = bb.get_terminator()
+            n_succ = terminator.get_num_successors()
+            succ_bbs = [(node, LLVMNode(terminator.get_successor(i), LLVMType.BasicBlock)) for i in range(n_succ)]
+            first_inst = next(iter(node.obj.iter_instructions()))
+
+            return [(node, LLVMNode(first_inst, LLVMType.Instruction))] + succ_bbs
+
         else:
             if node.obj.next_instruction:
                 return [(node, LLVMNode(node.obj.next_instruction, LLVMType.Instruction))]
@@ -155,6 +164,6 @@ class LLVMCypherExecutor(CypherExecutorBase[NodeType, EdgeType]):
 def run_on_module(module: cllvm.Module):
     exe = LLVMCypherExecutor(module)
     print(exe.exec("""
-        match (fn: Function)-->(b: BasicBlock)-->(i) WHERE i.str CONTAINS 'alloca' RETURN fn, count(b)
+        match (fn: Function)-->(b: BasicBlock)-[*]->(i) WHERE i.str CONTAINS 'alloca' RETURN fn, count(b)
     """))
     return 0
