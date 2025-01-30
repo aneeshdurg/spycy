@@ -9,7 +9,8 @@ The goal of `sPyCy` is to enable using openCypher as a frontend, or to embed
 openCypher in other projects. To this end, `sPyCy` is quite modular and several
 components such as the underlying graph implementation, the subgraph pattern
 matcher, and the expression evaluator can all be substituted with a custom
-implementation. See `examples/` for some sample usage.
+implementation. See `examples/` for some sample usage, and for some examples where
+the graph implementation is satisfied by third-party objects (e.g. HTML DOM, LLVM IR, etc)
 
 The long-term goals of this project include fully passing all openCypher TCK
 tests. Currently a majority of TCK tests are expected to pass. The failing tests
