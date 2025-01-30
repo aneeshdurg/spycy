@@ -18,14 +18,16 @@ jobs:
           git submodule init
           git submodule update
 
-      - name: "install behave"
+      - name: "install spycy"
         run: |
           pip install .
-          git clone https://github.com/aneeshdurg/behave
+
+      - name: "install test dependencies"
+        run: |
+          git clone https://github.com/behave/behave
           cd behave
-          git checkout support_and_after_background
           pip install -r py.requirements/all.txt
-          python3 setup.py install --user
+          pip install .
 
       - name: "Run TCK tests"
         run: |
