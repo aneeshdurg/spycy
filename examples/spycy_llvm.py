@@ -9,7 +9,9 @@ from enum import Enum
 from spycy.graph import Graph
 from spycy.spycy import CypherExecutorBase
 
-import llvmcpy.llvm as cllvm
+from llvmcpy import LLVMCPy
+
+cllvm = LLVMCPy()
 
 
 class LLVMType(Enum):
@@ -133,6 +135,7 @@ class LLVMGraph(Graph[NodeType, EdgeType]):
         if node.obj_type == LLVMType.Function:
             return []
         elif node.obj_type == LLVMType.BasicBlock:
+            # TODO - find all terminators that point to this basicblock as a successor
             return [(LLVMNode(node.obj.get_parent(), LLVMType.Function), node)]
         else:
             if node.obj.previous_instruction:
