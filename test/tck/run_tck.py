@@ -1,3 +1,4 @@
+import argparse
 import glob
 import os
 import re
@@ -78,4 +79,7 @@ def main(update: bool):
 
 
 if __name__ == "__main__":
-    sys.exit(main("--update" in sys.argv))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--update", action='store_true', help="Update expected passes")
+    args = parser.parse_args()
+    sys.exit(main(args.update))
