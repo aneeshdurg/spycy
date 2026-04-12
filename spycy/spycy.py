@@ -27,6 +27,7 @@ from spycy.graph import (
     NodeType,
 )
 from spycy.matcher import Matcher, MatchResult, MatchResultSet
+from spycy.predicate_pushdown import apply_pushdown, collect_pushdown_predicates
 from spycy.types import Edge, Node, Path
 from spycy.visitor import hasType, visitor
 
@@ -453,6 +454,18 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         )
 
         filter_ = node.oC_Where()
+
+        # Predicate pushdown: fold any `<var>.<prop> = <literal>` AND
+        # conjunctions in the WHERE clause into pattern node properties
+        # so node_matches can prune wrong starting candidates instead of
+        # forcing a full graph scan followed by per-row WHERE evaluation.
+        # Unsupported WHERE shapes (OR, NOT, cross-var comparisons) are
+        # left untouched and fall through to the existing post-DFS filter.
+        pushdown_triples = collect_pushdown_predicates(filter_)
+        if pushdown_triples:
+            apply_pushdown(
+                pushdown_triples, pgraph, node_ids_to_props, len(self.table)
+            )
 
         names_to_data = {}
         for n in pgraph.nodes.values():

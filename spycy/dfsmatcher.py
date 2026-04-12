@@ -35,14 +35,15 @@ class DFSMatcher(Generic[NodeType, EdgeType], Matcher[NodeType, EdgeType]):
         return True
 
     def node_matches(self, pnode: pattern_graph.Node, data_node: NodeType) -> bool:
-        if not pnode.labels and not pnode.properties:
+        has_props = pnode.id_ in self.node_ids_to_props
+        if not pnode.labels and not has_props:
             return True
 
         node_data = self.graph.nodes[data_node]
         if pnode.labels:
             if not pnode.labels <= set(node_data["labels"]):
                 return False
-        if pnode.properties:
+        if has_props:
             match_props = self.node_ids_to_props[pnode.id_][self.row_id]
             assert isinstance(match_props, dict)
             data_props = node_data["properties"]
