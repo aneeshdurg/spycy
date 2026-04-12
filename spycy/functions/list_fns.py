@@ -71,7 +71,9 @@ def nodes(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
                 if not isinstance(edges, list):
                     edges = [edges]
                 for edge in edges:
-                    dst = edge[1] if edge[0] == src else edge[0]
+                    edge_src = fnctx.graph.src(edge)
+                    edge_dst = fnctx.graph.dst(edge)
+                    dst = edge_dst if edge_src == src else edge_src
                     path_nodes.append(Node(dst))
                     src = dst
         output.append(path_nodes)
