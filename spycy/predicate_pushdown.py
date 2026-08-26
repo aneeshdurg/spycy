@@ -30,24 +30,39 @@ The supported shape is intentionally narrow:
 Anything more complex is left untouched and falls through to the
 existing post-DFS WHERE evaluation.
 """
+
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import pandas as pd
 
 from spycy import pattern_graph
 from spycy.gen.CypherParser import CypherParser
 
+#: Evaluates an ``oC_Atom`` AST node to a column of values (one per table
+#: row). Callers pass the expression evaluator here so literal semantics
+#: (escape sequences, numeric parsing, ...) live in exactly one place.
+AtomEvaluator = Callable[[CypherParser.OC_AtomContext], pd.Series]
 
-PushdownTriple = Tuple[str, str, Any]
+
+@dataclass(frozen=True)
+class PushdownPredicate:
+    """A ``<variable>.<property> = <value>`` constraint extracted from WHERE."""
+
+    variable: str
+    property_: str
+    value: Any
 
 
 def collect_pushdown_predicates(
     where_ast: Optional[CypherParser.OC_WhereContext],
-) -> List[PushdownTriple]:
-    """Walk a WHERE AST and return ``(var, prop, value)`` triples that
-    can be folded into pattern node properties.
+    evaluate_atom: AtomEvaluator,
+) -> List[PushdownPredicate]:
+    """Walk a WHERE AST and return :class:`PushdownPredicate` constraints
+    that can be folded into pattern node properties. Literal values are
+    evaluated with *evaluate_atom* (the expression evaluator).
 
     Returns an empty list when the WHERE shape is not pushdown-friendly,
     so the caller can pass any WHERE without checking first.
@@ -73,44 +88,44 @@ def collect_pushdown_predicates(
     # are simply skipped — they remain in the WHERE AST and the post-DFS
     # evaluator handles them. This means the returned list may be a
     # *partial* extraction: some conjuncts pushed, others not.
-    triples: List[PushdownTriple] = []
+    predicates: List[PushdownPredicate] = []
     for child in and_expr.children:
-        if not hasattr(child, 'getRuleIndex'):
+        if not hasattr(child, "getRuleIndex"):
             continue  # the literal 'AND' tokens
         not_expr = child
         if _has_not_keyword(not_expr):
             continue  # negated terms can't be pushed down naively
-        if not hasattr(not_expr, 'oC_ComparisonExpression'):
+        if not hasattr(not_expr, "oC_ComparisonExpression"):
             continue
         comp = not_expr.oC_ComparisonExpression()
         if comp is None:
             continue
-        triple = _try_extract_equality(comp)
-        if triple is not None:
-            triples.append(triple)
-    return triples
+        predicate = _try_extract_equality(comp, evaluate_atom)
+        if predicate is not None:
+            predicates.append(predicate)
+    return predicates
 
 
 def apply_pushdown(
-    triples: List[PushdownTriple],
+    predicates: List[PushdownPredicate],
     pgraph: pattern_graph.Graph,
     node_ids_to_props: Dict[pattern_graph.NodeID, pd.Series],
     table_len: int,
 ) -> None:
-    """Fold *triples* into *pgraph*'s node property dicts in place.
+    """Fold *predicates* into *pgraph*'s node property dicts in place.
 
     Mutates ``node_ids_to_props`` so that the property check inside
     :meth:`DFSMatcher.node_matches` will see the pushed constraints.
     The matcher gates on ``pnode.id_ in node_ids_to_props``, so adding
     an entry here is sufficient — no mutation of pnode.properties needed.
     """
-    if not triples:
+    if not predicates:
         return
 
-    # Group triples by variable name so each pattern node is touched once.
+    # Group predicates by variable name so each pattern node is touched once.
     by_var: Dict[str, Dict[str, Any]] = {}
-    for var, prop, value in triples:
-        by_var.setdefault(var, {})[prop] = value
+    for pred in predicates:
+        by_var.setdefault(pred.variable, {})[pred.property_] = pred.value
 
     name_to_pnode = {n.name: (nid, n) for nid, n in pgraph.nodes.items() if n.name}
 
@@ -136,20 +151,21 @@ def apply_pushdown(
 
 # ----- AST navigation helpers ------------------------------------------------
 
+
 def _has_multiple_rule_children(node) -> bool:
-    return sum(1 for c in node.children if hasattr(c, 'getRuleIndex')) > 1
+    return sum(1 for c in node.children if hasattr(c, "getRuleIndex")) > 1
 
 
 def _first_rule_child(node):
     for c in node.children:
-        if hasattr(c, 'getRuleIndex'):
+        if hasattr(c, "getRuleIndex"):
             return c
     return None
 
 
 def _has_not_keyword(not_expr) -> bool:
     for c in not_expr.children:
-        if not hasattr(c, 'getRuleIndex') and c.getText().lower() == 'not':
+        if not hasattr(c, "getRuleIndex") and c.getText().lower() == "not":
             return True
     return False
 
@@ -158,8 +174,8 @@ def _drill_to_operand(node):
     """Walk through single-child rules until we reach the operand layer
     (``oC_NonArithmeticOperatorExpression``) or run out of children.
     """
-    while node is not None and hasattr(node, 'children') and node.children:
-        if 'NonArithmeticOperator' in type(node).__name__:
+    while node is not None and hasattr(node, "children") and node.children:
+        if "NonArithmeticOperator" in type(node).__name__:
             return node
         if len(node.children) == 1:
             node = node.children[0]
@@ -170,21 +186,22 @@ def _drill_to_operand(node):
 
 def _try_extract_equality(
     comparison_expr,
-) -> Optional[PushdownTriple]:
+    evaluate_atom: AtomEvaluator,
+) -> Optional[PushdownPredicate]:
     """Recognise ``<var>.<prop> = <literal>`` (in either order)."""
-    if not hasattr(comparison_expr, 'children') or len(comparison_expr.children) < 2:
+    if not hasattr(comparison_expr, "children") or len(comparison_expr.children) < 2:
         return None
     lhs = comparison_expr.children[0]
 
     partial = None
     for c in comparison_expr.children[1:]:
-        if hasattr(c, 'getRuleIndex'):
+        if hasattr(c, "getRuleIndex"):
             partial = c
             break
     if partial is None or len(partial.children) < 2:
         return None
     op = partial.children[0].getText()
-    if op != '=':
+    if op != "=":
         return None
     rhs = partial.children[-1]
 
@@ -193,14 +210,21 @@ def _try_extract_equality(
 
     var_prop = _try_extract_var_prop(lhs_d)
     if var_prop is not None:
-        value = _try_extract_literal(rhs_d)
+        literal_atom = _try_extract_literal_atom(rhs_d)
     else:
         var_prop = _try_extract_var_prop(rhs_d)
-        value = _try_extract_literal(lhs_d)
+        literal_atom = _try_extract_literal_atom(lhs_d)
 
-    if var_prop is None or value is None:
+    if var_prop is None or literal_atom is None:
         return None
-    return (var_prop[0], var_prop[1], value)
+
+    values = evaluate_atom(literal_atom)
+    if len(values) == 0:
+        return None  # empty table — nothing to match anyway
+    value = values.iloc[0]
+    if value is pd.NA:
+        return None
+    return PushdownPredicate(var_prop[0], var_prop[1], value)
 
 
 def _try_extract_var_prop(non_arith_expr) -> Optional[Tuple[str, str]]:
@@ -209,19 +233,19 @@ def _try_extract_var_prop(non_arith_expr) -> Optional[Tuple[str, str]]:
     """
     if non_arith_expr is None:
         return None
-    if not hasattr(non_arith_expr, 'children') or non_arith_expr.children is None:
+    if not hasattr(non_arith_expr, "children") or non_arith_expr.children is None:
         return None
     if len(non_arith_expr.children) != 2:
         return None
     atom, prop_lookup = non_arith_expr.children
 
-    if not hasattr(atom, 'oC_Variable'):
+    if not hasattr(atom, "oC_Variable"):
         return None
     var_node = atom.oC_Variable()
     if var_node is None:
         return None
 
-    if not hasattr(prop_lookup, 'oC_PropertyKeyName'):
+    if not hasattr(prop_lookup, "oC_PropertyKeyName"):
         return None
     key = prop_lookup.oC_PropertyKeyName()
     if key is None:
@@ -230,57 +254,36 @@ def _try_extract_var_prop(non_arith_expr) -> Optional[Tuple[str, str]]:
     return (var_node.getText(), key.getText())
 
 
-def _try_extract_literal(non_arith_expr) -> Optional[Any]:
-    """Recognise an oC_NonArithmeticOperatorExpression containing a
-    single literal atom.  Supports string, integer, float, boolean,
-    and null literals.
+def _try_extract_literal_atom(
+    non_arith_expr,
+) -> Optional[CypherParser.OC_AtomContext]:
+    """Recognise an oC_NonArithmeticOperatorExpression containing a single
+    scalar literal atom (string, integer, float, or boolean) and return the
+    atom for the expression evaluator to compute the value.
+
+    Null literals are rejected here: Cypher null-equality semantics
+    (null = null → null, not true) must be handled by the post-DFS WHERE
+    evaluator, not by the dict-based properties_match. List and map
+    literals are likewise left to the post-DFS evaluator.
     """
     if non_arith_expr is None:
         return None
-    if not hasattr(non_arith_expr, 'children') or non_arith_expr.children is None:
+    if not hasattr(non_arith_expr, "children") or non_arith_expr.children is None:
         return None
     if len(non_arith_expr.children) != 1:
         return None
     atom = non_arith_expr.children[0]
-    if not hasattr(atom, 'oC_Literal'):
+    if not hasattr(atom, "oC_Literal"):
         return None
     lit = atom.oC_Literal()
     if lit is None:
         return None
 
-    # String literal
-    if lit.StringLiteral() is not None:
-        text = lit.getText()
-        if len(text) >= 2 and text[0] in ('"', "'") and text[-1] == text[0]:
-            body = text[1:-1]
-            return (body
-                    .replace('\\\\', '\x00')
-                    .replace("\\'", "'")
-                    .replace('\\"', '"')
-                    .replace('\\n', '\n')
-                    .replace('\\r', '\r')
-                    .replace('\\t', '\t')
-                    .replace('\\b', '\b')
-                    .replace('\\f', '\f')
-                    .replace('\x00', '\\'))
-
-    # Boolean literal
-    if lit.oC_BooleanLiteral() is not None:
-        return lit.getText().lower() == 'true'
-
-    # Null literal — do not push down; Cypher null-equality semantics
-    # (null = null → null, not true) must be handled by the post-DFS
-    # WHERE evaluator, not by the dict-based properties_match.
-    if lit.NULL() is not None:
+    is_scalar = (
+        lit.StringLiteral() is not None
+        or lit.oC_BooleanLiteral() is not None
+        or lit.oC_NumberLiteral() is not None
+    )
+    if not is_scalar:
         return None
-
-    # Numeric literal (integer or float)
-    num = lit.oC_NumberLiteral()
-    if num is not None:
-        text = num.getText()
-        if num.oC_IntegerLiteral() is not None:
-            return int(text)
-        if num.oC_DoubleLiteral() is not None:
-            return float(text)
-
-    return None
+    return atom
