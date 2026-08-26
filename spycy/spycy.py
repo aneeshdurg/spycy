@@ -119,7 +119,7 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
                 return int(x)
             elif np.issubdtype(type(x), np.bool_):
                 return bool(x)
-            elif np.issubdtype(type(x), np.float_):
+            elif np.issubdtype(type(x), np.float64):
                 return float(x)
             return x
 

@@ -82,7 +82,7 @@ def toString(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
         val = arg[i]
         if val is pd.NA:
             output.append(pd.NA)
-        elif np.issubdtype(type(val), np.float_) or np.issubdtype(
+        elif np.issubdtype(type(val), np.float64) or np.issubdtype(
             type(val), np.integer
         ):
             output.append(str(val))
