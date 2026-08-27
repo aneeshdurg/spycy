@@ -155,7 +155,7 @@ def toFloat(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
         val = arg[i]
         if val is pd.NA:
             output.append(pd.NA)
-        elif np.issubdtype(type(val), np.float_):
+        elif np.issubdtype(type(val), np.float64):
             output.append(val)
         elif np.issubdtype(type(val), np.integer):
             output.append(float(val))
@@ -180,7 +180,7 @@ def toInteger(params: List[pd.Series], fnctx: FunctionContext) -> pd.Series:
             output.append(pd.NA)
         elif np.issubdtype(type(val), np.integer):
             output.append(val)
-        elif np.issubdtype(type(val), np.float_):
+        elif np.issubdtype(type(val), np.float64):
             output.append(int(val))
         elif isinstance(val, str):
             try:
