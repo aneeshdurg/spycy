@@ -27,6 +27,7 @@ from spycy.graph import (
     NodeType,
 )
 from spycy.matcher import Matcher, MatchResult, MatchResultSet
+from spycy.predicate_pushdown import apply_pushdown, collect_pushdown_predicates
 from spycy.types import Edge, Node, Path
 from spycy.visitor import hasType, visitor
 
@@ -49,9 +50,9 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         default_factory=lambda: CypherExecutorBase._default_table()
     )
 
-    expr_eval: type[
-        ExpressionEvaluator[NodeType, EdgeType]
-    ] = ConcreteExpressionEvaluator[NodeType, EdgeType]
+    expr_eval: type[ExpressionEvaluator[NodeType, EdgeType]] = (
+        ConcreteExpressionEvaluator[NodeType, EdgeType]
+    )
     matcher: type[Matcher[NodeType, EdgeType]] = DFSMatcher[NodeType, EdgeType]
 
     _returned: bool = False
@@ -274,6 +275,7 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
             for alias, proj in group_by_keys.items():
                 expr = proj.oC_Expression()
                 group_by_columns[alias] = self.evaluate_expr(expr)
+
             def get_key(row):
                 def get_tuple(value):
                     if isinstance(value, Node):
@@ -453,6 +455,18 @@ class CypherExecutorBase(Generic[NodeType, EdgeType]):
         )
 
         filter_ = node.oC_Where()
+
+        # Predicate pushdown: fold any `<var>.<prop> = <literal>` AND
+        # conjunctions in the WHERE clause into pattern node properties
+        # so node_matches can prune wrong starting candidates instead of
+        # forcing a full graph scan followed by per-row WHERE evaluation.
+        # Unsupported WHERE shapes (OR, NOT, cross-var comparisons) are
+        # left untouched and fall through to the existing post-DFS filter.
+        pushdown_predicates = collect_pushdown_predicates(filter_, self.evaluate_expr)
+        if pushdown_predicates:
+            apply_pushdown(
+                pushdown_predicates, pgraph, node_ids_to_props, len(self.table)
+            )
 
         names_to_data = {}
         for n in pgraph.nodes.values():
